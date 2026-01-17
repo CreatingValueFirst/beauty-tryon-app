@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { ARCamera } from '@/components/ar/ARCamera';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import { Slider } from '@/components/ui/slider';
 import { processNails, hexToRgbNail, NAIL_PRESETS, NailSettings } from '@/lib/ai/nail-processor';
 import { Save, Share2, Download, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { createClient } from '@/lib/supabase/client';
 
 const PATTERNS = [
   { value: 'solid', label: 'Solid', icon: '🎨' },
@@ -16,16 +17,50 @@ const PATTERNS = [
   { value: 'ombre', label: 'Ombré', icon: '🌈' },
 ] as const;
 
+// Professional nail color samples
+const SAMPLE_NAIL_COLORS = [
+  { id: '1', name: 'Classic Red', color_code: '#DC143C', category: 'solid' },
+  { id: '2', name: 'Nude Pink', color_code: '#FFB6C1', category: 'solid' },
+  { id: '3', name: 'Midnight Black', color_code: '#000000', category: 'solid' },
+  { id: '4', name: 'Coral Crush', color_code: '#FF6B6B', category: 'solid' },
+  { id: '5', name: 'Lavender Dreams', color_code: '#E6E6FA', category: 'solid' },
+  { id: '6', name: 'Rose Gold', color_code: '#B76E79', category: 'solid' },
+  { id: '7', name: 'Navy Blue', color_code: '#000080', category: 'solid' },
+  { id: '8', name: 'Burgundy Wine', color_code: '#800020', category: 'solid' },
+  { id: '9', name: 'Mint Fresh', color_code: '#98FF98', category: 'solid' },
+  { id: '10', name: 'Pearl White', color_code: '#FFFFFF', category: 'solid' },
+];
+
 export default function NailTryOnPage() {
-  const [selectedColor, setSelectedColor] = useState('#EC4899');
+  const [nailColors, setNailColors] = useState(SAMPLE_NAIL_COLORS);
+  const [selectedColor, setSelectedColor] = useState('#DC143C');
   const [settings, setSettings] = useState<NailSettings>({
-    color: hexToRgbNail('#EC4899'),
+    color: hexToRgbNail('#DC143C'),
     opacity: 0.85,
     glossiness: 0.7,
     pattern: 'solid',
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [lastFrameTime, setLastFrameTime] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch real nail styles from Supabase
+  useEffect(() => {
+    async function fetchNailStyles() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from('nail_styles')
+        .select('id, name, color_code, category')
+        .eq('category', 'solid')
+        .limit(20);
+
+      if (data && data.length > 0) {
+        setNailColors(data);
+      }
+      setLoading(false);
+    }
+    fetchNailStyles();
+  }, []);
 
   // Process video frame with nail overlay
   const handleFrame = useCallback(
@@ -136,37 +171,56 @@ export default function NailTryOnPage() {
               <CardTitle className="text-base">Choose Color</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Preset Colors */}
+              {/* Professional Nail Colors */}
               <div className="grid grid-cols-5 gap-2">
-                {NAIL_PRESETS.map((preset) => (
-                  <button
-                    key={preset.hex}
-                    onClick={() => handleColorSelect(preset.hex)}
-                    className={cn(
-                      'aspect-square rounded-lg transition-all hover:scale-110 relative shadow-md',
-                      selectedColor === preset.hex && 'ring-4 ring-brand-pink ring-offset-2 scale-110'
-                    )}
-                    style={{ backgroundColor: preset.hex }}
-                    title={preset.name}
-                  >
-                    {selectedColor === preset.hex && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <svg
-                          className="w-4 h-4 text-white drop-shadow-lg"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </button>
-                ))}
+                {loading ? (
+                  // Loading state
+                  Array.from({ length: 10 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="aspect-square rounded-lg bg-gray-200 animate-pulse"
+                    />
+                  ))
+                ) : (
+                  // Real nail colors
+                  nailColors.map((nail) => (
+                    <button
+                      key={nail.id}
+                      onClick={() => handleColorSelect(nail.color_code)}
+                      className={cn(
+                        'aspect-square rounded-lg transition-all hover:scale-110 relative shadow-md border-2',
+                        selectedColor === nail.color_code
+                          ? 'ring-4 ring-brand-pink ring-offset-2 scale-110 border-white'
+                          : 'border-gray-200'
+                      )}
+                      style={{ backgroundColor: nail.color_code }}
+                      title={nail.name}
+                    >
+                      {selectedColor === nail.color_code && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <svg
+                            className="w-4 h-4 text-white drop-shadow-lg"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      )}
+                    </button>
+                  ))
+                )}
               </div>
+
+              {!loading && nailColors.length > 0 && (
+                <p className="text-xs text-center text-gray-500">
+                  {nailColors.length} professional colors available
+                </p>
+              )}
 
               {/* Custom Color */}
               <div>
