@@ -1,0 +1,459 @@
+{
+  "name": "BeautyTryOn - Image Processing Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "process-tryon-image",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook - Process Image",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 400],
+      "webhookId": "process-tryon-image"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.user_id }}",
+              "operation": "exists"
+            },
+            {
+              "value1": "={{ $json.image_url }}",
+              "operation": "exists"
+            },
+            {
+              "value1": "={{ $json.try_on_type }}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "validate-request",
+      "name": "Validate Request",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": false, \"error\": \"Missing required fields\" } }}"
+      },
+      "id": "error-response",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [650, 550]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.image_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "download-original",
+      "name": "Download Original Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 250]
+    },
+    {
+      "parameters": {
+        "operation": "resize",
+        "options": {
+          "width": 1920,
+          "height": 1080,
+          "resizeOption": "maximumArea"
+        }
+      },
+      "id": "resize-image",
+      "name": "Resize to Standard",
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [850, 250]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create multiple image variants\nconst inputData = $input.first();\nconst variants = [];\n\n// Original HD version\nvariants.push({\n  json: {\n    variant: 'hd',\n    width: 1920,\n    height: 1080,\n    quality: 95,\n    watermark: false\n  },\n  binary: inputData.binary\n});\n\n// Social media optimized (Instagram)\nvariants.push({\n  json: {\n    variant: 'social',\n    width: 1080,\n    height: 1080,\n    quality: 85,\n    watermark: true,\n    watermark_text: 'Created with BeautyTryOn'\n  },\n  binary: inputData.binary\n});\n\n// Thumbnail\nvariants.push({\n  json: {\n    variant: 'thumbnail',\n    width: 400,\n    height: 400,\n    quality: 80,\n    watermark: false\n  },\n  binary: inputData.binary\n});\n\n// Free tier preview (watermarked)\nvariants.push({\n  json: {\n    variant: 'preview',\n    width: 800,\n    height: 600,\n    quality: 75,\n    watermark: true,\n    watermark_text: 'BeautyTryOn - Upgrade for HD',\n    watermark_position: 'center'\n  },\n  binary: inputData.binary\n});\n\nreturn variants;"
+      },
+      "id": "create-variants",
+      "name": "Create Image Variants",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 250]
+    },
+    {
+      "parameters": {
+        "operation": "resize",
+        "options": {
+          "width": "={{ $json.width }}",
+          "height": "={{ $json.height }}",
+          "resizeOption": "maximumArea"
+        }
+      },
+      "id": "apply-variant-size",
+      "name": "Apply Variant Size",
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [1250, 250]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.watermark }}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "id": "check-watermark-needed",
+      "name": "Check Watermark Needed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1450, 250]
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "text": "={{ $json.watermark_text || 'BeautyTryOn' }}",
+        "options": {
+          "font": "Arial",
+          "fontSize": 32,
+          "fontColor": "rgba(255, 255, 255, 0.5)",
+          "positionX": 50,
+          "positionY": 50
+        }
+      },
+      "id": "add-watermark",
+      "name": "Add Watermark",
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [1650, 150]
+    },
+    {
+      "parameters": {
+        "operation": "optimize",
+        "options": {
+          "quality": "={{ $json.quality }}"
+        }
+      },
+      "id": "optimize-image",
+      "name": "Optimize Image Quality",
+      "type": "n8n-nodes-base.editImage",
+      "typeVersion": 1,
+      "position": [1850, 250]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.SUPABASE_URL }}/storage/v1/object/try-ons/{{ $json.user_id }}/{{ $json.variant }}_{{ $now.toISO() }}.jpg",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $binary }}",
+        "options": {}
+      },
+      "id": "upload-to-storage",
+      "name": "Upload to Supabase Storage",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [2050, 250],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "8",
+          "name": "Supabase Storage Auth"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Collect all uploaded variants\nconst variants = $input.all();\nconst urls = {};\n\nfor (const variant of variants) {\n  const data = variant.json;\n  urls[data.variant] = data.url;\n}\n\nconst originalInput = $('Webhook - Process Image').first().json;\n\nreturn [{\n  json: {\n    user_id: originalInput.user_id,\n    try_on_type: originalInput.try_on_type,\n    style_id: originalInput.style_id,\n    original_url: originalInput.image_url,\n    processed_urls: urls,\n    created_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "aggregate-results",
+      "name": "Aggregate Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2250, 250]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "database",
+        "operation": "insert",
+        "query": {
+          "sql": "INSERT INTO try_ons (user_id, type, style_id, original_image_url, result_image_url, thumbnail_url, settings, created_at) VALUES ('{{ $json.user_id }}', '{{ $json.try_on_type }}', '{{ $json.style_id }}', '{{ $json.original_url }}', '{{ $json.processed_urls.hd }}', '{{ $json.processed_urls.thumbnail }}', '{{ $json.settings }}', NOW()) RETURNING id"
+        }
+      },
+      "id": "save-to-database",
+      "name": "Save to Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [2450, 250],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"try_on_id\": $json.id, \"urls\": $json.processed_urls, \"message\": \"Image processed successfully\" } }}"
+      },
+      "id": "success-response",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2650, 250]
+    },
+    {
+      "parameters": {
+        "url": "={{ $env.SUPABASE_URL }}/functions/v1/analyze-face",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ { \"image_url\": $json.image_url } }}",
+        "options": {}
+      },
+      "id": "analyze-face-optional",
+      "name": "Analyze Face (Optional)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [850, 450],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "9",
+          "name": "Supabase Functions Auth"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log processing metrics for analytics\nconst startTime = $('Webhook - Process Image').first().json.timestamp || Date.now();\nconst endTime = Date.now();\nconst processingTime = endTime - startTime;\n\nreturn [{\n  json: {\n    user_id: $json.user_id,\n    event_type: 'image_processed',\n    event_data: JSON.stringify({\n      processing_time_ms: processingTime,\n      try_on_type: $json.try_on_type,\n      variants_created: Object.keys($json.processed_urls).length,\n      file_sizes: $json.file_sizes || {}\n    }),\n    created_at: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "log-analytics",
+      "name": "Log Processing Analytics",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2450, 450]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "database",
+        "operation": "insert",
+        "query": {
+          "sql": "INSERT INTO analytics_events (user_id, event_type, event_data, created_at) VALUES ('{{ $json.user_id }}', '{{ $json.event_type }}', '{{ $json.event_data }}', NOW())"
+        }
+      },
+      "id": "save-analytics",
+      "name": "Save Analytics Event",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [2650, 450],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - Process Image": {
+      "main": [
+        [
+          {
+            "node": "Validate Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Request": {
+      "main": [
+        [
+          {
+            "node": "Download Original Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Original Image": {
+      "main": [
+        [
+          {
+            "node": "Resize to Standard",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Analyze Face (Optional)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Resize to Standard": {
+      "main": [
+        [
+          {
+            "node": "Create Image Variants",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Image Variants": {
+      "main": [
+        [
+          {
+            "node": "Apply Variant Size",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Apply Variant Size": {
+      "main": [
+        [
+          {
+            "node": "Check Watermark Needed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Watermark Needed": {
+      "main": [
+        [
+          {
+            "node": "Add Watermark",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Optimize Image Quality",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Watermark": {
+      "main": [
+        [
+          {
+            "node": "Optimize Image Quality",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Optimize Image Quality": {
+      "main": [
+        [
+          {
+            "node": "Upload to Supabase Storage",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Supabase Storage": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Results": {
+      "main": [
+        [
+          {
+            "node": "Save to Database",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Processing Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save to Database": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Processing Analytics": {
+      "main": [
+        [
+          {
+            "node": "Save Analytics Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": ["image-processing", "automation", "beautytry-on"],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-17T00:00:00.000Z",
+  "versionId": "1"
+}

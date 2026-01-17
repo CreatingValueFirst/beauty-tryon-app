@@ -1,0 +1,350 @@
+{
+  "name": "BeautyTryOn - Social Media Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "social-share",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook - Social Share",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "social-share-trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.platform }}",
+              "operation": "exists"
+            },
+            {
+              "value1": "={{ $json.image_url }}",
+              "operation": "exists"
+            },
+            {
+              "value1": "={{ $json.user_id }}",
+              "operation": "exists"
+            }
+          ]
+        }
+      },
+      "id": "validate-input",
+      "name": "Validate Input",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": false, \"error\": \"Missing required fields: platform, image_url, or user_id\" } }}"
+      },
+      "id": "error-response",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [650, 450]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.image_url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "download-image",
+      "name": "Download Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 150]
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "user_data",
+        "key": "={{ $json.user_id }}",
+        "options": {}
+      },
+      "id": "get-user-preferences",
+      "name": "Get User Preferences",
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [850, 150],
+      "credentials": {
+        "redis": {
+          "id": "1",
+          "name": "Redis account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.platform }}",
+              "operation": "equals",
+              "value2": "twitter"
+            }
+          ]
+        }
+      },
+      "id": "route-platform",
+      "name": "Route by Platform",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [1050, 150]
+    },
+    {
+      "parameters": {
+        "text": "Just tried this amazing {{ $json.style_type }} look with @BeautyTryOn! ✨💅 #BeautyTryOn #VirtualTryOn #BeautyTech",
+        "additionalFields": {
+          "attachments": "={{ $binary.data }}"
+        }
+      },
+      "id": "post-twitter",
+      "name": "Post to Twitter/X",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 1,
+      "position": [1250, 50],
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "2",
+          "name": "Twitter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "Love my new {{ $json.style_type }} look! 💖 Try it yourself with BeautyTryOn 🎨",
+        "additionalFields": {
+          "media": "={{ $binary.data }}"
+        }
+      },
+      "id": "post-instagram",
+      "name": "Post to Instagram",
+      "type": "n8n-nodes-base.instagram",
+      "typeVersion": 1,
+      "position": [1250, 150],
+      "credentials": {
+        "instagramBusinessApi": {
+          "id": "3",
+          "name": "Instagram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "Check out this gorgeous {{ $json.style_type }} transformation! ✨ Created with BeautyTryOn",
+        "additionalFields": {
+          "image": "={{ $binary.data }}"
+        }
+      },
+      "id": "post-pinterest",
+      "name": "Post to Pinterest",
+      "type": "n8n-nodes-base.pinterest",
+      "typeVersion": 1,
+      "position": [1250, 250],
+      "credentials": {
+        "pinterestOAuth2Api": {
+          "id": "4",
+          "name": "Pinterest account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "database",
+        "operation": "insert",
+        "projectId": "{{ $json.supabase_project_id }}",
+        "query": {
+          "sql": "INSERT INTO analytics_events (user_id, event_type, event_data, created_at) VALUES ('{{ $json.user_id }}', 'social_share', '{{ $json.toJsonString() }}', NOW())"
+        }
+      },
+      "id": "log-share-event",
+      "name": "Log Share Event",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1450, 150],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"platform\": $json.platform, \"post_id\": $json.id, \"share_url\": $json.url } }}"
+      },
+      "id": "success-response",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1650, 150]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Add custom watermark text to user preferences\nconst items = $input.all();\nconst result = items.map(item => {\n  const data = item.json;\n  data.watermark_text = `Created with BeautyTryOn | ${data.platform}`;\n  data.hashtags = '#BeautyTryOn #VirtualMakeup #BeautyTech';\n  return { json: data, binary: item.binary };\n});\n\nreturn result;"
+      },
+      "id": "prepare-social-content",
+      "name": "Prepare Social Content",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook - Social Share": {
+      "main": [
+        [
+          {
+            "node": "Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Input": {
+      "main": [
+        [
+          {
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
+      "main": [
+        [
+          {
+            "node": "Get User Preferences",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User Preferences": {
+      "main": [
+        [
+          {
+            "node": "Prepare Social Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Social Content": {
+      "main": [
+        [
+          {
+            "node": "Route by Platform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Platform": {
+      "main": [
+        [
+          {
+            "node": "Post to Twitter/X",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Post to Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Post to Pinterest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Twitter/X": {
+      "main": [
+        [
+          {
+            "node": "Log Share Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Instagram": {
+      "main": [
+        [
+          {
+            "node": "Log Share Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Post to Pinterest": {
+      "main": [
+        [
+          {
+            "node": "Log Share Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Share Event": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": ["social-media", "automation", "beautytry-on"],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-17T00:00:00.000Z",
+  "versionId": "1"
+}

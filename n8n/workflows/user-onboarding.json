@@ -1,0 +1,405 @@
+{
+  "name": "BeautyTryOn - User Onboarding & Welcome",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "user-signup",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook - New User Signup",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 400],
+      "webhookId": "user-signup-trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.user_id }}",
+              "operation": "exists"
+            },
+            {
+              "value1": "={{ $json.email }}",
+              "operation": "isNotEmpty"
+            },
+            {
+              "value1": "={{ $json.full_name }}",
+              "operation": "exists"
+            }
+          ]
+        }
+      },
+      "id": "validate-user-data",
+      "name": "Validate User Data",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 400]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": false, \"error\": \"Invalid user data\" } }}"
+      },
+      "id": "error-response",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [650, 550]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "database",
+        "operation": "insert",
+        "query": {
+          "sql": "INSERT INTO profiles (id, username, full_name, avatar_url, subscription_tier, created_at) VALUES ('{{ $json.user_id }}', '{{ $json.username }}', '{{ $json.full_name }}', '{{ $json.avatar_url }}', 'free', NOW()) ON CONFLICT (id) DO UPDATE SET updated_at = NOW()"
+        }
+      },
+      "id": "create-profile",
+      "name": "Create User Profile",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [650, 250],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "database",
+        "operation": "insert",
+        "query": {
+          "sql": "INSERT INTO galleries (user_id, name, description, is_public, created_at) VALUES ('{{ $json.user_id }}', 'My First Gallery', 'Welcome to your BeautyTryOn journey!', false, NOW())"
+        }
+      },
+      "id": "create-default-gallery",
+      "name": "Create Default Gallery",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [850, 250],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "welcome@beautytry-on.app",
+        "toEmail": "={{ $json.email }}",
+        "subject": "Welcome to BeautyTryOn! ✨💅",
+        "emailType": "html",
+        "text": "",
+        "html": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }\n    .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }\n    .button { display: inline-block; background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; margin: 20px 0; }\n    .features { margin: 20px 0; }\n    .feature { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #8B5CF6; border-radius: 5px; }\n    .footer { text-align: center; color: #999; font-size: 12px; margin-top: 30px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>✨ Welcome to BeautyTryOn! ✨</h1>\n      <p>Your Virtual Beauty Transformation Journey Starts Here</p>\n    </div>\n    \n    <div class=\"content\">\n      <h2>Hi {{ $json.full_name || 'Beautiful' }}! 👋</h2>\n      \n      <p>We're thrilled to have you join our community of beauty enthusiasts! BeautyTryOn uses cutting-edge AI to help you discover your perfect look before you commit.</p>\n      \n      <div class=\"features\">\n        <div class=\"feature\">\n          <h3>💇 Hair Styles</h3>\n          <p>Try on 500+ hairstyles and colors in real-time. From classic to creative, find your signature look!</p>\n        </div>\n        \n        <div class=\"feature\">\n          <h3>💅 Nail Designs</h3>\n          <p>Experiment with endless nail polish colors and designs. See them on your own hands instantly!</p>\n        </div>\n        \n        <div class=\"feature\">\n          <h3>📸 Save & Share</h3>\n          <p>Save your favorite looks to your gallery and share them with friends on social media.</p>\n        </div>\n        \n        <div class=\"feature\">\n          <h3>🎨 Customize Everything</h3>\n          <p>Fine-tune colors, adjust opacity, and create your perfect custom style.</p>\n        </div>\n      </div>\n      \n      <div style=\"text-align: center;\">\n        <a href=\"https://beautytry-on.app/dashboard\" class=\"button\">Start Trying On Styles →</a>\n      </div>\n      \n      <h3>🎁 Your Free Plan Includes:</h3>\n      <ul>\n        <li>✓ 10 try-ons per day</li>\n        <li>✓ Access to basic style library</li>\n        <li>✓ Save to personal gallery</li>\n        <li>✓ Export with watermark</li>\n      </ul>\n      \n      <p><strong>Want more?</strong> Upgrade to Premium for unlimited try-ons, HD exports, and access to our full library of 500+ premium styles!</p>\n      \n      <div style=\"background: #FEF3C7; padding: 15px; border-radius: 5px; margin: 20px 0;\">\n        <p><strong>💡 Pro Tip:</strong> For best results, ensure good lighting and face the camera directly when trying on styles. Have fun experimenting!</p>\n      </div>\n      \n      <p>If you have any questions, our support team is here to help. Just reply to this email!</p>\n      \n      <p>Happy styling!<br>\n      The BeautyTryOn Team 💖</p>\n    </div>\n    \n    <div class=\"footer\">\n      <p>BeautyTryOn - Virtual Beauty Try-On Platform</p>\n      <p>You received this email because you signed up for BeautyTryOn</p>\n      <p><a href=\"https://beautytry-on.app/unsubscribe\">Unsubscribe</a> | <a href=\"https://beautytry-on.app/privacy\">Privacy Policy</a></p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "send-welcome-email",
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1050, 250],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "days"
+      },
+      "id": "wait-2-days",
+      "name": "Wait 2 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1250, 250]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "database",
+        "operation": "executeQuery",
+        "query": "SELECT COUNT(*) as try_on_count FROM try_ons WHERE user_id = '{{ $json.user_id }}' AND created_at >= NOW() - INTERVAL '2 days'"
+      },
+      "id": "check-user-activity",
+      "name": "Check User Activity",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1450, 250],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.try_on_count }}",
+              "operation": "smaller",
+              "value2": 1
+            }
+          ]
+        }
+      },
+      "id": "check-inactive-user",
+      "name": "Check If Inactive",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1650, 250]
+    },
+    {
+      "parameters": {
+        "fromEmail": "tips@beautytry-on.app",
+        "toEmail": "={{ $json.email }}",
+        "subject": "Need help getting started? 🤔",
+        "emailType": "html",
+        "html": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 30px; text-align: center; border-radius: 10px; }\n    .content { padding: 30px 0; }\n    .button { display: inline-block; background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; margin: 10px 0; }\n    .tip { background: #f0f9ff; padding: 15px; margin: 15px 0; border-left: 4px solid #8B5CF6; border-radius: 5px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>Haven't tried BeautyTryOn yet? 🎨</h1>\n    </div>\n    \n    <div class=\"content\">\n      <p>Hi {{ $json.full_name }}!</p>\n      \n      <p>We noticed you haven't tried on any styles yet. No worries! We wanted to share some quick tips to help you get started:</p>\n      \n      <div class=\"tip\">\n        <h3>🎥 Step 1: Allow Camera Access</h3>\n        <p>Click \"Allow\" when your browser asks for camera permission. This lets you see real-time try-ons!</p>\n      </div>\n      \n      <div class=\"tip\">\n        <h3>💡 Step 2: Good Lighting is Key</h3>\n        <p>Position yourself in a well-lit area facing the camera. Natural light works best!</p>\n      </div>\n      \n      <div class=\"tip\">\n        <h3>✨ Step 3: Start Experimenting</h3>\n        <p>Browse our style library, click on any style, and watch it transform your look instantly!</p>\n      </div>\n      \n      <div style=\"text-align: center; margin: 30px 0;\">\n        <a href=\"https://beautytry-on.app/dashboard/hair\" class=\"button\">Try Hair Styles Now →</a>\n        <a href=\"https://beautytry-on.app/dashboard/nails\" class=\"button\">Try Nail Designs →</a>\n      </div>\n      \n      <p>Still have questions? Our support team is ready to help! Just reply to this email.</p>\n      \n      <p>Can't wait to see what you create! 💖</p>\n      \n      <p>Best,<br>The BeautyTryOn Team</p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "send-engagement-email",
+      "name": "Send Engagement Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1850, 150],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "database",
+        "operation": "insert",
+        "query": {
+          "sql": "INSERT INTO analytics_events (user_id, event_type, event_data, created_at) VALUES ('{{ $json.user_id }}', 'user_signup', '{\"email\": \"{{ $json.email }}\", \"source\": \"web\"}', NOW())"
+        }
+      },
+      "id": "log-signup-event",
+      "name": "Log Signup Event",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [850, 450],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"success\": true, \"message\": \"User onboarded successfully\", \"user_id\": $json.user_id } }}"
+      },
+      "id": "success-response",
+      "name": "Success Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 450]
+    },
+    {
+      "parameters": {
+        "amount": 7,
+        "unit": "days"
+      },
+      "id": "wait-7-days",
+      "name": "Wait 7 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1850, 350]
+    },
+    {
+      "parameters": {
+        "fromEmail": "offers@beautytry-on.app",
+        "toEmail": "={{ $json.email }}",
+        "subject": "🎁 Special Offer: 50% Off Premium!",
+        "emailType": "html",
+        "html": "<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }\n    .container { max-width: 600px; margin: 0 auto; padding: 20px; }\n    .header { background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 40px; text-align: center; border-radius: 10px; }\n    .badge { background: #FCD34D; color: #78350F; padding: 8px 16px; border-radius: 20px; font-weight: bold; display: inline-block; }\n    .content { padding: 30px 0; }\n    .button { display: inline-block; background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%); color: white; padding: 15px 40px; text-decoration: none; border-radius: 30px; font-size: 18px; font-weight: bold; }\n    .feature-list { background: #f9f9f9; padding: 20px; border-radius: 10px; margin: 20px 0; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <div class=\"badge\">LIMITED TIME OFFER</div>\n      <h1 style=\"margin-top: 20px;\">50% OFF Premium! 🎉</h1>\n      <p style=\"font-size: 24px; margin: 0;\">$4.99/month (Usually $9.99)</p>\n    </div>\n    \n    <div class=\"content\">\n      <p>Hi {{ $json.full_name }}!</p>\n      \n      <p>You've been exploring BeautyTryOn for a week now, and we love seeing your creativity! As a thank you, we're offering you an exclusive <strong>50% discount on Premium</strong>.</p>\n      \n      <div class=\"feature-list\">\n        <h3>✨ Premium Benefits:</h3>\n        <ul>\n          <li>🔥 <strong>Unlimited try-ons</strong> - No daily limits!</li>\n          <li>🎨 <strong>500+ premium styles</strong> - Exclusive colors & designs</li>\n          <li>📸 <strong>HD exports</strong> - No watermarks, perfect quality</li>\n          <li>🤖 <strong>AI custom generation</strong> - Create unique styles with AI</li>\n          <li>⚡ <strong>Priority support</strong> - Get help when you need it</li>\n          <li>🌟 <strong>Early access</strong> - New features before everyone else</li>\n        </ul>\n      </div>\n      \n      <div style=\"text-align: center; margin: 40px 0;\">\n        <a href=\"https://beautytry-on.app/upgrade?promo=WELCOME50\" class=\"button\">Claim 50% OFF Now →</a>\n        <p style=\"color: #999; font-size: 14px;\">Offer expires in 48 hours</p>\n      </div>\n      \n      <p>Join thousands of beauty lovers who've already upgraded to Premium and unlocked their full creative potential!</p>\n      \n      <p>Questions? We're here to help - just reply to this email.</p>\n      \n      <p>See you on the other side! 💖<br>\n      The BeautyTryOn Team</p>\n    </div>\n  </div>\n</body>\n</html>",
+        "options": {}
+      },
+      "id": "send-upgrade-offer",
+      "name": "Send Upgrade Offer",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [2050, 350],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "SMTP account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook - New User Signup": {
+      "main": [
+        [
+          {
+            "node": "Validate User Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate User Data": {
+      "main": [
+        [
+          {
+            "node": "Create User Profile",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create User Profile": {
+      "main": [
+        [
+          {
+            "node": "Create Default Gallery",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Signup Event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Default Gallery": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email": {
+      "main": [
+        [
+          {
+            "node": "Wait 2 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 2 Days": {
+      "main": [
+        [
+          {
+            "node": "Check User Activity",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check User Activity": {
+      "main": [
+        [
+          {
+            "node": "Check If Inactive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check If Inactive": {
+      "main": [
+        [
+          {
+            "node": "Send Engagement Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 7 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Engagement Email": {
+      "main": [
+        [
+          {
+            "node": "Wait 7 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Signup Event": {
+      "main": [
+        [
+          {
+            "node": "Success Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 7 Days": {
+      "main": [
+        [
+          {
+            "node": "Send Upgrade Offer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true
+  },
+  "staticData": null,
+  "tags": ["onboarding", "email", "automation", "beautytry-on"],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-17T00:00:00.000Z",
+  "versionId": "1"
+}

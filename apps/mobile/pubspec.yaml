@@ -1,0 +1,78 @@
+name: beautytry_on_mobile
+description: BeautyTryOn mobile app - Virtual hair and nail try-on with AR
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # UI & Design
+  cupertino_icons: ^1.0.6
+  google_fonts: ^6.1.0
+  flutter_svg: ^2.0.9
+
+  # State Management
+  provider: ^6.1.1
+  riverpod: ^2.4.9
+  flutter_riverpod: ^2.4.9
+
+  # Navigation
+  go_router: ^12.1.3
+
+  # Backend & Database
+  supabase_flutter: ^2.0.2
+  http: ^1.1.2
+
+  # AR & Camera
+  camera: ^0.10.5+5
+  image: ^4.1.3
+  image_picker: ^1.0.5
+
+  # Permissions
+  permission_handler: ^11.0.1
+
+  # Storage
+  shared_preferences: ^2.2.2
+  path_provider: ^2.1.1
+
+  # Social Sharing
+  share_plus: ^7.2.1
+  url_launcher: ^6.2.1
+
+  # Analytics
+  firebase_core: ^2.24.2
+  firebase_analytics: ^10.7.4
+
+  # Error Tracking
+  sentry_flutter: ^7.13.2
+
+  # Utilities
+  uuid: ^4.2.2
+  intl: ^0.18.1
+  cached_network_image: ^3.3.0
+  flutter_cache_manager: ^3.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.1
+  build_runner: ^2.4.7
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
+    - assets/models/
+    - assets/styles/
+
+  fonts:
+    - family: BeautyTryOnIcons
+      fonts:
+        - asset: assets/fonts/icons.ttf

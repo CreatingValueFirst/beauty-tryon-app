@@ -1,0 +1,332 @@
+{
+  "name": "BeautyTryOn - Analytics & Data Sync",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every 15 Minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "database",
+        "operation": "executeQuery",
+        "query": "SELECT \n  user_id,\n  event_type,\n  event_data,\n  created_at\nFROM analytics_events\nWHERE \n  created_at >= NOW() - INTERVAL '15 minutes'\n  AND synced_to_analytics = false\nORDER BY created_at DESC\nLIMIT 1000"
+      },
+      "id": "fetch-unsynced-events",
+      "name": "Fetch Unsynced Events",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.length }}",
+              "operation": "larger",
+              "value2": 0
+            }
+          ]
+        }
+      },
+      "id": "check-events-exist",
+      "name": "Check Events Exist",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Transform database events to PostHog format\nconst events = $input.all();\nconst posthogEvents = [];\n\nfor (const event of events) {\n  const data = event.json;\n  \n  posthogEvents.push({\n    event: data.event_type,\n    properties: {\n      ...JSON.parse(data.event_data || '{}'),\n      distinct_id: data.user_id,\n      timestamp: data.created_at,\n      $source: 'beautytry-on-app'\n    },\n    timestamp: data.created_at\n  });\n}\n\nreturn posthogEvents.map(e => ({ json: e }));"
+      },
+      "id": "transform-to-posthog",
+      "name": "Transform to PostHog Format",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://app.posthog.com/batch",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "api_key",
+              "value": "={{ $env.POSTHOG_API_KEY }}"
+            },
+            {
+              "name": "batch",
+              "value": "={{ $json }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": false,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "send-to-posthog",
+      "name": "Send to PostHog",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 200],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "6",
+          "name": "PostHog API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Aggregate events for internal analytics\nconst events = $input.all();\nconst aggregated = {\n  total_events: events.length,\n  event_types: {},\n  user_counts: {},\n  timestamp: new Date().toISOString()\n};\n\nfor (const event of events) {\n  const data = event.json;\n  \n  // Count by event type\n  aggregated.event_types[data.event_type] = \n    (aggregated.event_types[data.event_type] || 0) + 1;\n  \n  // Count unique users\n  aggregated.user_counts[data.user_id] = true;\n}\n\naggregated.unique_users = Object.keys(aggregated.user_counts).length;\ndelete aggregated.user_counts; // Remove raw user data\n\nreturn [{ json: aggregated }];"
+      },
+      "id": "aggregate-metrics",
+      "name": "Aggregate Metrics",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 400]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "database",
+        "operation": "insert",
+        "query": {
+          "sql": "INSERT INTO analytics_summary (period_start, period_end, total_events, event_breakdown, unique_users, created_at) VALUES (NOW() - INTERVAL '15 minutes', NOW(), {{ $json.total_events }}, '{{ $json.event_types }}', {{ $json.unique_users }}, NOW())"
+        }
+      },
+      "id": "save-summary",
+      "name": "Save Summary to DB",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1050, 400],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "database",
+        "operation": "update",
+        "query": {
+          "sql": "UPDATE analytics_events SET synced_to_analytics = true WHERE created_at >= NOW() - INTERVAL '15 minutes' AND synced_to_analytics = false"
+        }
+      },
+      "id": "mark-synced",
+      "name": "Mark Events as Synced",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [1250, 300],
+      "credentials": {
+        "postgres": {
+          "id": "5",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.total_events }}",
+              "operation": "larger",
+              "value2": 100
+            }
+          ]
+        }
+      },
+      "id": "check-high-traffic",
+      "name": "Check High Traffic",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1250, 500]
+    },
+    {
+      "parameters": {
+        "fromEmail": "analytics@beautytry-on.app",
+        "toEmail": "admin@beautytry-on.app",
+        "subject": "High Traffic Alert - BeautyTryOn",
+        "text": "High traffic detected in the last 15 minutes:\n\nTotal Events: {{ $json.total_events }}\nUnique Users: {{ $json.unique_users }}\n\nEvent Breakdown:\n{{ $json.event_types }}\n\nTimestamp: {{ $json.timestamp }}",
+        "options": {}
+      },
+      "id": "send-alert-email",
+      "name": "Send Alert Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [1450, 600],
+      "credentials": {
+        "smtp": {
+          "id": "7",
+          "name": "SMTP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Export daily summary for backup\nconst now = new Date();\nconst summary = {\n  date: now.toISOString().split('T')[0],\n  sync_time: now.toISOString(),\n  status: 'completed',\n  events_processed: $('Fetch Unsynced Events').all().length,\n  posthog_synced: $('Send to PostHog').all().length > 0,\n  summary_saved: $('Save Summary to DB').all().length > 0\n};\n\nreturn summary;"
+      },
+      "id": "create-sync-log",
+      "name": "Create Sync Log",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1450, 300]
+    }
+  ],
+  "connections": {
+    "Every 15 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Fetch Unsynced Events",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Unsynced Events": {
+      "main": [
+        [
+          {
+            "node": "Check Events Exist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Events Exist": {
+      "main": [
+        [
+          {
+            "node": "Transform to PostHog Format",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Aggregate Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform to PostHog Format": {
+      "main": [
+        [
+          {
+            "node": "Send to PostHog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Metrics": {
+      "main": [
+        [
+          {
+            "node": "Save Summary to DB",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check High Traffic",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to PostHog": {
+      "main": [
+        [
+          {
+            "node": "Mark Events as Synced",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save Summary to DB": {
+      "main": [
+        [
+          {
+            "node": "Mark Events as Synced",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mark Events as Synced": {
+      "main": [
+        [
+          {
+            "node": "Create Sync Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check High Traffic": {
+      "main": [
+        [
+          {
+            "node": "Send Alert Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "error-handler-workflow"
+  },
+  "staticData": null,
+  "tags": ["analytics", "data-sync", "beautytry-on", "monitoring"],
+  "triggerCount": 1,
+  "updatedAt": "2026-01-17T00:00:00.000Z",
+  "versionId": "1"
+}
