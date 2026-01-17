@@ -85,6 +85,51 @@ The migration creates:
 
 ---
 
+## Loading Sample Data (Recommended)
+
+After running the migration, load sample hair and nail styles:
+
+### Option 1: Manual Load (Easiest)
+
+1. **Open Supabase SQL Editor:**
+   - Go to: https://supabase.com/dashboard/project/turepfhrembrjjkgsveq/sql/new
+
+2. **Copy Seed SQL:**
+   - Open the file: `supabase/seed.sql`
+   - Copy all the SQL content
+
+3. **Execute Seed Data:**
+   - Paste the SQL into the Supabase SQL Editor
+   - Click "Run"
+   - You should see: "Successfully seeded database with 35 hair styles and 45 nail styles"
+
+### Option 2: Automated Script
+
+```bash
+DATABASE_URL="postgresql://postgres.turepfhrembrjjkgsveq:[YOUR-PASSWORD]@aws-1-eu-west-1.pooler.supabase.com:6543/postgres" node load-seed-data.mjs
+```
+
+### What Sample Data Includes:
+
+**35 Hair Styles:**
+- 5 Short styles (Pixie Cut, Bob Cut, Textured Crop, etc.)
+- 5 Medium styles (Long Bob, Beach Waves, Layered Medium, etc.)
+- 5 Long styles (Long Layers, Mermaid Waves, Straight & Sleek, etc.)
+- 5 Curly styles (Tight Curls, Loose Curls, Afro, etc.)
+- 10 Trending colors (Platinum Blonde, Rose Gold, Balayage, etc.)
+- 5 Special styles (Braided Crown, Half-Up Half-Down, etc.)
+
+**45 Nail Designs:**
+- 10 Classic solid colors (Classic Red, Nude Pink, Midnight Black, etc.)
+- 5 French manicure variations
+- 5 Glitter & shimmer designs
+- 10 Nail art patterns (Polka Dots, Floral, Geometric, Marble, etc.)
+- 5 Seasonal designs (Valentine, Halloween, Christmas, etc.)
+- 4 Matte finishes
+- 6 Metallic & chrome finishes
+
+---
+
 ## Verification
 
 After running the migration, verify it worked:
