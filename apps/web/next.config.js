@@ -3,11 +3,19 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: ['localhost'],
-    // Add Supabase storage domain when configured
+    // Add external image sources
     remotePatterns: [
       {
         protocol: 'https',
         hostname: '**.supabase.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'via.placeholder.com',
       },
     ],
   },

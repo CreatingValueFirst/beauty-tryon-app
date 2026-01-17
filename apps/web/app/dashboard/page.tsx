@@ -1,12 +1,73 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Camera, Sparkles, TrendingUp, Star } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
+
+interface HairStyle {
+  id: string;
+  name: string;
+  thumbnail_url: string | null;
+  color_base: string;
+}
+
+interface NailStyle {
+  id: string;
+  name: string;
+  color_code: string;
+  thumbnail_url: string | null;
+}
 
 export default function DashboardPage() {
+  const [popularHairStyles, setPopularHairStyles] = useState<HairStyle[]>([]);
+  const [popularNailColors, setPopularNailColors] = useState<NailStyle[]>([]);
+  const [totalStyles, setTotalStyles] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchPopularStyles() {
+      const supabase = createClient();
+
+      try {
+        // Fetch 4 popular hair styles
+        const { data: hairData } = await supabase
+          .from('hair_styles')
+          .select('id, name, thumbnail_url, color_base')
+          .limit(4);
+
+        // Fetch 8 popular nail colors
+        const { data: nailData } = await supabase
+          .from('nail_styles')
+          .select('id, name, color_code, thumbnail_url')
+          .eq('category', 'solid')
+          .limit(8);
+
+        // Get total count
+        const { count: hairCount } = await supabase
+          .from('hair_styles')
+          .select('*', { count: 'exact', head: true });
+
+        const { count: nailCount } = await supabase
+          .from('nail_styles')
+          .select('*', { count: 'exact', head: true });
+
+        if (hairData) setPopularHairStyles(hairData);
+        if (nailData) setPopularNailColors(nailData);
+        setTotalStyles((hairCount || 0) + (nailCount || 0));
+      } catch (error) {
+        console.error('Error fetching popular styles:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPopularStyles();
+  }, []);
+
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
@@ -67,12 +128,39 @@ export default function DashboardPage() {
             <div className="mt-6">
               <p className="text-sm font-medium text-gray-700 mb-3">Popular Now:</p>
               <div className="grid grid-cols-4 gap-2">
-                {[1, 2, 3, 4].map((i) => (
-                  <div
-                    key={i}
-                    className="aspect-square rounded-lg bg-gradient-to-br from-purple-100 to-pink-100 animate-pulse"
-                  />
-                ))}
+                {loading ? (
+                  [1, 2, 3, 4].map((i) => (
+                    <div
+                      key={i}
+                      className="aspect-square rounded-lg bg-gradient-to-br from-purple-100 to-pink-100 animate-pulse"
+                    />
+                  ))
+                ) : (
+                  popularHairStyles.map((style) => (
+                    <div
+                      key={style.id}
+                      className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-purple-50 to-pink-50 hover:scale-105 transition-transform cursor-pointer shadow-sm hover:shadow-md"
+                      title={style.name}
+                    >
+                      {style.thumbnail_url ? (
+                        <Image
+                          src={style.thumbnail_url}
+                          alt={style.name}
+                          width={100}
+                          height={100}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div
+                          className="w-full h-full"
+                          style={{
+                            background: `linear-gradient(135deg, ${style.color_base}dd 0%, ${style.color_base}88 100%)`
+                          }}
+                        />
+                      )}
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </CardContent>
@@ -117,13 +205,23 @@ export default function DashboardPage() {
             <div className="mt-6">
               <p className="text-sm font-medium text-gray-700 mb-3">Trending Colors:</p>
               <div className="flex gap-2">
-                {['#DC143C', '#FFB6C1', '#E8D4C1', '#000000', '#FFD700', '#E0BFB8', '#C0C0C0', '#FF6B6B'].map((color) => (
-                  <div
-                    key={color}
-                    className="w-8 h-8 rounded-full shadow-md hover:scale-110 transition-transform cursor-pointer"
-                    style={{ backgroundColor: color }}
-                  />
-                ))}
+                {loading ? (
+                  [1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+                    <div
+                      key={i}
+                      className="w-8 h-8 rounded-full bg-gray-200 animate-pulse"
+                    />
+                  ))
+                ) : (
+                  popularNailColors.map((style) => (
+                    <div
+                      key={style.id}
+                      className="w-8 h-8 rounded-full shadow-md hover:scale-110 transition-transform cursor-pointer border border-gray-200"
+                      style={{ backgroundColor: style.color_code }}
+                      title={style.name}
+                    />
+                  ))
+                )}
               </div>
             </div>
           </CardContent>
@@ -135,7 +233,9 @@ export default function DashboardPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-center">
-              <p className="text-3xl font-bold text-brand-purple">800+</p>
+              <p className="text-3xl font-bold text-brand-purple">
+                {loading ? '...' : `${totalStyles}+`}
+              </p>
               <p className="text-sm text-gray-600 mt-1">Total Styles</p>
             </div>
           </CardContent>

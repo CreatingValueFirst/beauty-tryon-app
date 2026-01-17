@@ -1,112 +1,112 @@
--- Sample Hair Styles Data
+-- Sample Hair Styles Data with Professional Thumbnails
 -- BeautyTryOn Sample Styles
 
 -- Hair Styles
-INSERT INTO hair_styles (name, description, category, color_base, tags, is_premium) VALUES
+INSERT INTO hair_styles (name, description, category, color_base, thumbnail_url, tags, is_premium) VALUES
 -- Short Hair Styles
-('Pixie Cut', 'Chic and edgy short cut perfect for a bold look', 'short', '#2C1810', ARRAY['short', 'edgy', 'modern', 'professional'], FALSE),
-('Bob Cut', 'Classic chin-length bob with sleek finish', 'short', '#4A3728', ARRAY['short', 'classic', 'professional', 'versatile'], FALSE),
-('Textured Crop', 'Modern textured short style with movement', 'short', '#6B4423', ARRAY['short', 'modern', 'casual', 'trendy'], FALSE),
-('Asymmetric Bob', 'Trendy angled bob with one side longer', 'short', '#8B5A3C', ARRAY['short', 'trendy', 'edgy', 'modern'], TRUE),
-('Shaggy Pixie', 'Layered pixie with tousled texture', 'short', '#A67C52', ARRAY['short', 'casual', 'textured', 'fun'], FALSE),
+('Pixie Cut', 'Chic and edgy short cut perfect for a bold look', 'short', '#2C1810', 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=400&h=400&fit=crop', ARRAY['short', 'edgy', 'modern', 'professional'], FALSE),
+('Bob Cut', 'Classic chin-length bob with sleek finish', 'short', '#4A3728', 'https://images.unsplash.com/photo-1595475884562-073c30d45670?w=400&h=400&fit=crop', ARRAY['short', 'classic', 'professional', 'versatile'], FALSE),
+('Textured Crop', 'Modern textured short style with movement', 'short', '#6B4423', 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=400&h=400&fit=crop', ARRAY['short', 'modern', 'casual', 'trendy'], FALSE),
+('Asymmetric Bob', 'Trendy angled bob with one side longer', 'short', '#8B5A3C', 'https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=400&h=400&fit=crop', ARRAY['short', 'trendy', 'edgy', 'modern'], TRUE),
+('Shaggy Pixie', 'Layered pixie with tousled texture', 'short', '#A67C52', 'https://images.unsplash.com/photo-1524502397800-2eeaad7c3fe5?w=400&h=400&fit=crop', ARRAY['short', 'casual', 'textured', 'fun'], FALSE),
 
 -- Medium Hair Styles
-('Long Bob (Lob)', 'Shoulder-length bob, versatile and stylish', 'medium', '#3D2817', ARRAY['medium', 'versatile', 'professional', 'trendy'], FALSE),
-('Layered Medium', 'Layered cut with volume and movement', 'medium', '#5C3D2E', ARRAY['medium', 'layered', 'volume', 'casual'], FALSE),
-('Beach Waves', 'Effortless wavy texture for a relaxed vibe', 'medium', '#8B6F47', ARRAY['medium', 'wavy', 'casual', 'beachy'], FALSE),
-('Blunt Cut', 'Sleek straight cut at shoulder length', 'medium', '#2B1810', ARRAY['medium', 'straight', 'sleek', 'modern'], TRUE),
-('Shaggy Lob', 'Textured shoulder-length with layers', 'medium', '#4E3620', ARRAY['medium', 'textured', 'casual', 'trendy'], FALSE),
+('Long Bob (Lob)', 'Shoulder-length bob, versatile and stylish', 'medium', '#3D2817', 'https://images.unsplash.com/photo-1526045431048-f857369baa09?w=400&h=400&fit=crop', ARRAY['medium', 'versatile', 'professional', 'trendy'], FALSE),
+('Layered Medium', 'Layered cut with volume and movement', 'medium', '#5C3D2E', 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&h=400&fit=crop', ARRAY['medium', 'layered', 'volume', 'casual'], FALSE),
+('Beach Waves', 'Effortless wavy texture for a relaxed vibe', 'medium', '#8B6F47', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop', ARRAY['medium', 'wavy', 'casual', 'beachy'], FALSE),
+('Blunt Cut', 'Sleek straight cut at shoulder length', 'medium', '#2B1810', 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=400&fit=crop', ARRAY['medium', 'straight', 'sleek', 'modern'], TRUE),
+('Shaggy Lob', 'Textured shoulder-length with layers', 'medium', '#4E3620', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop', ARRAY['medium', 'textured', 'casual', 'trendy'], FALSE),
 
 -- Long Hair Styles
-('Long Layers', 'Flowing long hair with layered dimension', 'long', '#3A2618', ARRAY['long', 'layered', 'flowing', 'versatile'], FALSE),
-('Mermaid Waves', 'Romantic loose waves cascading down', 'long', '#D4AF37', ARRAY['long', 'wavy', 'romantic', 'glamorous'], TRUE),
-('Straight & Sleek', 'Ultra-smooth long straight hair', 'long', '#1C1410', ARRAY['long', 'straight', 'sleek', 'elegant'], FALSE),
-('Bohemian Curls', 'Natural-looking voluminous curls', 'long', '#6F4E37', ARRAY['long', 'curly', 'bohemian', 'volume'], FALSE),
-('Waterfall Braid', 'Long hair with elegant waterfall braid detail', 'long', '#8B7355', ARRAY['long', 'braided', 'elegant', 'romantic'], TRUE),
+('Long Layers', 'Flowing long hair with layered dimension', 'long', '#3A2618', 'https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?w=400&h=400&fit=crop', ARRAY['long', 'layered', 'flowing', 'versatile'], FALSE),
+('Mermaid Waves', 'Romantic loose waves cascading down', 'long', '#D4AF37', 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=400&fit=crop', ARRAY['long', 'wavy', 'romantic', 'glamorous'], TRUE),
+('Straight & Sleek', 'Ultra-smooth long straight hair', 'long', '#1C1410', 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop', ARRAY['long', 'straight', 'sleek', 'elegant'], FALSE),
+('Bohemian Curls', 'Natural-looking voluminous curls', 'long', '#6F4E37', 'https://images.unsplash.com/photo-1479936343636-73cdc5aae0c3?w=400&h=400&fit=crop', ARRAY['long', 'curly', 'bohemian', 'volume'], FALSE),
+('Waterfall Braid', 'Long hair with elegant waterfall braid detail', 'long', '#8B7355', 'https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=400&h=400&fit=crop', ARRAY['long', 'braided', 'elegant', 'romantic'], TRUE),
 
 -- Curly Hair Styles
-('Tight Curls', 'Defined spiral curls with bounce', 'curly', '#2C1810', ARRAY['curly', 'defined', 'volume', 'bold'], FALSE),
-('Loose Curls', 'Soft flowing curls with natural movement', 'curly', '#5D4037', ARRAY['curly', 'soft', 'romantic', 'casual'], FALSE),
-('Afro', 'Full voluminous natural afro', 'curly', '#3E2723', ARRAY['curly', 'natural', 'volume', 'bold'], FALSE),
-('Curly Shag', 'Layered curly style with texture', 'curly', '#4E342E', ARRAY['curly', 'layered', 'textured', 'modern'], TRUE),
-('Defined Coils', 'Tightly coiled curls with definition', 'curly', '#6D4C41', ARRAY['curly', 'defined', 'natural', 'textured'], FALSE),
+('Tight Curls', 'Defined spiral curls with bounce', 'curly', '#2C1810', 'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?w=400&h=400&fit=crop', ARRAY['curly', 'defined', 'volume', 'bold'], FALSE),
+('Loose Curls', 'Soft flowing curls with natural movement', 'curly', '#5D4037', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop', ARRAY['curly', 'soft', 'romantic', 'casual'], FALSE),
+('Afro', 'Full voluminous natural afro', 'curly', '#3E2723', 'https://images.unsplash.com/photo-1520466809213-7b9a56adcd45?w=400&h=400&fit=crop', ARRAY['curly', 'natural', 'volume', 'bold'], FALSE),
+('Curly Shag', 'Layered curly style with texture', 'curly', '#4E342E', 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop', ARRAY['curly', 'layered', 'textured', 'modern'], TRUE),
+('Defined Coils', 'Tightly coiled curls with definition', 'curly', '#6D4C41', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop', ARRAY['curly', 'defined', 'natural', 'textured'], FALSE),
 
 -- Trending Colors
-('Platinum Blonde', 'Ultra-light icy blonde shade', 'long', '#F5F5DC', ARRAY['long', 'blonde', 'platinum', 'bold'], TRUE),
-('Rose Gold', 'Trendy pink-tinted blonde', 'medium', '#ECC5C0', ARRAY['medium', 'pink', 'trendy', 'pastel'], TRUE),
-('Balayage Brunette', 'Natural sun-kissed brunette highlights', 'long', '#6B4423', ARRAY['long', 'brunette', 'balayage', 'natural'], TRUE),
-('Burgundy Red', 'Deep rich burgundy shade', 'medium', '#800020', ARRAY['medium', 'red', 'bold', 'rich'], TRUE),
-('Ash Brown', 'Cool-toned ash brown color', 'medium', '#A0826D', ARRAY['medium', 'brown', 'cool', 'natural'], FALSE),
-('Honey Blonde', 'Warm golden blonde tone', 'long', '#F0E68C', ARRAY['long', 'blonde', 'warm', 'golden'], FALSE),
-('Chocolate Brown', 'Rich chocolate brown shade', 'long', '#3D2817', ARRAY['long', 'brown', 'rich', 'natural'], FALSE),
-('Caramel Highlights', 'Warm caramel-toned highlights', 'medium', '#C68642', ARRAY['medium', 'brown', 'highlights', 'warm'], TRUE),
-('Silver Gray', 'Modern silver-gray tone', 'short', '#C0C0C0', ARRAY['short', 'gray', 'modern', 'trendy'], TRUE),
-('Auburn', 'Reddish-brown auburn shade', 'medium', '#A52A2A', ARRAY['medium', 'red', 'brown', 'warm'], FALSE),
+('Platinum Blonde', 'Ultra-light icy blonde shade', 'long', '#F5F5DC', 'https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?w=400&h=400&fit=crop', ARRAY['long', 'blonde', 'platinum', 'bold'], TRUE),
+('Rose Gold', 'Trendy pink-tinted blonde', 'medium', '#ECC5C0', 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop', ARRAY['medium', 'pink', 'trendy', 'pastel'], TRUE),
+('Balayage Brunette', 'Natural sun-kissed brunette highlights', 'long', '#6B4423', 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=400&fit=crop', ARRAY['long', 'brunette', 'balayage', 'natural'], TRUE),
+('Burgundy Red', 'Deep rich burgundy shade', 'medium', '#800020', 'https://images.unsplash.com/photo-1492106087820-71f1a00d2b11?w=400&h=400&fit=crop', ARRAY['medium', 'red', 'bold', 'rich'], TRUE),
+('Ash Brown', 'Cool-toned ash brown color', 'medium', '#A0826D', 'https://images.unsplash.com/photo-1518577915332-c2a19f149a75?w=400&h=400&fit=crop', ARRAY['medium', 'brown', 'cool', 'natural'], FALSE),
+('Honey Blonde', 'Warm golden blonde tone', 'long', '#F0E68C', 'https://images.unsplash.com/photo-1521119989659-a83eee488004?w=400&h=400&fit=crop', ARRAY['long', 'blonde', 'warm', 'golden'], FALSE),
+('Chocolate Brown', 'Rich chocolate brown shade', 'long', '#3D2817', 'https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?w=400&h=400&fit=crop', ARRAY['long', 'brown', 'rich', 'natural'], FALSE),
+('Caramel Highlights', 'Warm caramel-toned highlights', 'medium', '#C68642', 'https://images.unsplash.com/photo-1513956589380-bad6acb9b9d4?w=400&h=400&fit=crop', ARRAY['medium', 'brown', 'highlights', 'warm'], TRUE),
+('Silver Gray', 'Modern silver-gray tone', 'short', '#C0C0C0', 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop', ARRAY['short', 'gray', 'modern', 'trendy'], TRUE),
+('Auburn', 'Reddish-brown auburn shade', 'medium', '#A52A2A', 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=400&h=400&fit=crop', ARRAY['medium', 'red', 'brown', 'warm'], FALSE),
 
 -- Special Styles
-('Braided Crown', 'Elegant crown braid around the head', 'medium', '#5C4033', ARRAY['medium', 'braided', 'elegant', 'romantic'], TRUE),
-('Half-Up Half-Down', 'Half tied up with flowing bottom half', 'long', '#4A3728', ARRAY['long', 'versatile', 'casual', 'romantic'], FALSE),
-('Top Knot', 'Sleek high bun style', 'short', '#2C1810', ARRAY['short', 'updo', 'sleek', 'modern'], FALSE),
-('Messy Bun', 'Casual messy bun with texture', 'medium', '#6B4423', ARRAY['medium', 'updo', 'casual', 'textured'], FALSE),
-('Slicked Back', 'Sleek pulled-back style', 'short', '#1C1410', ARRAY['short', 'sleek', 'modern', 'edgy'], TRUE);
+('Braided Crown', 'Elegant crown braid around the head', 'medium', '#5C4033', 'https://images.unsplash.com/photo-1542206395-9feb3edaa68d?w=400&h=400&fit=crop', ARRAY['medium', 'braided', 'elegant', 'romantic'], TRUE),
+('Half-Up Half-Down', 'Half tied up with flowing bottom half', 'long', '#4A3728', 'https://images.unsplash.com/photo-1516575150278-77136aed6920?w=400&h=400&fit=crop', ARRAY['long', 'versatile', 'casual', 'romantic'], FALSE),
+('Top Knot', 'Sleek high bun style', 'short', '#2C1810', 'https://images.unsplash.com/photo-1503185912284-5271ff81b9a8?w=400&h=400&fit=crop', ARRAY['short', 'updo', 'sleek', 'modern'], FALSE),
+('Messy Bun', 'Casual messy bun with texture', 'medium', '#6B4423', 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=400&h=400&fit=crop', ARRAY['medium', 'updo', 'casual', 'textured'], FALSE),
+('Slicked Back', 'Sleek pulled-back style', 'short', '#1C1410', 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&h=400&fit=crop', ARRAY['short', 'sleek', 'modern', 'edgy'], TRUE);
 
--- Nail Styles
-INSERT INTO nail_styles (name, description, category, color_code, tags, is_premium) VALUES
+-- Nail Styles with Color Swatches
+INSERT INTO nail_styles (name, description, category, color_code, thumbnail_url, tags, is_premium) VALUES
 -- Classic Solid Colors
-('Classic Red', 'Timeless bold red polish', 'solid', '#DC143C', ARRAY['solid', 'classic', 'bold', 'red'], FALSE),
-('Nude Pink', 'Elegant natural nude shade', 'solid', '#FFB6C1', ARRAY['solid', 'nude', 'natural', 'professional'], FALSE),
-('Pearl White', 'Clean crisp white polish', 'solid', '#FFFFFF', ARRAY['solid', 'white', 'clean', 'elegant'], FALSE),
-('Midnight Black', 'Deep sophisticated black', 'solid', '#000000', ARRAY['solid', 'black', 'bold', 'edgy'], FALSE),
-('Coral Crush', 'Vibrant coral shade perfect for summer', 'solid', '#FF6B6B', ARRAY['solid', 'coral', 'bright', 'summer'], FALSE),
-('Lavender Dreams', 'Soft pastel lavender', 'solid', '#E6E6FA', ARRAY['solid', 'purple', 'pastel', 'soft'], FALSE),
-('Mint Fresh', 'Cool mint green', 'solid', '#98FF98', ARRAY['solid', 'green', 'pastel', 'fresh'], TRUE),
-('Rose Gold', 'Metallic rose gold shimmer', 'solid', '#B76E79', ARRAY['solid', 'pink', 'metallic', 'trendy'], TRUE),
-('Navy Blue', 'Deep navy blue shade', 'solid', '#000080', ARRAY['solid', 'blue', 'deep', 'elegant'], FALSE),
-('Burgundy Wine', 'Rich wine burgundy', 'solid', '#800020', ARRAY['solid', 'red', 'rich', 'elegant'], FALSE),
+('Classic Red', 'Timeless bold red polish', 'solid', '#DC143C', 'https://via.placeholder.com/200/DC143C/FFFFFF?text=Red', ARRAY['solid', 'classic', 'bold', 'red'], FALSE),
+('Nude Pink', 'Elegant natural nude shade', 'solid', '#FFB6C1', 'https://via.placeholder.com/200/FFB6C1/666666?text=Nude', ARRAY['solid', 'nude', 'natural', 'professional'], FALSE),
+('Pearl White', 'Clean crisp white polish', 'solid', '#FFFFFF', 'https://via.placeholder.com/200/FFFFFF/666666?text=White', ARRAY['solid', 'white', 'clean', 'elegant'], FALSE),
+('Midnight Black', 'Deep sophisticated black', 'solid', '#000000', 'https://via.placeholder.com/200/000000/FFFFFF?text=Black', ARRAY['solid', 'black', 'bold', 'edgy'], FALSE),
+('Coral Crush', 'Vibrant coral shade perfect for summer', 'solid', '#FF6B6B', 'https://via.placeholder.com/200/FF6B6B/FFFFFF?text=Coral', ARRAY['solid', 'coral', 'bright', 'summer'], FALSE),
+('Lavender Dreams', 'Soft pastel lavender', 'solid', '#E6E6FA', 'https://via.placeholder.com/200/E6E6FA/666666?text=Lavender', ARRAY['solid', 'purple', 'pastel', 'soft'], FALSE),
+('Mint Fresh', 'Cool mint green', 'solid', '#98FF98', 'https://via.placeholder.com/200/98FF98/666666?text=Mint', ARRAY['solid', 'green', 'pastel', 'fresh'], TRUE),
+('Rose Gold', 'Metallic rose gold shimmer', 'solid', '#B76E79', 'https://via.placeholder.com/200/B76E79/FFFFFF?text=Rose+Gold', ARRAY['solid', 'pink', 'metallic', 'trendy'], TRUE),
+('Navy Blue', 'Deep navy blue shade', 'solid', '#000080', 'https://via.placeholder.com/200/000080/FFFFFF?text=Navy', ARRAY['solid', 'blue', 'deep', 'elegant'], FALSE),
+('Burgundy Wine', 'Rich wine burgundy', 'solid', '#800020', 'https://via.placeholder.com/200/800020/FFFFFF?text=Burgundy', ARRAY['solid', 'red', 'rich', 'elegant'], FALSE),
 
 -- French Manicure Styles
-('Classic French', 'Traditional white tip french manicure', 'french', '#FFFFFF', ARRAY['french', 'classic', 'elegant', 'professional'], FALSE),
-('Pink French', 'Soft pink tip variation', 'french', '#FFB6C1', ARRAY['french', 'pink', 'soft', 'elegant'], FALSE),
-('Black French', 'Modern black tip french', 'french', '#000000', ARRAY['french', 'black', 'modern', 'edgy'], TRUE),
-('Gold French', 'Glamorous gold tip french', 'french', '#FFD700', ARRAY['french', 'gold', 'glamorous', 'metallic'], TRUE),
-('Rainbow French', 'Multi-colored tip french', 'french', '#FF69B4', ARRAY['french', 'rainbow', 'colorful', 'fun'], TRUE),
+('Classic French', 'Traditional white tip french manicure', 'french', '#FFFFFF', 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop', ARRAY['french', 'classic', 'elegant', 'professional'], FALSE),
+('Pink French', 'Soft pink tip variation', 'french', '#FFB6C1', 'https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=400&h=400&fit=crop', ARRAY['french', 'pink', 'soft', 'elegant'], FALSE),
+('Black French', 'Modern black tip french', 'french', '#000000', 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400&h=400&fit=crop', ARRAY['french', 'black', 'modern', 'edgy'], TRUE),
+('Gold French', 'Glamorous gold tip french', 'french', '#FFD700', 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=400&h=400&fit=crop', ARRAY['french', 'gold', 'glamorous', 'metallic'], TRUE),
+('Rainbow French', 'Multi-colored tip french', 'french', '#FF69B4', 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=400&h=400&fit=crop', ARRAY['french', 'rainbow', 'colorful', 'fun'], TRUE),
 
 -- Glitter & Shimmer
-('Silver Glitter', 'Sparkling silver glitter finish', 'glitter', '#C0C0C0', ARRAY['glitter', 'silver', 'sparkle', 'party'], FALSE),
-('Gold Sparkle', 'Luxurious gold glitter', 'glitter', '#FFD700', ARRAY['glitter', 'gold', 'sparkle', 'glamorous'], TRUE),
-('Rose Glitter', 'Pink rose glitter blend', 'glitter', '#FF69B4', ARRAY['glitter', 'pink', 'sparkle', 'romantic'], FALSE),
-('Holographic', 'Rainbow holographic finish', 'glitter', '#E0BBE4', ARRAY['glitter', 'holographic', 'rainbow', 'trendy'], TRUE),
-('Champagne Shimmer', 'Subtle champagne shimmer', 'glitter', '#F7E7CE', ARRAY['glitter', 'champagne', 'subtle', 'elegant'], FALSE),
+('Silver Glitter', 'Sparkling silver glitter finish', 'glitter', '#C0C0C0', 'https://images.unsplash.com/photo-1599948128020-9a44d19d5f5a?w=400&h=400&fit=crop', ARRAY['glitter', 'silver', 'sparkle', 'party'], FALSE),
+('Gold Sparkle', 'Luxurious gold glitter', 'glitter', '#FFD700', 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=400&h=400&fit=crop', ARRAY['glitter', 'gold', 'sparkle', 'glamorous'], TRUE),
+('Rose Glitter', 'Pink rose glitter blend', 'glitter', '#FF69B4', 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=400&h=400&fit=crop', ARRAY['glitter', 'pink', 'sparkle', 'romantic'], FALSE),
+('Holographic', 'Rainbow holographic finish', 'glitter', '#E0BBE4', 'https://images.unsplash.com/photo-1604654894609-2d2ffa2e0759?w=400&h=400&fit=crop', ARRAY['glitter', 'holographic', 'rainbow', 'trendy'], TRUE),
+('Champagne Shimmer', 'Subtle champagne shimmer', 'glitter', '#F7E7CE', 'https://images.unsplash.com/photo-1610992020042-a4e3f5c8c4e1?w=400&h=400&fit=crop', ARRAY['glitter', 'champagne', 'subtle', 'elegant'], FALSE),
 
 -- Nail Art Designs
-('Polka Dots', 'Playful polka dot pattern', 'art', '#FF1493', ARRAY['art', 'dots', 'playful', 'fun'], FALSE),
-('Floral Design', 'Delicate hand-painted flowers', 'art', '#FF69B4', ARRAY['art', 'floral', 'romantic', 'elegant'], TRUE),
-('Geometric Pattern', 'Modern geometric shapes', 'art', '#4169E1', ARRAY['art', 'geometric', 'modern', 'bold'], TRUE),
-('Marble Effect', 'Elegant marble stone pattern', 'art', '#A9A9A9', ARRAY['art', 'marble', 'elegant', 'sophisticated'], TRUE),
-('Animal Print', 'Trendy leopard or zebra print', 'art', '#D2691E', ARRAY['art', 'animal', 'bold', 'trendy'], FALSE),
-('Abstract Art', 'Artistic abstract design', 'art', '#9370DB', ARRAY['art', 'abstract', 'artistic', 'unique'], TRUE),
-('Ombre Fade', 'Gradient color fade effect', 'art', '#FF69B4', ARRAY['art', 'ombre', 'gradient', 'trendy'], FALSE),
-('Striped', 'Classic vertical or horizontal stripes', 'art', '#000000', ARRAY['art', 'stripes', 'classic', 'modern'], FALSE),
-('Hearts', 'Romantic heart designs', 'art', '#FF1493', ARRAY['art', 'hearts', 'romantic', 'cute'], FALSE),
-('Stars & Moon', 'Celestial star and moon pattern', 'art', '#4B0082', ARRAY['art', 'celestial', 'mystical', 'trendy'], TRUE),
+('Polka Dots', 'Playful polka dot pattern', 'art', '#FF1493', 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=400&h=400&fit=crop', ARRAY['art', 'dots', 'playful', 'fun'], FALSE),
+('Floral Design', 'Delicate hand-painted flowers', 'art', '#FF69B4', 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=400&h=400&fit=crop', ARRAY['art', 'floral', 'romantic', 'elegant'], TRUE),
+('Geometric Pattern', 'Modern geometric shapes', 'art', '#4169E1', 'https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=400&h=400&fit=crop', ARRAY['art', 'geometric', 'modern', 'bold'], TRUE),
+('Marble Effect', 'Elegant marble stone pattern', 'art', '#A9A9A9', 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=400&h=400&fit=crop', ARRAY['art', 'marble', 'elegant', 'sophisticated'], TRUE),
+('Animal Print', 'Trendy leopard or zebra print', 'art', '#D2691E', 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=400&h=400&fit=crop', ARRAY['art', 'animal', 'bold', 'trendy'], FALSE),
+('Abstract Art', 'Artistic abstract design', 'art', '#9370DB', 'https://images.unsplash.com/photo-1604654894609-2d2ffa2e0759?w=400&h=400&fit=crop', ARRAY['art', 'abstract', 'artistic', 'unique'], TRUE),
+('Ombre Fade', 'Gradient color fade effect', 'art', '#FF69B4', 'https://images.unsplash.com/photo-1599948128020-9a44d19d5f5a?w=400&h=400&fit=crop', ARRAY['art', 'ombre', 'gradient', 'trendy'], FALSE),
+('Striped', 'Classic vertical or horizontal stripes', 'art', '#000000', 'https://images.unsplash.com/photo-1606800052052-a08af7148866?w=400&h=400&fit=crop', ARRAY['art', 'stripes', 'classic', 'modern'], FALSE),
+('Hearts', 'Romantic heart designs', 'art', '#FF1493', 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=400&h=400&fit=crop', ARRAY['art', 'hearts', 'romantic', 'cute'], FALSE),
+('Stars & Moon', 'Celestial star and moon pattern', 'art', '#4B0082', 'https://images.unsplash.com/photo-1610992020042-a4e3f5c8c4e1?w=400&h=400&fit=crop', ARRAY['art', 'celestial', 'mystical', 'trendy'], TRUE),
 
 -- Seasonal & Special
-('Valentine Red', 'Romantic red with heart accents', 'art', '#DC143C', ARRAY['art', 'valentine', 'romantic', 'seasonal'], FALSE),
-('Halloween Orange', 'Spooky orange with black accents', 'art', '#FF8C00', ARRAY['art', 'halloween', 'seasonal', 'fun'], FALSE),
-('Christmas Red & Green', 'Festive red and green combo', 'art', '#DC143C', ARRAY['art', 'christmas', 'seasonal', 'festive'], FALSE),
-('Winter Wonderland', 'Icy blue with snowflake design', 'art', '#ADD8E6', ARRAY['art', 'winter', 'seasonal', 'elegant'], TRUE),
-('Spring Pastels', 'Soft pastel mix perfect for spring', 'art', '#FFB6C1', ARRAY['art', 'spring', 'seasonal', 'pastel'], FALSE),
+('Valentine Red', 'Romantic red with heart accents', 'art', '#DC143C', 'https://images.unsplash.com/photo-1518810765812-83d7d34b8e39?w=400&h=400&fit=crop', ARRAY['art', 'valentine', 'romantic', 'seasonal'], FALSE),
+('Halloween Orange', 'Spooky orange with black accents', 'art', '#FF8C00', 'https://images.unsplash.com/photo-1603366445787-09714680cbf1?w=400&h=400&fit=crop', ARRAY['art', 'halloween', 'seasonal', 'fun'], FALSE),
+('Christmas Red & Green', 'Festive red and green combo', 'art', '#DC143C', 'https://images.unsplash.com/photo-1545060937-d40733c78a47?w=400&h=400&fit=crop', ARRAY['art', 'christmas', 'seasonal', 'festive'], FALSE),
+('Winter Wonderland', 'Icy blue with snowflake design', 'art', '#ADD8E6', 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop', ARRAY['art', 'winter', 'seasonal', 'elegant'], TRUE),
+('Spring Pastels', 'Soft pastel mix perfect for spring', 'art', '#FFB6C1', 'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=400&h=400&fit=crop', ARRAY['art', 'spring', 'seasonal', 'pastel'], FALSE),
 
 -- Matte Finishes
-('Matte Black', 'Ultra-matte black finish', 'solid', '#000000', ARRAY['solid', 'matte', 'black', 'modern'], TRUE),
-('Matte Nude', 'Sophisticated matte nude', 'solid', '#E8D4C1', ARRAY['solid', 'matte', 'nude', 'elegant'], FALSE),
-('Matte Burgundy', 'Rich matte burgundy', 'solid', '#800020', ARRAY['solid', 'matte', 'burgundy', 'elegant'], TRUE),
-('Matte Navy', 'Deep matte navy blue', 'solid', '#000080', ARRAY['solid', 'matte', 'blue', 'sophisticated'], FALSE),
+('Matte Black', 'Ultra-matte black finish', 'solid', '#000000', 'https://via.placeholder.com/200/000000/FFFFFF?text=Matte+Black', ARRAY['solid', 'matte', 'black', 'modern'], TRUE),
+('Matte Nude', 'Sophisticated matte nude', 'solid', '#E8D4C1', 'https://via.placeholder.com/200/E8D4C1/666666?text=Matte+Nude', ARRAY['solid', 'matte', 'nude', 'elegant'], FALSE),
+('Matte Burgundy', 'Rich matte burgundy', 'solid', '#800020', 'https://via.placeholder.com/200/800020/FFFFFF?text=Matte+Burgundy', ARRAY['solid', 'matte', 'burgundy', 'elegant'], TRUE),
+('Matte Navy', 'Deep matte navy blue', 'solid', '#000080', 'https://via.placeholder.com/200/000080/FFFFFF?text=Matte+Navy', ARRAY['solid', 'matte', 'blue', 'sophisticated'], FALSE),
 
 -- Metallic & Chrome
-('Chrome Silver', 'Mirror chrome silver finish', 'solid', '#C0C0C0', ARRAY['solid', 'chrome', 'metallic', 'modern'], TRUE),
-('Rose Gold Chrome', 'Metallic rose gold chrome', 'solid', '#B76E79', ARRAY['solid', 'chrome', 'rose-gold', 'trendy'], TRUE),
-('Copper Metallic', 'Warm copper metallic', 'solid', '#B87333', ARRAY['solid', 'metallic', 'copper', 'warm'], TRUE);
+('Chrome Silver', 'Mirror chrome silver finish', 'solid', '#C0C0C0', 'https://via.placeholder.com/200/C0C0C0/666666?text=Chrome', ARRAY['solid', 'chrome', 'metallic', 'modern'], TRUE),
+('Rose Gold Chrome', 'Metallic rose gold chrome', 'solid', '#B76E79', 'https://via.placeholder.com/200/B76E79/FFFFFF?text=Rose+Chrome', ARRAY['solid', 'chrome', 'rose-gold', 'trendy'], TRUE),
+('Copper Metallic', 'Warm copper metallic', 'solid', '#B87333', 'https://via.placeholder.com/200/B87333/FFFFFF?text=Copper', ARRAY['solid', 'metallic', 'copper', 'warm'], TRUE);
 
 -- Update statistics
 INSERT INTO analytics_events (event_type, event_data) VALUES
@@ -116,7 +116,7 @@ INSERT INTO analytics_events (event_type, event_data) VALUES
 DO $$
 BEGIN
   RAISE NOTICE 'Successfully seeded database with:';
-  RAISE NOTICE '  - 35 hair styles';
-  RAISE NOTICE '  - 45 nail styles';
-  RAISE NOTICE 'Total: 80 styles ready to try on!';
+  RAISE NOTICE '  - 35 hair styles with professional Unsplash images';
+  RAISE NOTICE '  - 45 nail styles with color swatches and photos';
+  RAISE NOTICE 'Total: 80 styles with real thumbnails ready to display!';
 END $$;
