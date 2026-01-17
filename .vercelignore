@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Flutter mobile app
+apps/mobile/
+
+# Documentation
+docs/
+*.md
+!apps/web/README.md
+
+# n8n workflows
+n8n/
+
+# Tests
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+
+# Git
+.git/
+.github/
+
+# Local env
+.env.local
+.env*.local
+
+# Build
+coverage/
+.turbo/

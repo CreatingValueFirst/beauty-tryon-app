@@ -19,9 +19,10 @@
   },
   "devDependencies": {
     "@types/node": "^20.11.5",
-    "typescript": "^5.3.3",
+    "eslint": "^8.56.0",
     "prettier": "^3.2.4",
-    "eslint": "^8.56.0"
+    "typescript": "^5.3.3",
+    "vercel": "^50.4.5"
   },
   "engines": {
     "node": ">=18.0.0",
