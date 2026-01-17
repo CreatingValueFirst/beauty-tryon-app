@@ -1,26 +1,28 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Heart, Share2, Download, Trash2, Plus, Grid3x3, List } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 
-// Mock gallery items
+// Sample gallery items with professional images
 const MOCK_GALLERY_ITEMS = [
   {
     id: '1',
     type: 'hair',
-    thumbnail: '',
-    style_name: 'Purple Dream',
+    thumbnail: 'https://images.unsplash.com/photo-1580618672591-eb180b1a973f?w=800&h=800&fit=crop',
+    style_name: 'Platinum Blonde Pixie',
     created_at: '2026-01-15T10:30:00Z',
     is_favorite: true,
   },
   {
     id: '2',
     type: 'nails',
-    thumbnail: '',
+    thumbnail: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=800&h=800&fit=crop',
     style_name: 'Rose Gold Glitter',
     created_at: '2026-01-14T15:20:00Z',
     is_favorite: false,
@@ -28,7 +30,7 @@ const MOCK_GALLERY_ITEMS = [
   {
     id: '3',
     type: 'hair',
-    thumbnail: '',
+    thumbnail: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=800&h=800&fit=crop',
     style_name: 'Beach Waves',
     created_at: '2026-01-13T09:15:00Z',
     is_favorite: true,
@@ -36,10 +38,74 @@ const MOCK_GALLERY_ITEMS = [
   {
     id: '4',
     type: 'nails',
-    thumbnail: '',
-    style_name: 'French Manicure',
+    thumbnail: 'https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=800&h=800&fit=crop',
+    style_name: 'Classic French Manicure',
     created_at: '2026-01-12T14:45:00Z',
     is_favorite: false,
+  },
+  {
+    id: '5',
+    type: 'hair',
+    thumbnail: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&h=800&fit=crop',
+    style_name: 'Sleek Brunette Bob',
+    created_at: '2026-01-11T16:20:00Z',
+    is_favorite: true,
+  },
+  {
+    id: '6',
+    type: 'nails',
+    thumbnail: 'https://images.unsplash.com/photo-1599948128020-9a44d19d5f5a?w=800&h=800&fit=crop',
+    style_name: 'Silver Glitter',
+    created_at: '2026-01-10T11:30:00Z',
+    is_favorite: false,
+  },
+  {
+    id: '7',
+    type: 'hair',
+    thumbnail: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800&h=800&fit=crop',
+    style_name: 'Mermaid Waves',
+    created_at: '2026-01-09T13:45:00Z',
+    is_favorite: true,
+  },
+  {
+    id: '8',
+    type: 'nails',
+    thumbnail: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=800&h=800&fit=crop',
+    style_name: 'Floral Nail Art',
+    created_at: '2026-01-08T09:00:00Z',
+    is_favorite: false,
+  },
+  {
+    id: '9',
+    type: 'hair',
+    thumbnail: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800&h=800&fit=crop',
+    style_name: 'Textured Lob',
+    created_at: '2026-01-07T14:15:00Z',
+    is_favorite: false,
+  },
+  {
+    id: '10',
+    type: 'nails',
+    thumbnail: 'https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=800&h=800&fit=crop',
+    style_name: 'Rose Glitter Ombre',
+    created_at: '2026-01-06T10:30:00Z',
+    is_favorite: true,
+  },
+  {
+    id: '11',
+    type: 'hair',
+    thumbnail: 'https://images.unsplash.com/photo-1479936343636-73cdc5aae0c3?w=800&h=800&fit=crop',
+    style_name: 'Bohemian Curls',
+    created_at: '2026-01-05T15:45:00Z',
+    is_favorite: false,
+  },
+  {
+    id: '12',
+    type: 'nails',
+    thumbnail: 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?w=800&h=800&fit=crop',
+    style_name: 'Gold French Tips',
+    created_at: '2026-01-04T12:00:00Z',
+    is_favorite: true,
   },
 ];
 
@@ -136,8 +202,12 @@ export default function GalleryPage() {
                 Start trying on hair styles and nail designs to save your favorites here.
               </p>
               <div className="flex gap-3 justify-center">
-                <Button>Try Hair Styles</Button>
-                <Button variant="outline">Try Nail Designs</Button>
+                <Link href="/dashboard/hair">
+                  <Button>Try Hair Styles</Button>
+                </Link>
+                <Link href="/dashboard/nails">
+                  <Button variant="outline">Try Nail Designs</Button>
+                </Link>
               </div>
             </div>
           </CardContent>
@@ -170,7 +240,15 @@ function GalleryGrid({
           <Card key={item.id} className="hover:shadow-md transition-shadow">
             <CardContent className="p-4">
               <div className="flex items-center gap-4">
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex-shrink-0" />
+                <div className="w-20 h-20 rounded-lg flex-shrink-0 overflow-hidden bg-gray-100">
+                  <Image
+                    src={item.thumbnail}
+                    alt={item.style_name}
+                    width={80}
+                    height={80}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold truncate">{item.style_name}</h3>
                   <p className="text-sm text-gray-600 capitalize">{item.type} Try-On</p>
@@ -209,11 +287,14 @@ function GalleryGrid({
         <Card key={item.id} className="group overflow-hidden hover:shadow-lg transition-all">
           <CardContent className="p-0">
             {/* Thumbnail */}
-            <div className="aspect-square bg-gradient-to-br from-purple-100 to-pink-100 relative">
-              {/* Placeholder for actual image */}
-              <div className="absolute inset-0 flex items-center justify-center text-4xl">
-                {item.type === 'hair' ? '💇' : '💅'}
-              </div>
+            <div className="aspect-square bg-gray-100 relative overflow-hidden">
+              <Image
+                src={item.thumbnail}
+                alt={item.style_name}
+                width={400}
+                height={400}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              />
 
               {/* Hover Overlay */}
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
@@ -231,18 +312,18 @@ function GalleryGrid({
               {/* Favorite Badge */}
               {item.is_favorite && (
                 <div className="absolute top-2 right-2">
-                  <Heart className="w-5 h-5 fill-brand-pink text-brand-pink drop-shadow" />
+                  <Heart className="w-5 h-5 fill-brand-pink text-brand-pink drop-shadow-lg" />
                 </div>
               )}
 
               {/* Type Badge */}
-              <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs font-medium capitalize">
-                {item.type}
+              <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium capitalize shadow-sm">
+                {item.type === 'hair' ? '💇 Hair' : '💅 Nails'}
               </div>
             </div>
 
             {/* Info */}
-            <div className="p-3">
+            <div className="p-3 bg-white">
               <h3 className="font-semibold text-sm truncate">{item.style_name}</h3>
               <p className="text-xs text-gray-500 mt-1">{formatDate(item.created_at)}</p>
             </div>
