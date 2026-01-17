@@ -1,6 +1,3 @@
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 -- Create profiles table (extends auth.users)
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
@@ -14,7 +11,7 @@ CREATE TABLE IF NOT EXISTS profiles (
 
 -- Create hair_styles table
 CREATE TABLE IF NOT EXISTS hair_styles (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   description TEXT,
   category TEXT NOT NULL,
@@ -29,7 +26,7 @@ CREATE TABLE IF NOT EXISTS hair_styles (
 
 -- Create nail_styles table
 CREATE TABLE IF NOT EXISTS nail_styles (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   description TEXT,
   category TEXT NOT NULL,
@@ -43,7 +40,7 @@ CREATE TABLE IF NOT EXISTS nail_styles (
 
 -- Create try_ons table
 CREATE TABLE IF NOT EXISTS try_ons (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
   type TEXT NOT NULL CHECK (type IN ('hair', 'nails')),
   style_id UUID,
@@ -56,7 +53,7 @@ CREATE TABLE IF NOT EXISTS try_ons (
 
 -- Create galleries table
 CREATE TABLE IF NOT EXISTS galleries (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES profiles(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   description TEXT,
@@ -66,7 +63,7 @@ CREATE TABLE IF NOT EXISTS galleries (
 
 -- Create gallery_items table
 CREATE TABLE IF NOT EXISTS gallery_items (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   gallery_id UUID REFERENCES galleries(id) ON DELETE CASCADE,
   try_on_id UUID REFERENCES try_ons(id) ON DELETE CASCADE,
   position INTEGER DEFAULT 0,
@@ -76,7 +73,7 @@ CREATE TABLE IF NOT EXISTS gallery_items (
 
 -- Create analytics_events table
 CREATE TABLE IF NOT EXISTS analytics_events (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
   event_type TEXT NOT NULL,
   event_data JSONB DEFAULT '{}',
