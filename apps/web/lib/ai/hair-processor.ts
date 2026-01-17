@@ -16,7 +16,7 @@ export interface HairSettings {
   opacity: number; // 0-1
   saturation: number; // 0-2 (1 is normal)
   brightness: number; // 0-2 (1 is normal)
-  blendMode: 'normal' | 'multiply' | 'screen' | 'overlay';
+  blendMode: 'source-over' | 'multiply' | 'screen' | 'overlay';
 }
 
 /**
