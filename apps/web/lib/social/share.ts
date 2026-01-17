@@ -99,7 +99,7 @@ export async function shareToSocial(
  * Fallback share using Web Share API or platform URLs
  */
 async function fallbackShare(
-  platform: SocialPlatform,
+  platform: Exclude<SocialPlatform, 'copy-link'>,
   imageUrl: string,
   title?: string,
   description?: string
