@@ -1,9 +1,10 @@
 /**
  * Nail Processing Engine
- * Applies nail polish colors using MediaPipe hand tracking
+ * Applies nail polish colors using MediaPipe hand tracking + enhanced geometric detection
  */
 
 import { detectHands } from './mediapipe';
+import { calculateNailBed, applyPerspectiveCorrection, NailBedSmoother } from './enhanced-nail-detection';
 
 export interface NailColor {
   r: number;
@@ -24,6 +25,9 @@ export interface NailSettings {
  */
 const FINGER_TIP_INDICES = [4, 8, 12, 16, 20];
 
+// Global smoother for temporal consistency
+const nailSmoother = new NailBedSmoother();
+
 /**
  * Parse hex color to RGB
  */
@@ -39,7 +43,7 @@ export function hexToRgbNail(hex: string): NailColor {
 }
 
 /**
- * Draw a nail on canvas at specific landmark position
+ * Draw a professional nail on canvas at specific landmark position
  */
 function drawNail(
   ctx: CanvasRenderingContext2D,
@@ -47,74 +51,158 @@ function drawNail(
   y: number,
   width: number,
   height: number,
-  settings: NailSettings
+  settings: NailSettings,
+  rotation: number = 0
 ) {
   ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(rotation);
 
-  // Create nail shape (rounded rectangle)
-  const radius = width * 0.4;
+  // Enhanced nail shape with realistic curvature
+  const radius = width * 0.45;
+
   ctx.beginPath();
-  ctx.moveTo(x - width / 2 + radius, y - height / 2);
-  ctx.lineTo(x + width / 2 - radius, y - height / 2);
-  ctx.quadraticCurveTo(x + width / 2, y - height / 2, x + width / 2, y - height / 2 + radius);
-  ctx.lineTo(x + width / 2, y + height / 2 - radius);
-  ctx.quadraticCurveTo(x + width / 2, y + height / 2, x + width / 2 - radius, y + height / 2);
-  ctx.lineTo(x - width / 2 + radius, y + height / 2);
-  ctx.quadraticCurveTo(x - width / 2, y + height / 2, x - width / 2, y + height / 2 - radius);
-  ctx.lineTo(x - width / 2, y - height / 2 + radius);
-  ctx.quadraticCurveTo(x - width / 2, y - height / 2, x - width / 2 + radius, y - height / 2);
+  // Top edge (rounded)
+  ctx.moveTo(-width / 2 + radius, -height / 2);
+  ctx.lineTo(width / 2 - radius, -height / 2);
+  ctx.quadraticCurveTo(width / 2, -height / 2, width / 2, -height / 2 + radius);
+
+  // Right edge
+  ctx.lineTo(width / 2, height / 2 - radius);
+  ctx.quadraticCurveTo(width / 2, height / 2, width / 2 - radius, height / 2);
+
+  // Bottom edge (more rounded for nail tip)
+  ctx.lineTo(-width / 2 + radius, height / 2);
+  ctx.quadraticCurveTo(-width / 2, height / 2, -width / 2, height / 2 - radius);
+
+  // Left edge
+  ctx.lineTo(-width / 2, -height / 2 + radius);
+  ctx.quadraticCurveTo(-width / 2, -height / 2, -width / 2 + radius, -height / 2);
   ctx.closePath();
 
-  // Base color
+  // Shadow/depth effect
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+  ctx.shadowBlur = 4;
+  ctx.shadowOffsetX = 0;
+  ctx.shadowOffsetY = 2;
+
+  // Base color with smooth gradient
   const { r, g, b } = settings.color;
-  ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${settings.opacity})`;
+  const baseGradient = ctx.createLinearGradient(-width / 2, 0, width / 2, 0);
+  baseGradient.addColorStop(0, `rgba(${r * 0.9}, ${g * 0.9}, ${b * 0.9}, ${settings.opacity})`);
+  baseGradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${settings.opacity})`);
+  baseGradient.addColorStop(1, `rgba(${r * 0.9}, ${g * 0.9}, ${b * 0.9}, ${settings.opacity})`);
+  ctx.fillStyle = baseGradient;
   ctx.fill();
 
-  // Add glossiness effect
+  // Reset shadow for overlays
+  ctx.shadowColor = 'transparent';
+  ctx.shadowBlur = 0;
+
+  // Professional glossiness effect
   if (settings.glossiness > 0) {
-    const gradient = ctx.createLinearGradient(x - width / 2, y - height / 2, x + width / 2, y + height / 2);
-    gradient.addColorStop(0, `rgba(255, 255, 255, ${settings.glossiness * 0.4})`);
-    gradient.addColorStop(0.5, `rgba(255, 255, 255, 0)`);
-    gradient.addColorStop(1, `rgba(0, 0, 0, ${settings.glossiness * 0.2})`);
-    ctx.fillStyle = gradient;
+    ctx.beginPath();
+    ctx.ellipse(0, -height / 4, width * 0.35, height * 0.2, 0, 0, Math.PI * 2);
+    const gloss = ctx.createRadialGradient(0, -height / 4, 0, 0, -height / 4, width * 0.4);
+    gloss.addColorStop(0, `rgba(255, 255, 255, ${settings.glossiness * 0.6})`);
+    gloss.addColorStop(0.6, `rgba(255, 255, 255, ${settings.glossiness * 0.2})`);
+    gloss.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = gloss;
     ctx.fill();
   }
 
   // Pattern overlays
   if (settings.pattern === 'french') {
-    // French manicure tip
+    // Professional French manicure tip
     ctx.beginPath();
-    ctx.arc(x, y - height / 3, width * 0.6, 0, Math.PI);
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+    ctx.arc(0, -height / 3, width * 0.65, 0, Math.PI, true);
+    ctx.lineTo(-width * 0.65, -height / 3);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+    ctx.fill();
+
+    // Subtle tip highlight
+    ctx.beginPath();
+    ctx.arc(0, -height / 3, width * 0.5, 0, Math.PI, true);
+    const tipGloss = ctx.createLinearGradient(0, -height / 2, 0, -height / 3);
+    tipGloss.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+    tipGloss.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = tipGloss;
     ctx.fill();
   } else if (settings.pattern === 'glitter') {
-    // Glitter effect
-    for (let i = 0; i < 10; i++) {
-      const gx = x + (Math.random() - 0.5) * width * 0.8;
-      const gy = y + (Math.random() - 0.5) * height * 0.8;
-      const size = Math.random() * 2 + 1;
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.fillRect(gx, gy, size, size);
+    // Enhanced glitter effect with varied sizes
+    const glitterCount = 15;
+    for (let i = 0; i < glitterCount; i++) {
+      const gx = (Math.random() - 0.5) * width * 0.7;
+      const gy = (Math.random() - 0.5) * height * 0.7;
+      const size = Math.random() * 2.5 + 0.5;
+
+      ctx.beginPath();
+      ctx.arc(gx, gy, size, 0, Math.PI * 2);
+      const brightness = Math.random() * 0.5 + 0.5;
+      ctx.fillStyle = `rgba(255, 255, 255, ${brightness})`;
+      ctx.fill();
     }
   } else if (settings.pattern === 'ombre') {
-    // Ombre gradient
-    const ombre = ctx.createLinearGradient(x, y - height / 2, x, y + height / 2);
-    ombre.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${settings.opacity})`);
-    ombre.addColorStop(1, `rgba(255, 255, 255, ${settings.opacity * 0.3})`);
+    // Sophisticated ombre gradient
+    const ombre = ctx.createLinearGradient(0, -height / 2, 0, height / 2);
+    ombre.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${settings.opacity * 0.9})`);
+    ombre.addColorStop(0.3, `rgba(${r}, ${g}, ${b}, ${settings.opacity})`);
+    ombre.addColorStop(0.7, `rgba(${Math.min(r + 40, 255)}, ${Math.min(g + 40, 255)}, ${Math.min(b + 40, 255)}, ${settings.opacity})`);
+    ombre.addColorStop(1, `rgba(255, 255, 255, ${settings.opacity * 0.5})`);
+
+    // Redraw with ombre
+    ctx.beginPath();
+    ctx.moveTo(-width / 2 + radius, -height / 2);
+    ctx.lineTo(width / 2 - radius, -height / 2);
+    ctx.quadraticCurveTo(width / 2, -height / 2, width / 2, -height / 2 + radius);
+    ctx.lineTo(width / 2, height / 2 - radius);
+    ctx.quadraticCurveTo(width / 2, height / 2, width / 2 - radius, height / 2);
+    ctx.lineTo(-width / 2 + radius, height / 2);
+    ctx.quadraticCurveTo(-width / 2, height / 2, -width / 2, height / 2 - radius);
+    ctx.lineTo(-width / 2, -height / 2 + radius);
+    ctx.quadraticCurveTo(-width / 2, -height / 2, -width / 2 + radius, -height / 2);
+    ctx.closePath();
+
     ctx.fillStyle = ombre;
     ctx.fill();
   }
 
-  // Subtle border for definition
-  ctx.strokeStyle = `rgba(0, 0, 0, 0.2)`;
-  ctx.lineWidth = 1;
+  // Professional border for definition
+  ctx.strokeStyle = `rgba(0, 0, 0, 0.25)`;
+  ctx.lineWidth = 1.5;
   ctx.stroke();
 
   ctx.restore();
 }
 
 /**
- * Process nail overlay on video frame
+ * Calculate distance between two landmarks
+ */
+function getLandmarkDistance(
+  p1: { x: number; y: number },
+  p2: { x: number; y: number },
+  width: number,
+  height: number
+): number {
+  const dx = (p1.x - p2.x) * width;
+  const dy = (p1.y - p2.y) * height;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+/**
+ * Calculate rotation angle between two points
+ */
+function getRotationAngle(
+  p1: { x: number; y: number },
+  p2: { x: number; y: number }
+): number {
+  return Math.atan2(p2.y - p1.y, p2.x - p1.x);
+}
+
+/**
+ * Process nail overlay on video frame with PROFESSIONAL PIXEL-PERFECT accuracy
+ * Uses enhanced geometric analysis and temporal smoothing
  */
 export async function processNails(
   video: HTMLVideoElement,
@@ -126,36 +214,55 @@ export async function processNails(
   if (!ctx) return;
 
   try {
-    // Detect hands
+    // Detect hands with MediaPipe
     const handResults = await detectHands(video, timestamp);
 
     if (!handResults || !handResults.landmarks || handResults.landmarks.length === 0) {
+      // No hands detected - clear smoother history
+      nailSmoother.clear();
       return;
     }
 
     // Process each detected hand
-    for (const handLandmarks of handResults.landmarks) {
-      // Draw nails on each fingertip
-      for (const tipIndex of FINGER_TIP_INDICES) {
-        const landmark = handLandmarks[tipIndex];
+    for (let handIndex = 0; handIndex < handResults.landmarks.length; handIndex++) {
+      const handLandmarks = handResults.landmarks[handIndex];
+      const handedness = handResults.handednesses?.[handIndex]?.[0]?.categoryName || 'Right';
 
-        // Convert normalized coordinates to canvas coordinates
-        const x = landmark.x * canvas.width;
-        const y = landmark.y * canvas.height;
+      // Process all 5 fingers with enhanced detection
+      for (let fingerIndex = 0; fingerIndex < 5; fingerIndex++) {
+        // Calculate precise nail bed geometry
+        let nailBed = calculateNailBed(
+          handLandmarks,
+          fingerIndex,
+          canvas.width,
+          canvas.height
+        );
 
-        // Estimate nail size based on hand size and depth
-        // Larger z value means closer to camera
-        const baseSize = 20;
-        const depthFactor = 1 + (landmark.z || 0) * 0.5;
-        const nailWidth = baseSize * depthFactor;
-        const nailHeight = nailWidth * 1.4; // Nails are typically longer than wide
+        // Apply perspective correction based on hand orientation
+        nailBed = applyPerspectiveCorrection(nailBed, handLandmarks);
 
-        // Draw the nail
-        drawNail(ctx, x, y, nailWidth, nailHeight, settings);
+        // Apply temporal smoothing to reduce jitter
+        const fingerKey = `${handedness}_${fingerIndex}`;
+        nailBed = nailSmoother.smooth(fingerKey, nailBed);
+
+        // Only draw if confidence is high enough
+        if (nailBed.confidence > 0.3) {
+          // Draw professional nail with enhanced rendering
+          drawNail(
+            ctx,
+            nailBed.center.x,
+            nailBed.center.y,
+            nailBed.width,
+            nailBed.height,
+            settings,
+            nailBed.rotation
+          );
+        }
       }
     }
   } catch (error) {
     console.error('Error processing nails:', error);
+    nailSmoother.clear();
   }
 }
 

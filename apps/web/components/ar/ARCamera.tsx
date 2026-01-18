@@ -85,8 +85,8 @@ export function ARCamera({ mode, onFrame, className }: ARCameraProps) {
 
   return (
     <div className={className}>
-      <div className="relative ar-camera-container rounded-lg overflow-hidden bg-black">
-        {/* Webcam */}
+      <div className="relative ar-camera-container rounded-lg overflow-hidden bg-black" style={{ minHeight: '400px', aspectRatio: '16/9' }}>
+        {/* Webcam - hidden, used only as video source */}
         <Webcam
           ref={webcamRef}
           audio={false}
@@ -97,16 +97,17 @@ export function ARCamera({ mode, onFrame, className }: ARCameraProps) {
             facingMode,
           }}
           onUserMedia={handleUserMedia}
-          className="w-full h-full object-cover"
-          mirrored={facingMode === 'user'}
+          className="absolute top-0 left-0 opacity-0 pointer-events-none"
+          mirrored={false}
         />
 
-        {/* Canvas overlay for AR effects */}
+        {/* Canvas - main visible element with AR effects */}
         <canvas
           ref={canvasRef}
-          className="ar-canvas-overlay"
+          className="w-full h-full object-contain"
           style={{
             transform: facingMode === 'user' ? 'scaleX(-1)' : 'none',
+            display: 'block',
           }}
         />
 

@@ -20,7 +20,13 @@
     "no": "No",
     "optional": "Optional",
     "required": "Required",
-    "linkCopied": "Link copied to clipboard!"
+    "linkCopied": "Link copied to clipboard!",
+    "download": "Download",
+    "upload": "Upload",
+    "edit": "Edit",
+    "update": "Update",
+    "create": "Create",
+    "view": "View"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -37,28 +43,263 @@
     "logoutFailed": "Failed to log out. Please try again.",
     "redirectingToPricing": "Redirecting to pricing..."
   },
+  "auth": {
+    "login": "Log In",
+    "signup": "Sign Up",
+    "signInWith": "Sign in with {provider}",
+    "orContinueWith": "Or continue with",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "createAccount": "Create account",
+    "fullName": "Full name",
+    "agreeToTerms": "I agree to the Terms of Service and Privacy Policy",
+    "loggingIn": "Logging in...",
+    "signingUp": "Signing up...",
+    "invalidCredentials": "Invalid email or password",
+    "accountCreated": "Account created successfully!"
+  },
   "hair": {
-    "title": "Hair Try-On",
+    "title": "Hair Virtual Try-On",
     "subtitle": "Try on different hairstyles and colors in real-time",
     "selectStyle": "Choose a Style",
     "customize": "Customize",
     "info": "Info",
-    "tips": "Tips"
+    "tips": "Tips",
+    "categories": {
+      "all": "All Styles",
+      "short": "Short",
+      "medium": "Medium",
+      "long": "Long",
+      "curly": "Curly",
+      "straight": "Straight",
+      "wavy": "Wavy",
+      "color": "Color"
+    },
+    "actions": {
+      "takePhoto": "Take Photo",
+      "customColor": "Custom Color",
+      "addToFavorites": "Add to Favorites",
+      "compare": "Compare Styles",
+      "reset": "Reset",
+      "apply": "Apply Style"
+    },
+    "controls": {
+      "opacity": "Opacity",
+      "saturation": "Saturation",
+      "brightness": "Brightness",
+      "blend": "Blend Mode"
+    },
+    "styles": {
+      "pixieCut": "Pixie Cut",
+      "classicBob": "Classic Bob",
+      "beachWaves": "Beach Waves",
+      "longLayers": "Long Layers",
+      "mermaidWaves": "Mermaid Waves",
+      "platinumBlonde": "Platinum Blonde",
+      "roseGold": "Rose Gold",
+      "burgundyRed": "Burgundy Red",
+      "tightCurls": "Tight Curls",
+      "afro": "Afro"
+    },
+    "messages": {
+      "saved": "Hair style saved to gallery!",
+      "shared": "Hair style shared successfully!",
+      "photoTaken": "Photo captured!",
+      "noCamera": "Camera access denied",
+      "loading": "Loading hair try-on..."
+    }
   },
   "nails": {
-    "title": "Nail Try-On",
-    "subtitle": "Experiment with nail polish colors and designs"
+    "title": "Nail Virtual Try-On",
+    "subtitle": "Experiment with nail polish colors and designs",
+    "selectColor": "Choose a Color",
+    "selectPattern": "Choose a Pattern",
+    "customize": "Customize",
+    "categories": {
+      "all": "All Colors",
+      "reds": "Reds",
+      "pinks": "Pinks & Nudes",
+      "purples": "Purples",
+      "blues": "Blues & Teals",
+      "greens": "Greens",
+      "oranges": "Oranges & Corals",
+      "neutrals": "Neutrals",
+      "metallics": "Metallics"
+    },
+    "patterns": {
+      "solid": "Solid",
+      "french": "French Manicure",
+      "glitter": "Glitter",
+      "ombre": "Ombré"
+    },
+    "controls": {
+      "opacity": "Opacity",
+      "glossiness": "Glossiness"
+    },
+    "actions": {
+      "capture": "Capture Photo",
+      "saveLook": "Save Look",
+      "addToFavorites": "Add to Favorites"
+    },
+    "messages": {
+      "saved": "Nail design saved to gallery!",
+      "shared": "Nail design shared successfully!",
+      "photoTaken": "Photo captured!",
+      "noCamera": "Camera access denied"
+    }
   },
   "gallery": {
     "title": "My Gallery",
-    "savedLooks": "saved looks"
-  },
-  "profile": {
-    "title": "Profile",
-    "subtitle": "Manage your account settings and preferences"
+    "subtitle": "View and manage your saved looks",
+    "tabs": {
+      "all": "All",
+      "hair": "Hair",
+      "nails": "Nails",
+      "favorites": "Favorites"
+    },
+    "views": {
+      "grid": "Grid View",
+      "list": "List View"
+    },
+    "actions": {
+      "favorite": "Favorite",
+      "unfavorite": "Remove from Favorites",
+      "share": "Share",
+      "download": "Download",
+      "delete": "Delete"
+    },
+    "confirmDelete": "Are you sure you want to delete this item?",
+    "messages": {
+      "deleted": "Item deleted successfully",
+      "downloaded": "Image downloaded",
+      "addedToFavorites": "Added to favorites",
+      "removedFromFavorites": "Removed from favorites"
+    },
+    "empty": {
+      "title": "No saved looks yet",
+      "description": "Start trying on styles and save your favorites!",
+      "action": "Start Try-On"
+    }
   },
   "stores": {
     "title": "Discover Amazing Salons",
-    "subtitle": "Browse styles from top-rated salons and book your next appointment"
+    "subtitle": "Browse styles from top-rated salons and book your next appointment",
+    "search": "Search salons...",
+    "filters": {
+      "all": "All Categories",
+      "hair": "Hair Salons",
+      "nails": "Nail Salons",
+      "both": "Hair & Nails"
+    },
+    "details": {
+      "about": "About",
+      "styles": "Styles",
+      "reviews": "Reviews",
+      "contact": "Contact"
+    },
+    "actions": {
+      "bookAppointment": "Book Appointment",
+      "call": "Call",
+      "email": "Email",
+      "directions": "Get Directions",
+      "tryOn": "Try This Style"
+    },
+    "info": {
+      "open": "Open",
+      "closed": "Closed",
+      "hours": "Hours",
+      "location": "Location",
+      "specialties": "Specialties"
+    }
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your account settings and preferences",
+    "sections": {
+      "account": "Account Information",
+      "preferences": "Preferences",
+      "subscription": "Subscription",
+      "security": "Security"
+    },
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "username": "Username",
+      "avatar": "Profile Picture"
+    },
+    "actions": {
+      "updateProfile": "Update Profile",
+      "changePassword": "Change Password",
+      "deleteAccount": "Delete Account",
+      "signOut": "Sign Out",
+      "uploadAvatar": "Upload Photo"
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "email": "Email Notifications",
+      "push": "Push Notifications",
+      "marketing": "Marketing Emails"
+    },
+    "subscription": {
+      "current": "Current Plan",
+      "free": "Free",
+      "premium": "Premium",
+      "upgrade": "Upgrade to Premium",
+      "benefits": "Premium Benefits"
+    },
+    "messages": {
+      "updated": "Profile updated successfully",
+      "avatarUploaded": "Avatar uploaded successfully",
+      "passwordChanged": "Password changed successfully",
+      "accountDeleted": "Account deleted",
+      "signedOut": "Signed out successfully"
+    }
+  },
+  "bookings": {
+    "title": "My Bookings",
+    "subtitle": "Manage your salon appointments",
+    "tabs": {
+      "upcoming": "Upcoming",
+      "past": "Past",
+      "cancelled": "Cancelled"
+    },
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "actions": {
+      "reschedule": "Reschedule",
+      "cancel": "Cancel Booking",
+      "viewDetails": "View Details"
+    },
+    "booking": {
+      "date": "Date",
+      "time": "Time",
+      "service": "Service",
+      "salon": "Salon",
+      "price": "Price",
+      "duration": "Duration"
+    },
+    "empty": {
+      "title": "No bookings yet",
+      "description": "Book your first appointment at a salon",
+      "action": "Browse Salons"
+    },
+    "messages": {
+      "cancelled": "Booking cancelled successfully",
+      "confirmed": "Booking confirmed!"
+    }
+  },
+  "legal": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "refunds": "Refund Policy",
+    "lastUpdated": "Last updated: {date}"
   }
 }

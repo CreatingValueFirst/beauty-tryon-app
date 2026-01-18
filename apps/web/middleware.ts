@@ -1,15 +1,15 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
+import { locales, defaultLocale } from './i18n';
 
-export function middleware(request: NextRequest) {
-  // Simple middleware without i18n for now
-  // Add any custom logic here if needed
-  return NextResponse.next();
-}
+export default createMiddleware({
+  locales,
+  defaultLocale,
+  localePrefix: 'always'
+});
 
 export const config = {
-  // Match all paths except static files and API routes
+  // Match all paths except static files, API routes, and _next
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };

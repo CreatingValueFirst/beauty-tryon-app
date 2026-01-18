@@ -7,8 +7,9 @@ import { cn } from '@/lib/utils/cn';
 import { Sparkles, Camera, Image, User, LogOut } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import type { Locale } from '@/i18n';
 
 const navItems = [
   { href: '/dashboard', label: 'Try-On', icon: Camera },
@@ -21,6 +22,11 @@ const navItems = [
 export function Navigation() {
   const pathname = usePathname();
   const router = useRouter();
+
+  // Extract current locale from pathname
+  const currentLocale = useMemo(() => {
+    return pathname.split('/')[1] as Locale;
+  }, [pathname]);
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
@@ -37,7 +43,7 @@ export function Navigation() {
       }
 
       toast.success('Logged out successfully');
-      router.push('/');
+      router.push(`/${currentLocale}`);
     } catch (error) {
       console.error('Logout error:', error);
       toast.error('Failed to log out. Please try again.');
@@ -47,7 +53,7 @@ export function Navigation() {
   };
 
   const handleUpgradeToPremium = () => {
-    router.push('/pricing');
+    router.push(`/${currentLocale}/pricing`);
     toast.info('Redirecting to pricing...');
   };
 
@@ -56,7 +62,7 @@ export function Navigation() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/dashboard" className="flex items-center">
+          <Link href={`/${currentLocale}/dashboard`} className="flex items-center">
             <h1 className="text-2xl font-bold text-gradient">BeautyTryOn</h1>
           </Link>
 
@@ -64,11 +70,12 @@ export function Navigation() {
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href;
+              const localizedHref = `/${currentLocale}${item.href}`;
+              const isActive = pathname === localizedHref;
               return (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={localizedHref}
                   className={cn(
                     'flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors',
                     isActive
@@ -109,11 +116,12 @@ export function Navigation() {
         <div className="md:hidden flex items-center overflow-x-auto pb-2 space-x-2">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href;
+            const localizedHref = `/${currentLocale}${item.href}`;
+            const isActive = pathname === localizedHref;
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={localizedHref}
                 className={cn(
                   'flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors',
                   isActive

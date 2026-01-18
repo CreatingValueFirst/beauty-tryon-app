@@ -8,7 +8,7 @@
     "loading": "Yükleniyor...",
     "error": "Bir hata oluştu",
     "success": "Başarılı",
-    "tryAgain": "Tekrar dene",
+    "tryAgain": "Tekrar Dene",
     "back": "Geri",
     "next": "İleri",
     "previous": "Önceki",
@@ -18,13 +18,19 @@
     "all": "Tümü",
     "yes": "Evet",
     "no": "Hayır",
-    "optional": "İsteğe bağlı",
-    "required": "Gerekli",
-    "linkCopied": "Bağlantı kopyalandı!"
+    "optional": "İsteğe Bağlı",
+    "required": "Zorunlu",
+    "linkCopied": "Bağlantı kopyalandı!",
+    "download": "İndir",
+    "upload": "Yükle",
+    "edit": "Düzenle",
+    "update": "Güncelle",
+    "create": "Oluştur",
+    "view": "Görüntüle"
   },
   "navigation": {
     "dashboard": "Panel",
-    "tryOn": "Dene",
+    "tryOn": "Sanal Deneme",
     "hair": "Saç Modelleri",
     "nails": "Tırnak Tasarımları",
     "gallery": "Galeri",
@@ -34,31 +40,266 @@
     "upgradeToPremium": "Premium'a Yükselt",
     "logout": "Çıkış Yap",
     "loggedOut": "Başarıyla çıkış yapıldı",
-    "logoutFailed": "Çıkış yapılamadı. Tekrar deneyin.",
-    "redirectingToPricing": "Fiyatlara yönlendiriliyor..."
+    "logoutFailed": "Çıkış yapılamadı. Lütfen tekrar deneyin.",
+    "redirectingToPricing": "Fiyatlandırmaya yönlendiriliyor..."
+  },
+  "auth": {
+    "login": "Giriş Yap",
+    "signup": "Kayıt Ol",
+    "signInWith": "{provider} ile giriş yap",
+    "orContinueWith": "Veya devam et",
+    "email": "E-posta",
+    "password": "Şifre",
+    "forgotPassword": "Şifrenizi mi unuttunuz?",
+    "noAccount": "Hesabınız yok mu?",
+    "hasAccount": "Zaten hesabınız var mı?",
+    "createAccount": "Hesap oluştur",
+    "fullName": "Tam Ad",
+    "agreeToTerms": "Hizmet Şartlarını ve Gizlilik Politikasını kabul ediyorum",
+    "loggingIn": "Giriş yapılıyor...",
+    "signingUp": "Kayıt olunuyor...",
+    "invalidCredentials": "Geçersiz e-posta veya şifre",
+    "accountCreated": "Hesap başarıyla oluşturuldu!"
   },
   "hair": {
-    "title": "Saç modeli dene",
-    "subtitle": "Farklı saç stilleri ve renkleri gerçek zamanlı olarak deneyin",
-    "selectStyle": "Bir stil seçin",
+    "title": "Saç Sanal Deneme",
+    "subtitle": "Gerçek zamanlı olarak farklı saç modellerini ve renklerini deneyin",
+    "selectStyle": "Bir Stil Seçin",
     "customize": "Özelleştir",
     "info": "Bilgi",
-    "tips": "İpuçları"
+    "tips": "İpuçları",
+    "categories": {
+      "all": "Tüm Stiller",
+      "short": "Kısa",
+      "medium": "Orta",
+      "long": "Uzun",
+      "curly": "Kıvırcık",
+      "straight": "Düz",
+      "wavy": "Dalgalı",
+      "color": "Renk"
+    },
+    "actions": {
+      "takePhoto": "Fotoğraf Çek",
+      "customColor": "Özel Renk",
+      "addToFavorites": "Favorilere Ekle",
+      "compare": "Stilleri Karşılaştır",
+      "reset": "Sıfırla",
+      "apply": "Stili Uygula"
+    },
+    "controls": {
+      "opacity": "Saydamlık",
+      "saturation": "Doygunluk",
+      "brightness": "Parlaklık",
+      "blend": "Karışım Modu"
+    },
+    "styles": {
+      "pixieCut": "Pixie Kesim",
+      "classicBob": "Klasik Bob",
+      "beachWaves": "Plaj Dalgaları",
+      "longLayers": "Uzun Katmanlar",
+      "mermaidWaves": "Deniz Kızı Dalgaları",
+      "platinumBlonde": "Platin Sarısı",
+      "roseGold": "Pembe Altın",
+      "burgundyRed": "Bordo Kırmızı",
+      "tightCurls": "Sıkı Kıvrımlar",
+      "afro": "Afro"
+    },
+    "messages": {
+      "saved": "Saç modeli galeriye kaydedildi!",
+      "shared": "Saç modeli başarıyla paylaşıldı!",
+      "photoTaken": "Fotoğraf çekildi!",
+      "noCamera": "Kamera erişimi reddedildi",
+      "loading": "Saç deneme yükleniyor..."
+    }
   },
   "nails": {
-    "title": "Tırnak tasarımı dene",
-    "subtitle": "Oje renkleri ve tasarımlarla denemeler yapın"
+    "title": "Tırnak Sanal Deneme",
+    "subtitle": "Oje renkleri ve tasarımlarıyla deneyler yapın",
+    "selectColor": "Bir Renk Seçin",
+    "selectPattern": "Bir Desen Seçin",
+    "customize": "Özelleştir",
+    "categories": {
+      "all": "Tüm Renkler",
+      "reds": "Kırmızılar",
+      "pinks": "Pembeler ve Nude",
+      "purples": "Morlar",
+      "blues": "Maviler ve Turkuazlar",
+      "greens": "Yeşiller",
+      "oranges": "Turuncular ve Mercenler",
+      "neutrals": "Nötrler",
+      "metallics": "Metalikler"
+    },
+    "patterns": {
+      "solid": "Düz",
+      "french": "Fransız Manikürdü",
+      "glitter": "Parıltı",
+      "ombre": "Ombre"
+    },
+    "controls": {
+      "opacity": "Saydamlık",
+      "glossiness": "Parlama"
+    },
+    "actions": {
+      "capture": "Fotoğraf Çek",
+      "saveLook": "Görünümü Kaydet",
+      "addToFavorites": "Favorilere Ekle"
+    },
+    "messages": {
+      "saved": "Tırnak tasarımı galeriye kaydedildi!",
+      "shared": "Tırnak tasarımı başarıyla paylaşıldı!",
+      "photoTaken": "Fotoğraf çekildi!",
+      "noCamera": "Kamera erişimi reddedildi"
+    }
   },
   "gallery": {
     "title": "Galerim",
-    "savedLooks": "kaydedilmiş görünüm"
+    "subtitle": "Kayıtlı görünümlerinizi görüntüleyin ve yönetin",
+    "tabs": {
+      "all": "Tümü",
+      "hair": "Saç",
+      "nails": "Tırnaklar",
+      "favorites": "Favoriler"
+    },
+    "views": {
+      "grid": "Izgara Görünümü",
+      "list": "Liste Görünümü"
+    },
+    "actions": {
+      "favorite": "Favori",
+      "unfavorite": "Favorilerden Kaldır",
+      "share": "Paylaş",
+      "download": "İndir",
+      "delete": "Sil"
+    },
+    "confirmDelete": "Bu öğeyi silmek istediğinizden emin misiniz?",
+    "messages": {
+      "deleted": "Öğe başarıyla silindi",
+      "downloaded": "Görüntü indirildi",
+      "addedToFavorites": "Favorilere eklendi",
+      "removedFromFavorites": "Favorilerden kaldırıldı"
+    },
+    "empty": {
+      "title": "Henüz kayıtlı görünüm yok",
+      "description": "Stilleri denemeye başlayın ve favorilerinizi kaydedin!",
+      "action": "Denemeye Başla"
+    }
+  },
+  "stores": {
+    "title": "Harika Salonları Keşfedin",
+    "subtitle": "En iyi salonlardan stillere göz atın ve bir sonraki randevunuzu ayarlayın",
+    "search": "Salon ara...",
+    "filters": {
+      "all": "Tüm Kategoriler",
+      "hair": "Kuaförler",
+      "nails": "Tırnak Salonları",
+      "both": "Saç ve Tırnak"
+    },
+    "details": {
+      "about": "Hakkında",
+      "styles": "Stiller",
+      "reviews": "Yorumlar",
+      "contact": "İletişim"
+    },
+    "actions": {
+      "bookAppointment": "Randevu Al",
+      "call": "Ara",
+      "email": "E-posta",
+      "directions": "Yol Tarifi Al",
+      "tryOn": "Bu Stili Dene"
+    },
+    "info": {
+      "open": "Açık",
+      "closed": "Kapalı",
+      "hours": "Çalışma Saatleri",
+      "location": "Konum",
+      "specialties": "Uzmanlıklar"
+    }
   },
   "profile": {
     "title": "Profil",
-    "subtitle": "Hesap ayarlarınızı yönetin"
+    "subtitle": "Hesap ayarlarınızı yönetin",
+    "sections": {
+      "account": "Hesap Bilgileri",
+      "preferences": "Tercihler",
+      "subscription": "Abonelik",
+      "security": "Güvenlik"
+    },
+    "fields": {
+      "fullName": "Tam Ad",
+      "email": "E-posta",
+      "phone": "Telefon Numarası",
+      "username": "Kullanıcı Adı",
+      "avatar": "Profil Fotoğrafı"
+    },
+    "actions": {
+      "updateProfile": "Profili Güncelle",
+      "changePassword": "Şifre Değiştir",
+      "deleteAccount": "Hesabı Sil",
+      "signOut": "Çıkış Yap",
+      "uploadAvatar": "Fotoğraf Yükle"
+    },
+    "notifications": {
+      "title": "Bildirim Tercihleri",
+      "email": "E-posta Bildirimleri",
+      "push": "Push Bildirimleri",
+      "marketing": "Pazarlama E-postaları"
+    },
+    "subscription": {
+      "current": "Mevcut Plan",
+      "free": "Ücretsiz",
+      "premium": "Premium",
+      "upgrade": "Premium'a Yükselt",
+      "benefits": "Premium Avantajları"
+    },
+    "messages": {
+      "updated": "Profil başarıyla güncellendi",
+      "avatarUploaded": "Fotoğraf başarıyla yüklendi",
+      "passwordChanged": "Şifre başarıyla değiştirildi",
+      "accountDeleted": "Hesap silindi",
+      "signedOut": "Başarıyla çıkış yapıldı"
+    }
   },
-  "stores": {
-    "title": "Harika salonları keşfedin",
-    "subtitle": "En iyi salonlardan stilleri inceleyin ve randevu alın"
+  "bookings": {
+    "title": "Randevularım",
+    "subtitle": "Salon randevularınızı yönetin",
+    "tabs": {
+      "upcoming": "Yaklaşan",
+      "past": "Geçmiş",
+      "cancelled": "İptal Edilenler"
+    },
+    "status": {
+      "pending": "Beklemede",
+      "confirmed": "Onaylandı",
+      "completed": "Tamamlandı",
+      "cancelled": "İptal Edildi"
+    },
+    "actions": {
+      "reschedule": "Yeniden Planla",
+      "cancel": "Randevuyu İptal Et",
+      "viewDetails": "Detayları Gör"
+    },
+    "booking": {
+      "date": "Tarih",
+      "time": "Saat",
+      "service": "Hizmet",
+      "salon": "Salon",
+      "price": "Fiyat",
+      "duration": "Süre"
+    },
+    "empty": {
+      "title": "Henüz randevu yok",
+      "description": "Bir salonda ilk randevunuzu alın",
+      "action": "Salonlara Göz At"
+    },
+    "messages": {
+      "cancelled": "Randevu başarıyla iptal edildi",
+      "confirmed": "Randevu onaylandı!"
+    }
+  },
+  "legal": {
+    "privacy": "Gizlilik Politikası",
+    "terms": "Hizmet Şartları",
+    "refunds": "İade Politikası",
+    "lastUpdated": "Son güncelleme: {date}"
   }
 }

@@ -20,45 +20,286 @@
     "no": "No",
     "optional": "Opcional",
     "required": "Requerido",
-    "linkCopied": "¡Enlace copiado!"
+    "linkCopied": "¡Enlace copiado!",
+    "download": "Descargar",
+    "upload": "Subir",
+    "edit": "Editar",
+    "update": "Actualizar",
+    "create": "Crear",
+    "view": "Ver"
   },
   "navigation": {
     "dashboard": "Panel",
-    "tryOn": "Prueba",
+    "tryOn": "Prueba Virtual",
     "hair": "Peinados",
-    "nails": "Manicura",
+    "nails": "Uñas",
     "gallery": "Galería",
     "stores": "Salones",
     "profile": "Perfil",
-    "bookings": "Mis reservas",
+    "bookings": "Mis Citas",
     "upgradeToPremium": "Actualizar a Premium",
-    "logout": "Cerrar sesión",
+    "logout": "Cerrar Sesión",
     "loggedOut": "Sesión cerrada exitosamente",
-    "logoutFailed": "Error al cerrar sesión. Inténtalo de nuevo.",
+    "logoutFailed": "Error al cerrar sesión. Inténtelo de nuevo.",
     "redirectingToPricing": "Redirigiendo a precios..."
   },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "signInWith": "Iniciar sesión con {provider}",
+    "orContinueWith": "O continuar con",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes cuenta?",
+    "hasAccount": "¿Ya tienes cuenta?",
+    "createAccount": "Crear cuenta",
+    "fullName": "Nombre completo",
+    "agreeToTerms": "Acepto los Términos de Servicio y la Política de Privacidad",
+    "loggingIn": "Iniciando sesión...",
+    "signingUp": "Registrándose...",
+    "invalidCredentials": "Correo o contraseña inválidos",
+    "accountCreated": "¡Cuenta creada exitosamente!"
+  },
   "hair": {
-    "title": "Prueba de peinados",
+    "title": "Prueba Virtual de Peinados",
     "subtitle": "Prueba diferentes peinados y colores en tiempo real",
-    "selectStyle": "Elige un estilo",
+    "selectStyle": "Elige un Estilo",
     "customize": "Personalizar",
     "info": "Información",
-    "tips": "Consejos"
+    "tips": "Consejos",
+    "categories": {
+      "all": "Todos los Estilos",
+      "short": "Corto",
+      "medium": "Medio",
+      "long": "Largo",
+      "curly": "Rizado",
+      "straight": "Liso",
+      "wavy": "Ondulado",
+      "color": "Color"
+    },
+    "actions": {
+      "takePhoto": "Tomar Foto",
+      "customColor": "Color Personalizado",
+      "addToFavorites": "Añadir a Favoritos",
+      "compare": "Comparar Estilos",
+      "reset": "Restablecer",
+      "apply": "Aplicar Estilo"
+    },
+    "controls": {
+      "opacity": "Opacidad",
+      "saturation": "Saturación",
+      "brightness": "Brillo",
+      "blend": "Modo de Mezcla"
+    },
+    "styles": {
+      "pixieCut": "Corte Pixie",
+      "classicBob": "Bob Clásico",
+      "beachWaves": "Ondas Playeras",
+      "longLayers": "Capas Largas",
+      "mermaidWaves": "Ondas de Sirena",
+      "platinumBlonde": "Rubio Platino",
+      "roseGold": "Oro Rosa",
+      "burgundyRed": "Rojo Burdeos",
+      "tightCurls": "Rizos Apretados",
+      "afro": "Afro"
+    },
+    "messages": {
+      "saved": "¡Peinado guardado en la galería!",
+      "shared": "¡Peinado compartido exitosamente!",
+      "photoTaken": "¡Foto capturada!",
+      "noCamera": "Acceso a la cámara denegado",
+      "loading": "Cargando prueba de peinados..."
+    }
   },
   "nails": {
-    "title": "Prueba de manicura",
-    "subtitle": "Experimenta con esmaltes y diseños"
+    "title": "Prueba Virtual de Uñas",
+    "subtitle": "Experimenta con colores de esmalte y diseños",
+    "selectColor": "Elige un Color",
+    "selectPattern": "Elige un Patrón",
+    "customize": "Personalizar",
+    "categories": {
+      "all": "Todos los Colores",
+      "reds": "Rojos",
+      "pinks": "Rosas y Nude",
+      "purples": "Púrpuras",
+      "blues": "Azules y Turquesas",
+      "greens": "Verdes",
+      "oranges": "Naranjas y Corales",
+      "neutrals": "Neutros",
+      "metallics": "Metálicos"
+    },
+    "patterns": {
+      "solid": "Sólido",
+      "french": "Manicura Francesa",
+      "glitter": "Brillantina",
+      "ombre": "Degradado"
+    },
+    "controls": {
+      "opacity": "Opacidad",
+      "glossiness": "Brillo"
+    },
+    "actions": {
+      "capture": "Capturar Foto",
+      "saveLook": "Guardar Look",
+      "addToFavorites": "Añadir a Favoritos"
+    },
+    "messages": {
+      "saved": "¡Diseño de uñas guardado en la galería!",
+      "shared": "¡Diseño de uñas compartido exitosamente!",
+      "photoTaken": "¡Foto capturada!",
+      "noCamera": "Acceso a la cámara denegado"
+    }
   },
   "gallery": {
-    "title": "Mi galería",
-    "savedLooks": "looks guardados"
+    "title": "Mi Galería",
+    "subtitle": "Ve y administra tus looks guardados",
+    "tabs": {
+      "all": "Todos",
+      "hair": "Peinados",
+      "nails": "Uñas",
+      "favorites": "Favoritos"
+    },
+    "views": {
+      "grid": "Vista de Cuadrícula",
+      "list": "Vista de Lista"
+    },
+    "actions": {
+      "favorite": "Favorito",
+      "unfavorite": "Quitar de Favoritos",
+      "share": "Compartir",
+      "download": "Descargar",
+      "delete": "Eliminar"
+    },
+    "confirmDelete": "¿Estás seguro de que quieres eliminar este elemento?",
+    "messages": {
+      "deleted": "Elemento eliminado exitosamente",
+      "downloaded": "Imagen descargada",
+      "addedToFavorites": "Añadido a favoritos",
+      "removedFromFavorites": "Eliminado de favoritos"
+    },
+    "empty": {
+      "title": "Aún no hay looks guardados",
+      "description": "¡Comienza a probar estilos y guarda tus favoritos!",
+      "action": "Comenzar Prueba"
+    }
+  },
+  "stores": {
+    "title": "Descubre Salones Increíbles",
+    "subtitle": "Explora estilos de los mejores salones y reserva tu próxima cita",
+    "search": "Buscar salones...",
+    "filters": {
+      "all": "Todas las Categorías",
+      "hair": "Peluquerías",
+      "nails": "Salones de Uñas",
+      "both": "Cabello y Uñas"
+    },
+    "details": {
+      "about": "Acerca de",
+      "styles": "Estilos",
+      "reviews": "Reseñas",
+      "contact": "Contacto"
+    },
+    "actions": {
+      "bookAppointment": "Reservar Cita",
+      "call": "Llamar",
+      "email": "Email",
+      "directions": "Obtener Direcciones",
+      "tryOn": "Probar Este Estilo"
+    },
+    "info": {
+      "open": "Abierto",
+      "closed": "Cerrado",
+      "hours": "Horario",
+      "location": "Ubicación",
+      "specialties": "Especialidades"
+    }
   },
   "profile": {
     "title": "Perfil",
-    "subtitle": "Administra la configuración de tu cuenta"
+    "subtitle": "Administra la configuración de tu cuenta",
+    "sections": {
+      "account": "Información de la Cuenta",
+      "preferences": "Preferencias",
+      "subscription": "Suscripción",
+      "security": "Seguridad"
+    },
+    "fields": {
+      "fullName": "Nombre Completo",
+      "email": "Correo Electrónico",
+      "phone": "Número de Teléfono",
+      "username": "Nombre de Usuario",
+      "avatar": "Foto de Perfil"
+    },
+    "actions": {
+      "updateProfile": "Actualizar Perfil",
+      "changePassword": "Cambiar Contraseña",
+      "deleteAccount": "Eliminar Cuenta",
+      "signOut": "Cerrar Sesión",
+      "uploadAvatar": "Subir Foto"
+    },
+    "notifications": {
+      "title": "Preferencias de Notificaciones",
+      "email": "Notificaciones por Email",
+      "push": "Notificaciones Push",
+      "marketing": "Emails de Marketing"
+    },
+    "subscription": {
+      "current": "Plan Actual",
+      "free": "Gratis",
+      "premium": "Premium",
+      "upgrade": "Actualizar a Premium",
+      "benefits": "Beneficios Premium"
+    },
+    "messages": {
+      "updated": "Perfil actualizado exitosamente",
+      "avatarUploaded": "Foto subida exitosamente",
+      "passwordChanged": "Contraseña cambiada exitosamente",
+      "accountDeleted": "Cuenta eliminada",
+      "signedOut": "Sesión cerrada exitosamente"
+    }
   },
-  "stores": {
-    "title": "Descubre salones increíbles",
-    "subtitle": "Explora estilos de los mejores salones y reserva tu cita"
+  "bookings": {
+    "title": "Mis Citas",
+    "subtitle": "Administra tus citas en los salones",
+    "tabs": {
+      "upcoming": "Próximas",
+      "past": "Pasadas",
+      "cancelled": "Canceladas"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "confirmed": "Confirmada",
+      "completed": "Completada",
+      "cancelled": "Cancelada"
+    },
+    "actions": {
+      "reschedule": "Reprogramar",
+      "cancel": "Cancelar Cita",
+      "viewDetails": "Ver Detalles"
+    },
+    "booking": {
+      "date": "Fecha",
+      "time": "Hora",
+      "service": "Servicio",
+      "salon": "Salón",
+      "price": "Precio",
+      "duration": "Duración"
+    },
+    "empty": {
+      "title": "Aún no hay citas",
+      "description": "Reserva tu primera cita en un salón",
+      "action": "Explorar Salones"
+    },
+    "messages": {
+      "cancelled": "Cita cancelada exitosamente",
+      "confirmed": "¡Cita confirmada!"
+    }
+  },
+  "legal": {
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "refunds": "Política de Reembolsos",
+    "lastUpdated": "Última actualización: {date}"
   }
 }

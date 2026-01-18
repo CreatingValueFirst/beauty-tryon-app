@@ -74,3 +74,18 @@ export async function signOut() {
 
   return await supabase.auth.signOut();
 }
+
+/**
+ * Sign in with OAuth provider (Google, Facebook, TikTok)
+ */
+export async function signInWithOAuth(provider: 'google' | 'facebook' | 'tiktok') {
+  const supabase = createClient();
+  if (!supabase) return { error: 'Supabase not configured' };
+
+  return await supabase.auth.signInWithOAuth({
+    provider: provider,
+    options: {
+      redirectTo: `${window.location.origin}/dashboard`,
+    },
+  });
+}
