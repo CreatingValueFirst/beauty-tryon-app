@@ -1,0 +1,64 @@
+{
+  "common": {
+    "save": "Save",
+    "share": "Share",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success",
+    "tryAgain": "Try Again",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No",
+    "optional": "Optional",
+    "required": "Required",
+    "linkCopied": "Link copied to clipboard!"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "tryOn": "Try-On",
+    "hair": "Hair Styles",
+    "nails": "Nail Designs",
+    "gallery": "Gallery",
+    "stores": "Browse Salons",
+    "profile": "Profile",
+    "bookings": "My Bookings",
+    "upgradeToPremium": "Upgrade to Premium",
+    "logout": "Log Out",
+    "loggedOut": "Logged out successfully",
+    "logoutFailed": "Failed to log out. Please try again.",
+    "redirectingToPricing": "Redirecting to pricing..."
+  },
+  "hair": {
+    "title": "Hair Try-On",
+    "subtitle": "Try on different hairstyles and colors in real-time",
+    "selectStyle": "Choose a Style",
+    "customize": "Customize",
+    "info": "Info",
+    "tips": "Tips"
+  },
+  "nails": {
+    "title": "Nail Try-On",
+    "subtitle": "Experiment with nail polish colors and designs"
+  },
+  "gallery": {
+    "title": "My Gallery",
+    "savedLooks": "saved looks"
+  },
+  "profile": {
+    "title": "Profile",
+    "subtitle": "Manage your account settings and preferences"
+  },
+  "stores": {
+    "title": "Discover Amazing Salons",
+    "subtitle": "Browse styles from top-rated salons and book your next appointment"
+  }
+}

@@ -1,13 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Heart, Share2, Download, Trash2, Plus, Grid3x3, List } from 'lucide-react';
+import { Heart, Share2, Download, Trash2, Plus, Grid3x3, List, Loader2, Scissors, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
+import { createClient } from '@/lib/supabase/client';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 // Sample gallery items with professional images
 const MOCK_GALLERY_ITEMS = [
@@ -109,14 +112,178 @@ const MOCK_GALLERY_ITEMS = [
   },
 ];
 
-export default function GalleryPage() {
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+interface GalleryItem {
+  id: string;
+  type: 'hair' | 'nails';
+  result_image_url: string;
+  created_at: string;
+  is_favorite: boolean;
+  settings?: any;
+}
 
-  const toggleSelection = (id: string) => {
-    setSelectedItems((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+export default function GalleryPage() {
+  const router = useRouter();
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [loading, setLoading] = useState(true);
+  const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  // Fetch gallery items on mount
+  useEffect(() => {
+    async function fetchGalleryItems() {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+          toast.error('Please log in to view your gallery');
+          router.push('/login');
+          return;
+        }
+
+        setUserId(user.id);
+
+        // Fetch try-ons from database
+        const { data, error } = await supabase
+          .from('try_ons')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        setGalleryItems(data || []);
+        setLoading(false);
+      } catch (error) {
+        console.error('Failed to fetch gallery items:', error);
+        toast.error('Failed to load gallery');
+        setLoading(false);
+      }
+    }
+
+    fetchGalleryItems();
+  }, [router]);
+
+  const handleToggleFavorite = async (itemId: string, currentValue: boolean) => {
+    if (!userId) return;
+
+    // Optimistic update
+    setGalleryItems(prev =>
+      prev.map(item =>
+        item.id === itemId ? { ...item, is_favorite: !currentValue } : item
+      )
     );
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('try_ons')
+        .update({ is_favorite: !currentValue })
+        .eq('id', itemId);
+
+      if (error) throw error;
+
+      toast.success(
+        !currentValue
+          ? 'Added to favorites'
+          : 'Removed from favorites'
+      );
+    } catch (error) {
+      console.error('Failed to toggle favorite:', error);
+      // Revert on error
+      setGalleryItems(prev =>
+        prev.map(item =>
+          item.id === itemId ? { ...item, is_favorite: currentValue } : item
+        )
+      );
+      toast.error('Failed to update favorite');
+    }
+  };
+
+  const handleShare = async (item: GalleryItem) => {
+    const shareUrl = window.location.origin;
+    const shareText = `Check out my ${item.type} try-on!`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Try-On',
+          text: shareText,
+          url: shareUrl
+        });
+        toast.success('Shared successfully!');
+      } catch (err) {
+        if (err instanceof Error && err.name !== 'AbortError') {
+          await handleCopyLink(shareUrl);
+        }
+      }
+    } else {
+      await handleCopyLink(shareUrl);
+    }
+  };
+
+  const handleCopyLink = async (url: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success('Link copied to clipboard!');
+    } catch (error) {
+      toast.error('Failed to copy link');
+    }
+  };
+
+  const handleDownload = async (item: GalleryItem) => {
+    try {
+      const response = await fetch(item.result_image_url);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `beautytry-on-${item.id}.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      toast.success('Downloaded successfully!');
+    } catch (error) {
+      console.error('Failed to download:', error);
+      toast.error('Failed to download image');
+    }
+  };
+
+  const handleDelete = async (itemId: string) => {
+    if (!userId) return;
+
+    // Confirmation dialog
+    const confirmed = window.confirm(
+      'Are you sure you want to delete this try-on? This action cannot be undone.'
+    );
+    if (!confirmed) return;
+
+    // Optimistic update - remove from UI immediately
+    setGalleryItems(prev => prev.filter(item => item.id !== itemId));
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase
+        .from('try_ons')
+        .delete()
+        .eq('id', itemId);
+
+      if (error) throw error;
+
+      toast.success('Deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete:', error);
+      toast.error('Failed to delete. Please try again.');
+      // Re-fetch on error to restore correct state
+      const supabase = createClient();
+      const { data } = await supabase
+        .from('try_ons')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
+      if (data) setGalleryItems(data);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -128,6 +295,14 @@ export default function GalleryPage() {
     });
   };
 
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="w-8 h-8 animate-spin text-brand-purple" />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -135,7 +310,7 @@ export default function GalleryPage() {
         <div>
           <h1 className="text-3xl font-bold text-gradient">My Gallery</h1>
           <p className="text-gray-600 mt-1">
-            {MOCK_GALLERY_ITEMS.length} saved looks
+            {galleryItems.length} saved looks
           </p>
         </div>
         <div className="flex gap-2">
@@ -151,46 +326,65 @@ export default function GalleryPage() {
       {/* Filters */}
       <Tabs defaultValue="all" className="w-full">
         <TabsList>
-          <TabsTrigger value="all">All ({MOCK_GALLERY_ITEMS.length})</TabsTrigger>
+          <TabsTrigger value="all">All ({galleryItems.length})</TabsTrigger>
           <TabsTrigger value="hair">
-            Hair ({MOCK_GALLERY_ITEMS.filter((i) => i.type === 'hair').length})
+            Hair ({galleryItems.filter((i) => i.type === 'hair').length})
           </TabsTrigger>
           <TabsTrigger value="nails">
-            Nails ({MOCK_GALLERY_ITEMS.filter((i) => i.type === 'nails').length})
+            Nails ({galleryItems.filter((i) => i.type === 'nails').length})
           </TabsTrigger>
           <TabsTrigger value="favorites">
-            Favorites ({MOCK_GALLERY_ITEMS.filter((i) => i.is_favorite).length})
+            Favorites ({galleryItems.filter((i) => i.is_favorite).length})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="mt-6">
-          <GalleryGrid items={MOCK_GALLERY_ITEMS} viewMode={viewMode} />
+          <GalleryGrid
+            items={galleryItems}
+            viewMode={viewMode}
+            onToggleFavorite={handleToggleFavorite}
+            onShare={handleShare}
+            onDownload={handleDownload}
+            onDelete={handleDelete}
+          />
         </TabsContent>
 
         <TabsContent value="hair" className="mt-6">
           <GalleryGrid
-            items={MOCK_GALLERY_ITEMS.filter((i) => i.type === 'hair')}
+            items={galleryItems.filter((i) => i.type === 'hair')}
             viewMode={viewMode}
+            onToggleFavorite={handleToggleFavorite}
+            onShare={handleShare}
+            onDownload={handleDownload}
+            onDelete={handleDelete}
           />
         </TabsContent>
 
         <TabsContent value="nails" className="mt-6">
           <GalleryGrid
-            items={MOCK_GALLERY_ITEMS.filter((i) => i.type === 'nails')}
+            items={galleryItems.filter((i) => i.type === 'nails')}
             viewMode={viewMode}
+            onToggleFavorite={handleToggleFavorite}
+            onShare={handleShare}
+            onDownload={handleDownload}
+            onDelete={handleDelete}
           />
         </TabsContent>
 
         <TabsContent value="favorites" className="mt-6">
           <GalleryGrid
-            items={MOCK_GALLERY_ITEMS.filter((i) => i.is_favorite)}
+            items={galleryItems.filter((i) => i.is_favorite)}
             viewMode={viewMode}
+            onToggleFavorite={handleToggleFavorite}
+            onShare={handleShare}
+            onDownload={handleDownload}
+            onDelete={handleDelete}
           />
         </TabsContent>
       </Tabs>
 
       {/* Empty State */}
-      {MOCK_GALLERY_ITEMS.length === 0 && (
+      {galleryItems.length === 0 && (
         <Card>
           <CardContent className="py-16">
             <div className="text-center max-w-md mx-auto">
@@ -220,9 +414,17 @@ export default function GalleryPage() {
 function GalleryGrid({
   items,
   viewMode,
+  onToggleFavorite,
+  onShare,
+  onDownload,
+  onDelete,
 }: {
-  items: typeof MOCK_GALLERY_ITEMS;
+  items: GalleryItem[];
   viewMode: 'grid' | 'list';
+  onToggleFavorite: (itemId: string, currentValue: boolean) => void;
+  onShare: (item: GalleryItem) => void;
+  onDownload: (item: GalleryItem) => void;
+  onDelete: (itemId: string) => void;
 }) {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -242,20 +444,25 @@ function GalleryGrid({
               <div className="flex items-center gap-4">
                 <div className="w-20 h-20 rounded-lg flex-shrink-0 overflow-hidden bg-gray-100">
                   <Image
-                    src={item.thumbnail}
-                    alt={item.style_name}
+                    src={item.result_image_url}
+                    alt={`${item.type} try-on`}
                     width={80}
                     height={80}
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold truncate">{item.style_name}</h3>
-                  <p className="text-sm text-gray-600 capitalize">{item.type} Try-On</p>
+                  <h3 className="font-semibold truncate capitalize">{item.type} Try-On</h3>
+                  <p className="text-sm text-gray-600">Saved look</p>
                   <p className="text-xs text-gray-500 mt-1">{formatDate(item.created_at)}</p>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="ghost" size="icon">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onToggleFavorite(item.id, item.is_favorite)}
+                    title={item.is_favorite ? 'Remove from favorites' : 'Add to favorites'}
+                  >
                     <Heart
                       className={cn(
                         'w-4 h-4',
@@ -263,13 +470,28 @@ function GalleryGrid({
                       )}
                     />
                   </Button>
-                  <Button variant="ghost" size="icon">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onShare(item)}
+                    title="Share"
+                  >
                     <Share2 className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="icon">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onDownload(item)}
+                    title="Download"
+                  >
                     <Download className="w-4 h-4" />
                   </Button>
-                  <Button variant="ghost" size="icon">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onDelete(item.id)}
+                    title="Delete"
+                  >
                     <Trash2 className="w-4 h-4 text-red-500" />
                   </Button>
                 </div>
@@ -289,8 +511,8 @@ function GalleryGrid({
             {/* Thumbnail */}
             <div className="aspect-square bg-gray-100 relative overflow-hidden">
               <Image
-                src={item.thumbnail}
-                alt={item.style_name}
+                src={item.result_image_url}
+                alt={`${item.type} try-on`}
                 width={400}
                 height={400}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
@@ -298,33 +520,70 @@ function GalleryGrid({
 
               {/* Hover Overlay */}
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                <Button size="icon" variant="secondary" className="rounded-full">
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  className="rounded-full"
+                  onClick={() => onShare(item)}
+                  title="Share"
+                >
                   <Share2 className="w-4 h-4" />
                 </Button>
-                <Button size="icon" variant="secondary" className="rounded-full">
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  className="rounded-full"
+                  onClick={() => onDownload(item)}
+                  title="Download"
+                >
                   <Download className="w-4 h-4" />
                 </Button>
-                <Button size="icon" variant="secondary" className="rounded-full">
+                <Button
+                  size="icon"
+                  variant="secondary"
+                  className="rounded-full"
+                  onClick={() => onDelete(item.id)}
+                  title="Delete"
+                >
                   <Trash2 className="w-4 h-4" />
                 </Button>
               </div>
 
-              {/* Favorite Badge */}
-              {item.is_favorite && (
-                <div className="absolute top-2 right-2">
-                  <Heart className="w-5 h-5 fill-brand-pink text-brand-pink drop-shadow-lg" />
-                </div>
-              )}
+              {/* Favorite Badge - Clickable */}
+              <button
+                className="absolute top-2 right-2 z-10"
+                onClick={() => onToggleFavorite(item.id, item.is_favorite)}
+                title={item.is_favorite ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Heart
+                  className={cn(
+                    'w-5 h-5 drop-shadow-lg transition-all hover:scale-110',
+                    item.is_favorite
+                      ? 'fill-brand-pink text-brand-pink'
+                      : 'fill-white/50 text-white/50 hover:fill-white hover:text-white'
+                  )}
+                />
+              </button>
 
               {/* Type Badge */}
-              <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium capitalize shadow-sm">
-                {item.type === 'hair' ? '💇 Hair' : '💅 Nails'}
+              <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium capitalize shadow-sm flex items-center gap-1">
+                {item.type === 'hair' ? (
+                  <>
+                    <Scissors className="w-3 h-3" />
+                    <span>Hair</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-3 h-3" />
+                    <span>Nails</span>
+                  </>
+                )}
               </div>
             </div>
 
             {/* Info */}
             <div className="p-3 bg-white">
-              <h3 className="font-semibold text-sm truncate">{item.style_name}</h3>
+              <h3 className="font-semibold text-sm truncate capitalize">{item.type} Try-On</h3>
               <p className="text-xs text-gray-500 mt-1">{formatDate(item.created_at)}</p>
             </div>
           </CardContent>

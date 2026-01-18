@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Search, MapPin, Star, TrendingUp, Store } from 'lucide-react';
+import { Search, MapPin, Star, TrendingUp, Store, Sparkles } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -97,11 +97,24 @@ export default function StoresPage() {
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.currentTarget.blur();
+                  }
+                }}
                 placeholder="Search salons, cities, or styles..."
                 className="border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
               />
             </div>
-            <Button size="lg" className="bg-brand-purple hover:bg-brand-purple/90">
+            <Button
+              size="lg"
+              className="bg-brand-purple hover:bg-brand-purple/90"
+              onClick={() => {
+                if (!searchQuery) {
+                  document.querySelector<HTMLInputElement>('input')?.focus();
+                }
+              }}
+            >
               Search
             </Button>
           </div>
@@ -221,8 +234,9 @@ export default function StoresPage() {
                       />
                     )}
                     {store.is_featured && (
-                      <div className="absolute top-4 right-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                        ⭐ Featured
+                      <div className="absolute top-4 right-4 bg-yellow-500 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1">
+                        <Sparkles className="w-3 h-3" />
+                        Featured
                       </div>
                     )}
                   </div>

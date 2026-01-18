@@ -136,6 +136,10 @@ export default function StoreDashboardPage() {
     );
   }
 
+  if (!store) {
+    return null;
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}

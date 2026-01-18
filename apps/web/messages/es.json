@@ -1,0 +1,64 @@
+{
+  "common": {
+    "save": "Guardar",
+    "share": "Compartir",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "success": "Éxito",
+    "tryAgain": "Intentar de nuevo",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "all": "Todos",
+    "yes": "Sí",
+    "no": "No",
+    "optional": "Opcional",
+    "required": "Requerido",
+    "linkCopied": "¡Enlace copiado!"
+  },
+  "navigation": {
+    "dashboard": "Panel",
+    "tryOn": "Prueba",
+    "hair": "Peinados",
+    "nails": "Manicura",
+    "gallery": "Galería",
+    "stores": "Salones",
+    "profile": "Perfil",
+    "bookings": "Mis reservas",
+    "upgradeToPremium": "Actualizar a Premium",
+    "logout": "Cerrar sesión",
+    "loggedOut": "Sesión cerrada exitosamente",
+    "logoutFailed": "Error al cerrar sesión. Inténtalo de nuevo.",
+    "redirectingToPricing": "Redirigiendo a precios..."
+  },
+  "hair": {
+    "title": "Prueba de peinados",
+    "subtitle": "Prueba diferentes peinados y colores en tiempo real",
+    "selectStyle": "Elige un estilo",
+    "customize": "Personalizar",
+    "info": "Información",
+    "tips": "Consejos"
+  },
+  "nails": {
+    "title": "Prueba de manicura",
+    "subtitle": "Experimenta con esmaltes y diseños"
+  },
+  "gallery": {
+    "title": "Mi galería",
+    "savedLooks": "looks guardados"
+  },
+  "profile": {
+    "title": "Perfil",
+    "subtitle": "Administra la configuración de tu cuenta"
+  },
+  "stores": {
+    "title": "Descubre salones increíbles",
+    "subtitle": "Explora estilos de los mejores salones y reserva tu cita"
+  }
+}

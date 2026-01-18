@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { ARCamera } from '@/components/ar/ARCamera';
 import { StyleCarousel, StyleItem } from '@/components/features/hair-tryon/StyleCarousel';
 import { ColorPicker, ColorSettings } from '@/components/features/hair-tryon/ColorPicker';
@@ -8,8 +8,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { processHair, hexToRgb } from '@/lib/ai/hair-processor';
-import { Save, Share2, Download, Sparkles } from 'lucide-react';
+import { Save, Share2, Download, Sparkles, Camera, Palette, Heart, RefreshCw } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 // Professional sample hair styles with real images
 const SAMPLE_HAIR_STYLES: StyleItem[] = [
@@ -96,8 +98,14 @@ const SAMPLE_HAIR_STYLES: StyleItem[] = [
 ];
 
 export default function HairTryOnPage() {
+  const router = useRouter();
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   const [hairStyles, setHairStyles] = useState<StyleItem[]>(SAMPLE_HAIR_STYLES);
+  const [filteredStyles, setFilteredStyles] = useState<StyleItem[]>(SAMPLE_HAIR_STYLES);
   const [selectedStyle, setSelectedStyle] = useState<StyleItem>(SAMPLE_HAIR_STYLES[0]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [colorSettings, setColorSettings] = useState<ColorSettings>({
     hex: SAMPLE_HAIR_STYLES[0].color_base || '#8B5CF6',
     opacity: 0.6,
@@ -107,6 +115,8 @@ export default function HairTryOnPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [lastFrameTime, setLastFrameTime] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
   // Fetch real styles from Supabase
   useEffect(() => {
@@ -119,6 +129,7 @@ export default function HairTryOnPage() {
 
       if (data && data.length > 0) {
         setHairStyles(data);
+        setFilteredStyles(data);
         setSelectedStyle(data[0]);
         setColorSettings(prev => ({
           ...prev,
@@ -176,14 +187,108 @@ export default function HairTryOnPage() {
     setSelectedStyle(style);
   };
 
-  const handleSave = () => {
-    // TODO: Implement save to gallery
-    console.log('Saving try-on...');
+  const handleTakePhoto = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      toast.error('Camera not ready. Please wait.');
+      return;
+    }
+
+    try {
+      const imageUrl = canvas.toDataURL('image/png');
+      setCapturedImage(imageUrl);
+      toast.success('Photo captured successfully!');
+    } catch (error) {
+      console.error('Failed to capture photo:', error);
+      toast.error('Failed to capture photo. Please try again.');
+    }
   };
 
-  const handleShare = () => {
-    // TODO: Implement social sharing
-    console.log('Sharing...');
+  const handleSave = async () => {
+    if (!capturedImage) {
+      toast.error('Please take a photo first');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        toast.error('Please log in to save your try-on');
+        router.push('/login');
+        return;
+      }
+
+      const { error } = await supabase.from('try_ons').insert({
+        user_id: user.id,
+        type: 'hair',
+        style_id: selectedStyle?.id,
+        result_image_url: capturedImage,
+        settings: {
+          color: colorSettings.hex,
+          opacity: colorSettings.opacity,
+          saturation: colorSettings.saturation,
+          brightness: colorSettings.brightness
+        },
+        is_favorite: false
+      });
+
+      if (error) throw error;
+      toast.success('Saved to your gallery!');
+    } catch (error) {
+      console.error('Failed to save:', error);
+      toast.error('Failed to save. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!capturedImage) {
+      toast.error('Please take a photo first');
+      return;
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Hair Try-On',
+          text: 'Check out my new hairstyle!',
+          url: window.location.href
+        });
+        toast.success('Shared successfully!');
+      } catch (err) {
+        if (err instanceof Error && err.name !== 'AbortError') {
+          await navigator.clipboard.writeText(window.location.href);
+          toast.success('Link copied to clipboard!');
+        }
+      }
+    } else {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success('Link copied to clipboard!');
+    }
+  };
+
+  const handleCustomColor = () => {
+    toast.info('Use the color picker in the Customize tab');
+  };
+
+  const handleViewFavorites = () => {
+    router.push('/dashboard/gallery?filter=favorites');
+  };
+
+  const handleCompare = () => {
+    toast.info('Compare mode coming soon!');
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    const filtered = hairStyles.filter(s =>
+      category === 'All' || s.category?.toLowerCase() === category.toLowerCase()
+    );
+    setFilteredStyles(filtered);
   };
 
   return (
@@ -227,13 +332,13 @@ export default function HairTryOnPage() {
             </CardHeader>
             <CardContent>
               <StyleCarousel
-                styles={hairStyles}
+                styles={filteredStyles}
                 selectedId={selectedStyle.id}
                 onSelect={handleStyleSelect}
               />
-              {!loading && hairStyles.length > 0 && (
+              {!loading && filteredStyles.length > 0 && (
                 <p className="text-xs text-center text-gray-500 mt-3">
-                  {hairStyles.length} professional styles available
+                  {filteredStyles.length} {selectedCategory !== 'All' && selectedCategory.toLowerCase()} styles available
                 </p>
               )}
             </CardContent>
@@ -285,10 +390,20 @@ export default function HairTryOnPage() {
                     </div>
 
                     <div className="pt-4 border-t">
-                      <Button className="w-full" size="lg">
+                      <Button
+                        className="w-full"
+                        size="lg"
+                        onClick={handleSave}
+                        disabled={saving || !capturedImage}
+                      >
                         <Download className="w-4 h-4 mr-2" />
-                        Save This Look
+                        {saving ? 'Saving...' : 'Save This Look'}
                       </Button>
+                      {!capturedImage && (
+                        <p className="text-xs text-muted-foreground mt-2 text-center">
+                          Take a photo first to save
+                        </p>
+                      )}
                     </div>
                   </div>
                 </TabsContent>
@@ -302,17 +417,41 @@ export default function HairTryOnPage() {
               <CardTitle className="text-sm">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button variant="outline" className="w-full justify-start" size="sm">
-                📸 Take Photo
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                size="sm"
+                onClick={handleTakePhoto}
+              >
+                <Camera className="w-4 h-4 mr-2" />
+                Take Photo
               </Button>
-              <Button variant="outline" className="w-full justify-start" size="sm">
-                🎨 Create Custom Color
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                size="sm"
+                onClick={handleCustomColor}
+              >
+                <Palette className="w-4 h-4 mr-2" />
+                Custom Color
               </Button>
-              <Button variant="outline" className="w-full justify-start" size="sm">
-                ⭐ View Favorites
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                size="sm"
+                onClick={handleViewFavorites}
+              >
+                <Heart className="w-4 h-4 mr-2" />
+                View Favorites
               </Button>
-              <Button variant="outline" className="w-full justify-start" size="sm">
-                🔄 Compare Styles
+              <Button
+                variant="outline"
+                className="w-full justify-start"
+                size="sm"
+                onClick={handleCompare}
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Compare Styles
               </Button>
             </CardContent>
           </Card>
@@ -327,7 +466,12 @@ export default function HairTryOnPage() {
         <CardContent>
           <div className="flex flex-wrap gap-2">
             {['All', 'Short', 'Medium', 'Long', 'Curly', 'Straight', 'Wavy', 'Premium'].map((category) => (
-              <Button key={category} variant="outline" size="sm">
+              <Button
+                key={category}
+                variant={selectedCategory === category ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => handleCategoryChange(category)}
+              >
                 {category}
               </Button>
             ))}

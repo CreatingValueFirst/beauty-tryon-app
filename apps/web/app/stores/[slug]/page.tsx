@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MapPin, Star, Phone, Mail, Calendar, ExternalLink, Camera } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface Store {
   id: string;
@@ -140,6 +141,69 @@ export default function StoreDetailPage() {
     }
   }, [slug, router]);
 
+  const handleBookAppointment = () => {
+    // TODO: Open booking modal in future phase
+    toast.info('Booking system coming soon! Please call or email the salon to book an appointment.');
+  };
+
+  const handleCall = () => {
+    if (!store?.phone) {
+      toast.error('Phone number not available');
+      return;
+    }
+
+    // Clean phone number and open dialer
+    const cleanPhone = store.phone.replace(/\D/g, '');
+    window.location.href = `tel:${cleanPhone}`;
+    toast.success('Opening phone dialer...');
+  };
+
+  const handleEmail = () => {
+    if (!store?.email) {
+      toast.error('Email address not available');
+      return;
+    }
+
+    // Open email client with pre-filled subject
+    const subject = encodeURIComponent(`Inquiry about ${store.business_name}`);
+    const body = encodeURIComponent(`Hi ${store.business_name},\n\nI'm interested in booking an appointment.\n\nThank you!`);
+    window.location.href = `mailto:${store.email}?subject=${subject}&body=${body}`;
+    toast.success('Opening email client...');
+  };
+
+  const handleTryOnHair = (style: HairStyle) => {
+    // Save style to session storage for try-on page to use
+    sessionStorage.setItem('selectedHairStyle', JSON.stringify({
+      id: style.id,
+      name: style.name,
+      category: style.category,
+      color_base: '#8B5CF6', // Default color
+      thumbnail_url: style.thumbnail_url,
+      is_premium: false,
+    }));
+
+    toast.success(`Redirecting to hair try-on with ${style.name}...`);
+    router.push('/dashboard/hair');
+  };
+
+  const handleTryOnNails = (style: NailStyle) => {
+    // Save style to session storage
+    sessionStorage.setItem('selectedNailStyle', JSON.stringify({
+      id: style.id,
+      name: style.name,
+      color_code: '#DC143C', // Default color
+      category: style.category,
+    }));
+
+    toast.success(`Redirecting to nail try-on with ${style.name}...`);
+    router.push('/dashboard/nails');
+  };
+
+  const handleBookStyle = (style: HairStyle | NailStyle, type: 'hair' | 'nails') => {
+    // TODO: Open booking modal with this style pre-selected in future phase
+    toast.info(`To book "${style.name}", please call or email ${store?.business_name}`);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -231,18 +295,18 @@ export default function StoreDetailPage() {
                 </div>
 
                 <div className="flex gap-3 flex-wrap">
-                  <Button size="lg" className="gap-2">
+                  <Button size="lg" className="gap-2" onClick={handleBookAppointment}>
                     <Calendar className="w-4 h-4" />
                     Book Appointment
                   </Button>
                   {store.phone && (
-                    <Button variant="outline" size="lg" className="gap-2">
+                    <Button variant="outline" size="lg" className="gap-2" onClick={handleCall}>
                       <Phone className="w-4 h-4" />
                       Call
                     </Button>
                   )}
                   {store.email && (
-                    <Button variant="outline" size="lg" className="gap-2">
+                    <Button variant="outline" size="lg" className="gap-2" onClick={handleEmail}>
                       <Mail className="w-4 h-4" />
                       Email
                     </Button>
@@ -283,7 +347,12 @@ export default function StoreDetailPage() {
                         />
                       )}
                       <div className="absolute top-3 right-3">
-                        <Button size="sm" variant="secondary" className="gap-1">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="gap-1"
+                          onClick={() => handleTryOnHair(style)}
+                        >
                           <Camera className="w-3 h-3" />
                           Try On
                         </Button>
@@ -309,7 +378,9 @@ export default function StoreDetailPage() {
                             </div>
                           )}
                         </div>
-                        <Button size="sm">Book</Button>
+                        <Button size="sm" onClick={() => handleBookStyle(style, 'hair')}>
+                          Book
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>
@@ -340,7 +411,12 @@ export default function StoreDetailPage() {
                         />
                       )}
                       <div className="absolute top-3 right-3">
-                        <Button size="sm" variant="secondary" className="gap-1">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          className="gap-1"
+                          onClick={() => handleTryOnNails(style)}
+                        >
                           <Camera className="w-3 h-3" />
                           Try On
                         </Button>
@@ -366,7 +442,9 @@ export default function StoreDetailPage() {
                             </div>
                           )}
                         </div>
-                        <Button size="sm">Book</Button>
+                        <Button size="sm" onClick={() => handleBookStyle(style, 'nails')}>
+                          Book
+                        </Button>
                       </div>
                     </CardContent>
                   </Card>

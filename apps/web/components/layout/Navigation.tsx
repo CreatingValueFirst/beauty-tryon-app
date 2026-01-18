@@ -1,10 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
 import { Sparkles, Camera, Image, User, LogOut } from 'lucide-react';
+import { createClient } from '@/lib/supabase/client';
+import { toast } from 'sonner';
+import { useState } from 'react';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 const navItems = [
   { href: '/dashboard', label: 'Try-On', icon: Camera },
@@ -16,6 +20,36 @@ const navItems = [
 
 export function Navigation() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+
+    try {
+      const supabase = createClient();
+      const { error } = await supabase.auth.signOut();
+
+      if (error) {
+        toast.error('Failed to log out. Please try again.');
+        console.error('Logout error:', error);
+        return;
+      }
+
+      toast.success('Logged out successfully');
+      router.push('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to log out. Please try again.');
+    } finally {
+      setLoggingOut(false);
+    }
+  };
+
+  const handleUpgradeToPremium = () => {
+    router.push('/pricing');
+    toast.info('Redirecting to pricing...');
+  };
 
   return (
     <nav className="bg-white border-b border-gray-200 shadow-sm">
@@ -51,10 +85,21 @@ export function Navigation() {
 
           {/* Actions */}
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
+            <LanguageSwitcher />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleUpgradeToPremium}
+            >
               <span className="hidden sm:inline">Upgrade to</span> Premium
             </Button>
-            <Button variant="ghost" size="icon">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              disabled={loggingOut}
+              title="Log out"
+            >
               <LogOut className="w-4 h-4" />
             </Button>
           </div>

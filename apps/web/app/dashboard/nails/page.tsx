@@ -1,14 +1,16 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { ARCamera } from '@/components/ar/ARCamera';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { processNails, hexToRgbNail, NAIL_PRESETS, NailSettings } from '@/lib/ai/nail-processor';
-import { Save, Share2, Download, Sparkles } from 'lucide-react';
+import { Save, Share2, Download, Sparkles, Camera, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { createClient } from '@/lib/supabase/client';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 const PATTERNS = [
   { value: 'solid', label: 'Solid', icon: '🎨' },
@@ -32,8 +34,12 @@ const SAMPLE_NAIL_COLORS = [
 ];
 
 export default function NailTryOnPage() {
+  const router = useRouter();
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   const [nailColors, setNailColors] = useState(SAMPLE_NAIL_COLORS);
   const [selectedColor, setSelectedColor] = useState('#DC143C');
+  const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
   const [settings, setSettings] = useState<NailSettings>({
     color: hexToRgbNail('#DC143C'),
     opacity: 0.85,
@@ -43,6 +49,8 @@ export default function NailTryOnPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [lastFrameTime, setLastFrameTime] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [capturedImage, setCapturedImage] = useState<string | null>(null);
 
   // Fetch real nail styles from Supabase
   useEffect(() => {
@@ -111,6 +119,151 @@ export default function NailTryOnPage() {
     }));
   };
 
+  const handleTakePhoto = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      toast.error('Camera not ready. Please wait.');
+      return;
+    }
+
+    try {
+      const imageUrl = canvas.toDataURL('image/png');
+      setCapturedImage(imageUrl);
+      toast.success('Photo captured successfully!');
+    } catch (error) {
+      console.error('Failed to capture photo:', error);
+      toast.error('Failed to capture photo. Please try again.');
+    }
+  };
+
+  const handleSave = async () => {
+    if (!capturedImage) {
+      toast.error('Please take a photo first');
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      const supabase = createClient();
+
+      // Get current user
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        toast.error('Please log in to save your try-on');
+        router.push('/login');
+        return;
+      }
+
+      // Save to try_ons table
+      const { error } = await supabase
+        .from('try_ons')
+        .insert({
+          user_id: user.id,
+          type: 'nails',
+          result_image_url: capturedImage,
+          settings: {
+            color: selectedColor,
+            opacity: settings.opacity,
+            glossiness: settings.glossiness,
+            pattern: settings.pattern,
+          },
+          is_favorite: false
+        });
+
+      if (error) throw error;
+
+      toast.success('Saved to your gallery!');
+    } catch (error) {
+      console.error('Failed to save:', error);
+      toast.error('Failed to save. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleShare = async () => {
+    if (!capturedImage) {
+      toast.error('Please take a photo first');
+      return;
+    }
+
+    // Use Web Share API if available
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'My Nail Try-On',
+          text: `Check out my ${selectedColor} nail design!`,
+          url: window.location.href
+        });
+        toast.success('Shared successfully!');
+      } catch (err) {
+        // User cancelled or share failed
+        if (err instanceof Error && err.name !== 'AbortError') {
+          handleCopyLink();
+        }
+      }
+    } else {
+      handleCopyLink();
+    }
+  };
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast.success('Link copied to clipboard!');
+    } catch (error) {
+      toast.error('Failed to copy link');
+    }
+  };
+
+  const handleAddToFavorites = async () => {
+    if (!capturedImage) {
+      toast.error('Please take a photo first');
+      return;
+    }
+
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        toast.error('Please log in to save favorites');
+        router.push('/login');
+        return;
+      }
+
+      const { error } = await supabase
+        .from('try_ons')
+        .insert({
+          user_id: user.id,
+          type: 'nails',
+          result_image_url: capturedImage,
+          settings: {
+            color: selectedColor,
+            opacity: settings.opacity,
+            glossiness: settings.glossiness,
+            pattern: settings.pattern,
+          },
+          is_favorite: true
+        });
+
+      if (error) throw error;
+
+      toast.success('Added to favorites!');
+    } catch (error) {
+      console.error('Failed to add to favorites:', error);
+      toast.error('Failed to add to favorites');
+    }
+  };
+
+  const handleCollectionSelect = (collection: string) => {
+    setSelectedCollection(collection);
+    toast.info(`${collection} collection selected`);
+    // TODO: Filter nail designs by collection
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -122,11 +275,11 @@ export default function NailTryOnPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleSave} disabled={saving || !capturedImage}>
             <Save className="w-4 h-4 mr-2" />
-            Save
+            {saving ? 'Saving...' : 'Save'}
           </Button>
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleShare} disabled={!capturedImage}>
             <Share2 className="w-4 h-4 mr-2" />
             Share
           </Button>
@@ -306,15 +459,21 @@ export default function NailTryOnPage() {
           {/* Actions */}
           <Card>
             <CardContent className="pt-6 space-y-2">
-              <Button className="w-full">
+              <Button
+                className="w-full"
+                onClick={handleSave}
+                disabled={saving || !capturedImage}
+              >
                 <Download className="w-4 h-4 mr-2" />
-                Save This Look
+                {saving ? 'Saving...' : 'Save This Look'}
               </Button>
-              <Button variant="outline" className="w-full">
-                📸 Capture Photo
+              <Button variant="outline" className="w-full" onClick={handleTakePhoto}>
+                <Camera className="w-4 h-4 mr-2" />
+                Capture Photo
               </Button>
-              <Button variant="outline" className="w-full">
-                ⭐ Add to Favorites
+              <Button variant="outline" className="w-full" onClick={handleAddToFavorites} disabled={!capturedImage}>
+                <Heart className="w-4 h-4 mr-2" />
+                Add to Favorites
               </Button>
             </CardContent>
           </Card>
@@ -328,14 +487,16 @@ export default function NailTryOnPage() {
         </CardHeader>
         <CardContent>
           <div className="flex gap-2 flex-wrap">
-            <Button variant="outline" size="sm">💖 Romantic</Button>
-            <Button variant="outline" size="sm">🌟 Glam</Button>
-            <Button variant="outline" size="sm">🍂 Autumn</Button>
-            <Button variant="outline" size="sm">❄️ Winter</Button>
-            <Button variant="outline" size="sm">🌸 Spring</Button>
-            <Button variant="outline" size="sm">☀️ Summer</Button>
-            <Button variant="outline" size="sm">🎃 Halloween</Button>
-            <Button variant="outline" size="sm">🎄 Holiday</Button>
+            {['Romantic', 'Glam', 'Autumn', 'Winter', 'Spring', 'Summer', 'Halloween', 'Holiday'].map((collection) => (
+              <Button
+                key={collection}
+                variant={selectedCollection === collection ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => handleCollectionSelect(collection)}
+              >
+                {collection}
+              </Button>
+            ))}
           </div>
         </CardContent>
       </Card>

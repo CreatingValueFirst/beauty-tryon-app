@@ -1,0 +1,64 @@
+{
+  "common": {
+    "save": "Kaydet",
+    "share": "Paylaş",
+    "delete": "Sil",
+    "cancel": "İptal",
+    "confirm": "Onayla",
+    "loading": "Yükleniyor...",
+    "error": "Bir hata oluştu",
+    "success": "Başarılı",
+    "tryAgain": "Tekrar dene",
+    "back": "Geri",
+    "next": "İleri",
+    "previous": "Önceki",
+    "close": "Kapat",
+    "search": "Ara",
+    "filter": "Filtrele",
+    "all": "Tümü",
+    "yes": "Evet",
+    "no": "Hayır",
+    "optional": "İsteğe bağlı",
+    "required": "Gerekli",
+    "linkCopied": "Bağlantı kopyalandı!"
+  },
+  "navigation": {
+    "dashboard": "Panel",
+    "tryOn": "Dene",
+    "hair": "Saç Modelleri",
+    "nails": "Tırnak Tasarımları",
+    "gallery": "Galeri",
+    "stores": "Salonlar",
+    "profile": "Profil",
+    "bookings": "Randevularım",
+    "upgradeToPremium": "Premium'a Yükselt",
+    "logout": "Çıkış Yap",
+    "loggedOut": "Başarıyla çıkış yapıldı",
+    "logoutFailed": "Çıkış yapılamadı. Tekrar deneyin.",
+    "redirectingToPricing": "Fiyatlara yönlendiriliyor..."
+  },
+  "hair": {
+    "title": "Saç modeli dene",
+    "subtitle": "Farklı saç stilleri ve renkleri gerçek zamanlı olarak deneyin",
+    "selectStyle": "Bir stil seçin",
+    "customize": "Özelleştir",
+    "info": "Bilgi",
+    "tips": "İpuçları"
+  },
+  "nails": {
+    "title": "Tırnak tasarımı dene",
+    "subtitle": "Oje renkleri ve tasarımlarla denemeler yapın"
+  },
+  "gallery": {
+    "title": "Galerim",
+    "savedLooks": "kaydedilmiş görünüm"
+  },
+  "profile": {
+    "title": "Profil",
+    "subtitle": "Hesap ayarlarınızı yönetin"
+  },
+  "stores": {
+    "title": "Harika salonları keşfedin",
+    "subtitle": "En iyi salonlardan stilleri inceleyin ve randevu alın"
+  }
+}
