@@ -6,17 +6,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { processNails, hexToRgbNail, NAIL_PRESETS, NailSettings } from '@/lib/ai/nail-processor';
-import { Save, Share2, Download, Sparkles, Camera, Heart } from 'lucide-react';
+import { Save, Share2, Download, Sparkles, Camera, Heart, Palette, Star, Sparkle, Blend } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
 const PATTERNS = [
-  { value: 'solid', label: 'Solid', icon: '🎨' },
-  { value: 'french', label: 'French', icon: '💅' },
-  { value: 'glitter', label: 'Glitter', icon: '✨' },
-  { value: 'ombre', label: 'Ombré', icon: '🌈' },
+  { value: 'solid', label: 'Solid', icon: Palette },
+  { value: 'french', label: 'French', icon: Star },
+  { value: 'glitter', label: 'Glitter', icon: Sparkles },
+  { value: 'ombre', label: 'Ombré', icon: Blend },
 ] as const;
 
 // Professional nail color samples
@@ -405,17 +405,20 @@ export default function NailTryOnPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-2">
-                {PATTERNS.map((pattern) => (
-                  <Button
-                    key={pattern.value}
-                    variant={settings.pattern === pattern.value ? 'default' : 'outline'}
-                    onClick={() => handlePatternChange(pattern.value)}
-                    className="h-auto py-3 flex-col gap-1"
-                  >
-                    <span className="text-2xl">{pattern.icon}</span>
-                    <span className="text-xs">{pattern.label}</span>
-                  </Button>
-                ))}
+                {PATTERNS.map((pattern) => {
+                  const Icon = pattern.icon;
+                  return (
+                    <Button
+                      key={pattern.value}
+                      variant={settings.pattern === pattern.value ? 'default' : 'outline'}
+                      onClick={() => handlePatternChange(pattern.value)}
+                      className="h-auto py-3 flex-col gap-1"
+                    >
+                      <Icon className="w-5 h-5" />
+                      <span className="text-xs">{pattern.label}</span>
+                    </Button>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
