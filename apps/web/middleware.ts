@@ -1,18 +1,15 @@
-import createMiddleware from 'next-intl/middleware';
-import { locales, defaultLocale } from './i18n';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export default createMiddleware({
-  // A list of all locales that are supported
-  locales,
-
-  // Used when no locale matches
-  defaultLocale,
-
-  // Always use locale prefix in URLs
-  localePrefix: 'always'
-});
+export function middleware(request: NextRequest) {
+  // Simple middleware without i18n for now
+  // Add any custom logic here if needed
+  return NextResponse.next();
+}
 
 export const config = {
-  // Match only internationalized pathnames
-  matcher: ['/', '/(bg|ru|es|tr|en)/:path*']
+  // Match all paths except static files and API routes
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 };
