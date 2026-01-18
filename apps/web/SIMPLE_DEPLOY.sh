@@ -1,0 +1,142 @@
+#!/bin/bash
+
+# ============================================================================
+# BeautyTryOn - Simple Deployment (Opens All URLs)
+# ============================================================================
+# This script opens all necessary dashboards in your browser
+# You just need to paste the SQL files and click buttons!
+# ============================================================================
+
+clear
+
+echo "🚀 BeautyTryOn - Simple Deployment"
+echo "===================================="
+echo ""
+echo "This script will open all necessary pages in your browser."
+echo "Follow the instructions below for each tab!"
+echo ""
+echo "Press Enter to continue..."
+read
+
+# Step 1: Database Schema
+echo ""
+echo "═══ STEP 1: Database Schema ═══"
+echo ""
+echo "Opening Supabase SQL Editor..."
+cat supabase/migrations/001_complete_schema.sql | pbcopy
+echo "✅ Schema SQL copied to clipboard!"
+echo ""
+open "https://app.supabase.com/project/turepfhrembrjjkgsveq/sql/new"
+echo "A browser tab just opened!"
+echo ""
+echo "ACTION:"
+echo "1. Paste (Cmd+V) in the SQL editor"
+echo "2. Click 'Run' button"
+echo "3. Wait for 'Success' message"
+echo ""
+read -p "Press Enter when done..."
+
+# Step 2: Sample Data
+echo ""
+echo "═══ STEP 2: Sample Data ═══"
+echo ""
+cat supabase/migrations/002_sample_data.sql | pbcopy
+echo "✅ Sample data SQL copied to clipboard!"
+echo ""
+open "https://app.supabase.com/project/turepfhrembrjjkgsveq/sql/new"
+echo "A new SQL editor tab opened!"
+echo ""
+echo "ACTION:"
+echo "1. Paste (Cmd+V) in the new query"
+echo "2. Click 'Run' button"
+echo "3. Verify 53 rows inserted"
+echo ""
+read -p "Press Enter when done..."
+
+# Step 3: Storage Buckets
+echo ""
+echo "═══ STEP 3: Storage Buckets ═══"
+echo ""
+echo "Opening Supabase Storage..."
+open "https://app.supabase.com/project/turepfhrembrjjkgsveq/storage/buckets"
+echo ""
+echo "ACTION - Create 3 buckets:"
+echo ""
+echo "1. Click 'New bucket'"
+echo "   Name: avatars"
+echo "   Public: YES ✅"
+echo "   Click 'Save'"
+echo ""
+echo "2. Click 'New bucket'"
+echo "   Name: store-images"
+echo "   Public: YES ✅"
+echo "   Click 'Save'"
+echo ""
+echo "3. Click 'New bucket'"
+echo "   Name: try-on-results"
+echo "   Public: NO ❌"
+echo "   Click 'Save'"
+echo ""
+read -p "Press Enter when all 3 buckets are created..."
+
+# Step 4: Deploy to Vercel
+echo ""
+echo "═══ STEP 4: Deploy to Vercel ═══"
+echo ""
+echo "Opening Vercel..."
+open "https://vercel.com/new"
+echo ""
+echo "ACTION:"
+echo "1. Import 'beauty-tryon-app' repository"
+echo "2. Set Root Directory: apps/web"
+echo "3. Add these environment variables:"
+echo ""
+echo "   NEXT_PUBLIC_SUPABASE_URL"
+echo "   https://turepfhrembrjjkgsveq.supabase.co"
+echo ""
+echo "   NEXT_PUBLIC_SUPABASE_ANON_KEY"
+echo "   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1cmVwZmhyZW1icmpqa2dzdmVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njg2NjA2MTQsImV4cCI6MjA4NDIzNjYxNH0.9WdYp69liic6VL2xxwyrFMgLVo-s7iqfic4-4b2LrBc"
+echo ""
+echo "4. Click 'Deploy'"
+echo "5. Wait 2-3 minutes"
+echo "6. Copy your deployment URL when ready"
+echo ""
+read -p "Press Enter when deployed and you have your URL..."
+
+# Step 5: Configure Auth
+echo ""
+echo "═══ STEP 5: Configure Authentication ═══"
+echo ""
+echo "Opening Supabase Auth Configuration..."
+open "https://app.supabase.com/project/turepfhrembrjjkgsveq/auth/url-configuration"
+echo ""
+echo "ACTION:"
+echo "1. Paste your Vercel URL in 'Site URL'"
+echo "2. Add to 'Redirect URLs':"
+echo "   - Your Vercel URL with /** at the end"
+echo "   - http://localhost:3000/**"
+echo "3. Click 'Save'"
+echo ""
+read -p "Press Enter when done..."
+
+# Complete!
+clear
+echo ""
+echo "╔═══════════════════════════════════════════════════════════════╗"
+echo "║                                                               ║"
+echo "║                    🎉 DEPLOYMENT COMPLETE! 🎉                 ║"
+echo "║                                                               ║"
+echo "╚═══════════════════════════════════════════════════════════════╝"
+echo ""
+echo "Your BeautyTryOn app is now LIVE!"
+echo ""
+echo "Test your app:"
+echo "✅ Sign up with a new account"
+echo "✅ Try Hair Try-On (25 styles)"
+echo "✅ Try Nail Try-On (28 designs)"
+echo "✅ Browse 6 professional stores"
+echo "✅ Switch to Bulgarian/Russian/Spanish/Turkish"
+echo "✅ Save a try-on to gallery"
+echo ""
+echo "Ready to generate revenue! 💰"
+echo ""
