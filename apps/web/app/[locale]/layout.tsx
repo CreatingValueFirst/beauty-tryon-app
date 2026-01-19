@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import '../../styles/globals.css';
 import { Providers } from '@/components/providers';
 import { locales } from '@/i18n';
@@ -37,12 +36,7 @@ export default async function LocaleLayout({
   // Await params in Next.js 15
   const { locale } = await params;
 
-  // Validate locale
-  if (!locales.includes(locale as any)) {
-    notFound();
-  }
-
-  // Get messages for the locale
+  // Get messages for the locale (middleware ensures valid locale)
   const messages = await getMessages();
 
   return (

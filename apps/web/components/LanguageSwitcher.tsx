@@ -20,12 +20,18 @@ export function LanguageSwitcher() {
   const currentLocale = pathname.split('/')[1] as Locale;
 
   const switchLocale = (newLocale: Locale) => {
+    if (newLocale === currentLocale) {
+      setIsOpen(false);
+      return;
+    }
+
     const segments = pathname.split('/');
     segments[1] = newLocale;
     const newPath = segments.join('/');
 
-    router.push(newPath);
     setIsOpen(false);
+    router.push(newPath);
+    router.refresh(); // Force reload to apply new translations
   };
 
   return (
