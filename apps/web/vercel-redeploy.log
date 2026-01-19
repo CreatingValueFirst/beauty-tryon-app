@@ -1,0 +1,749 @@
+Vercel CLI 50.4.5
+Retrieving project…
+Deploying infoheaveninteractive-2456s-projects/beautytry-on-app
+Uploading [--------------------] (0.0B/77.4KB)
+Uploading [========------------] (32.0KB/77.4KB)
+Uploading [============--------] (48.0KB/77.4KB)
+Uploading [================----] (64.0KB/77.4KB)
+Uploading [====================] (77.4KB/77.4KB)
+Inspect: https://vercel.com/infoheaveninteractive-2456s-projects/beautytry-on-app/JBxdoPgvDcUsvEz1P5w7WneLQA6U [2s]
+Production: https://beautytry-on-6dc3r7pr0-infoheaveninteractive-2456s-projects.vercel.app [2s]
+https://beautytry-on-6dc3r7pr0-infoheaveninteractive-2456s-projects.vercel.appBuilding...
+Building...
+Building: Running build in Washington, D.C., USA (East) – iad1
+Building: Build machine configuration: 4 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Downloading 150 deployment files...
+Building: Restored build cache from previous deployment (3rJb7QpukTKtKyBhyodEeo23Ue5P)
+Building: Running "vercel build"
+Building: Vercel CLI 50.4.4
+Building: Installing dependencies...
+Building: up to date in 6s
+Building: 166 packages are looking for funding
+Building: run `npm fund` for details
+Building: Detected Next.js version: 15.5.9
+Building: Running "npm run build"
+Building: > web@1.0.0 build
+Building: > next build
+Building: ▲ Next.js 15.5.9
+Building: - Experiments (use with caution):
+Building: · serverActions
+Building: Creating an optimized production build ...
+Building: ✓ Compiled successfully in 10.4s
+Building: Linting and checking validity of types ...
+Building: Collecting page data ...
+Building: REPLICATE_API_TOKEN is not set. AI features will not work.
+Building: REPLICATE_API_TOKEN is not set. AI features will not work.
+Building: Generating static pages (0/83) ...
+Building: REPLICATE_API_TOKEN is not set. AI features will not work.
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/login. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/nails. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/privacy. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/refunds. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/legal/terms. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store/create. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/profile. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/store. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/hair. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/signup. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/stores. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/clothing-tryon. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard/gallery. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata viewport is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: ⚠ Unsupported metadata themeColor is configured in metadata export in /[locale]/dashboard. Please move it to viewport export instead.
+Building: Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+Building: Generating static pages (20/83)
+Building: Generating static pages (41/83)
+Building: Generating static pages (62/83)
+Building: ✓ Generating static pages (83/83)
+Building: Finalizing page optimization ...
+Building: Collecting build traces ...
+Building: Route (app)                                 Size  First Load JS
+Building: ┌ ○ /_not-found                             1 kB         103 kB
+Building: ├ ● /[locale]                              166 B         106 kB
+Building: ├   ├ /en
+Building: ├   ├ /bg
+Building: ├   ├ /ru
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/dashboard                  4.04 kB         174 kB
+Building: ├   ├ /en/dashboard
+Building: ├   ├ /bg/dashboard
+Building: ├   ├ /ru/dashboard
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/dashboard/clothing-tryon   8.95 kB         133 kB
+Building: ├   ├ /en/dashboard/clothing-tryon
+Building: ├   ├ /bg/dashboard/clothing-tryon
+Building: ├   ├ /ru/dashboard/clothing-tryon
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/dashboard/gallery          7.43 kB         194 kB
+Building: ├   ├ /en/dashboard/gallery
+Building: ├   ├ /bg/dashboard/gallery
+Building: ├   ├ /ru/dashboard/gallery
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/dashboard/hair              318 kB         546 kB
+Building: ├   ├ /en/dashboard/hair
+Building: ├   ├ /bg/dashboard/hair
+Building: ├   ├ /ru/dashboard/hair
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/dashboard/nails            9.81 kB         235 kB
+Building: ├   ├ /en/dashboard/nails
+Building: ├   ├ /bg/dashboard/nails
+Building: ├   ├ /ru/dashboard/nails
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/dashboard/profile          7.63 kB         186 kB
+Building: ├   ├ /en/dashboard/profile
+Building: ├   ├ /bg/dashboard/profile
+Building: ├   ├ /ru/dashboard/profile
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/dashboard/store            4.12 kB         169 kB
+Building: ├   ├ /en/dashboard/store
+Building: ├   ├ /bg/dashboard/store
+Building: ├   ├ /ru/dashboard/store
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/dashboard/store/create     5.63 kB         170 kB
+Building: ├   ├ /en/dashboard/store/create
+Building: ├   ├ /bg/dashboard/store/create
+Building: ├   ├ /ru/dashboard/store/create
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/legal/privacy                158 B         102 kB
+Building: ├   ├ /en/legal/privacy
+Building: ├   ├ /bg/legal/privacy
+Building: ├   ├ /ru/legal/privacy
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/legal/refunds                158 B         102 kB
+Building: ├   ├ /en/legal/refunds
+Building: ├   ├ /bg/legal/refunds
+Building: ├   ├ /ru/legal/refunds
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/legal/terms                  158 B         102 kB
+Building: ├   ├ /en/legal/terms
+Building: ├   ├ /bg/legal/terms
+Building: ├   ├ /ru/legal/terms
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/login                      3.46 kB         168 kB
+Building: ├   ├ /en/login
+Building: ├   ├ /bg/login
+Building: ├   ├ /ru/login
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/signup                     3.74 kB         168 kB
+Building: ├   ├ /en/signup
+Building: ├   ├ /bg/signup
+Building: ├   ├ /ru/signup
+Building: ├   └ [+2 more paths]
+Building: ├ ● /[locale]/stores                     4.64 kB         175 kB
+Building: ├   ├ /en/stores
+Building: ├   ├ /bg/stores
+Building: ├   ├ /ru/stores
+Building: ├   └ [+2 more paths]
+Building: ├ ƒ /[locale]/stores/[slug]               7.3 kB         191 kB
+Building: ├ ƒ /api/ai/generate-nails                 158 B         102 kB
+Building: ├ ƒ /api/ai/predictions/[id]               158 B         102 kB
+Building: ├ ƒ /api/upload/image                      158 B         102 kB
+Building: ├ ƒ /api/virtual-tryon/generate            158 B         102 kB
+Building: ├ ƒ /api/virtual-tryon/predictions/[id]    158 B         102 kB
+Building: ├ ƒ /api/webhooks/replicate                158 B         102 kB
+Building: └ ƒ /api/webhooks/virtual-tryon            158 B         102 kB
+Building: + First Load JS shared by all             102 kB
+Building: ├ chunks/1255-f9c8c5b8673827a3.js      45.7 kB
+Building: ├ chunks/4bd1b696-182b6b13bdad92e3.js  54.2 kB
+Building: └ other shared chunks (total)          2.02 kB
+Building: ƒ Middleware                             45.4 kB
+Building: ○  (Static)   prerendered as static content
+Building: ●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+Building: ƒ  (Dynamic)  server-rendered on demand
+Building: Traced Next.js server files in: 65.017ms
+Building: Created all serverless functions in: 158.356ms
+Building: Collected static files (public/, static/, .next/static): 7.208ms
+Building: Build Completed in /vercel/output [39s]
+Building: Deploying outputs...
+[2K[1A[2K[GProduction: https://beautytry-on-6dc3r7pr0-infoheaveninteractive-2456s-projects.vercel.app [1m]
+Completing...
+Aliased: https://beautytry-on-app.vercel.app [1m]
+
+Common next commands:
+- `vercel inspect beautytry-on-6dc3r7pr0-infoheaveninteractive-2456s-projects.vercel.app --logs`
+- `vercel redeploy beautytry-on-6dc3r7pr0-infoheaveninteractive-2456s-projects.vercel.app`

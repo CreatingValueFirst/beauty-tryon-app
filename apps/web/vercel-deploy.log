@@ -1,0 +1,53 @@
+Vercel CLI 50.4.5
+WARN! `--confirm` is deprecated, please use `--yes` instead
+Retrieving project…
+Deploying infoheaveninteractive-2456s-projects/beautytry-on-app
+Uploading [--------------------] (0.0B/233.9KB)
+Uploading [=====---------------] (65.3KB/233.9KB)
+Uploading [==========----------] (119.6KB/233.9KB)
+Uploading [===============-----] (181.3KB/233.9KB)
+Uploading [====================] (233.9KB/233.9KB)
+Inspect: https://vercel.com/infoheaveninteractive-2456s-projects/beautytry-on-app/CsAJs3qDdoCdMvJmFp9XPZgqohan [3s]
+Preview: https://beautytry-on-as7g9x39p-infoheaveninteractive-2456s-projects.vercel.app [3s]
+https://beautytry-on-as7g9x39p-infoheaveninteractive-2456s-projects.vercel.appBuilding...
+Building...
+Building: Running build in Washington, D.C., USA (East) – iad1
+Building: Build machine configuration: 4 cores, 8 GB
+Building: Retrieving list of deployment files...
+Building: Downloading 143 deployment files...
+Building: Restored build cache from previous deployment (EY6ZnqKc7SVh8fGfaz4cPBNSBfE4)
+Building: Running "vercel build"
+Building: Vercel CLI 50.4.4
+Building: Installing dependencies...
+Building: added 10 packages in 9s
+Building: 166 packages are looking for funding
+Building: run `npm fund` for details
+Building: Detected Next.js version: 15.5.9
+Building: Running "npm run build"
+Building: > web@1.0.0 build
+Building: > next build
+Building: ▲ Next.js 15.5.9
+Building: - Experiments (use with caution):
+Building: · serverActions
+Building: Creating an optimized production build ...
+Building: ✓ Compiled successfully in 27.1s
+Building: Linting and checking validity of types ...
+Building: Collecting page data ...
+Building: REPLICATE_API_TOKEN is not set. AI features will not work.
+Building: REPLICATE_API_TOKEN is not set. AI features will not work.
+Building: Error: supabaseUrl is required.
+Building: at <unknown> (.next/server/chunks/533.js:37:46388)
+Building: at new ck (.next/server/chunks/533.js:37:46639)
+Building: at cl (.next/server/chunks/533.js:37:50513)
+Building: at 17735 (.next/server/app/api/webhooks/virtual-tryon/route.js:1:779)
+Building: at c (.next/server/webpack-runtime.js:1:143)
+Building: at <unknown> (.next/server/app/api/webhooks/virtual-tryon/route.js:1:8014)
+Building: at c.X (.next/server/webpack-runtime.js:1:1350)
+Building: at <unknown> (.next/server/app/api/webhooks/virtual-tryon/route.js:1:7996)
+Building: at Object.<anonymous> (.next/server/app/api/webhooks/virtual-tryon/route.js:1:8046)
+Building: > Build error occurred
+Building: [Error: Failed to collect page data for /api/webhooks/virtual-tryon] {
+Building: type: 'Error'
+Building: }
+Building: Error: Command "npm run build" exited with 1
+Error: Command "npm run build" exited with 1

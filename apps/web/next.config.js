@@ -20,6 +20,22 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'via.placeholder.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'replicate.delivery',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pbxt.replicate.delivery',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.huggingface.co',
+      },
+      {
+        protocol: 'https',
+        hostname: 'fal.media',
+      },
     ],
   },
   experimental: {

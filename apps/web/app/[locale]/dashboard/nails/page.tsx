@@ -11,6 +11,7 @@ import { cn } from '@/lib/utils/cn';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { NailsGenerator } from '@/components/features/ai-generation/NailsGenerator';
 
 const PATTERNS = [
   { value: 'solid', label: 'Solid', icon: Palette },
@@ -503,6 +504,11 @@ export default function NailTryOnPage() {
           </div>
         </CardContent>
       </Card>
+
+      {/* AI Nail Design Generator */}
+      <div className="mt-8">
+        <NailsGenerator />
+      </div>
     </div>
   );
 }
