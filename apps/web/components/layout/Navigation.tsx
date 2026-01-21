@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils/cn';
-import { Sparkles, Camera, Image, User, LogOut, Shirt } from 'lucide-react';
+import { Sparkles, Camera, Image, User, LogOut, Shirt, Palette } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { useState, useMemo } from 'react';
@@ -16,6 +16,7 @@ const navItems = [
   { href: '/dashboard', labelKey: 'tryOn', icon: Camera },
   { href: '/dashboard/hair', labelKey: 'hair', icon: Sparkles },
   { href: '/dashboard/nails', labelKey: 'nails', icon: Sparkles },
+  { href: '/dashboard/makeup', labelKey: 'makeup', icon: Palette },
   { href: '/dashboard/clothing-tryon', labelKey: 'clothing', icon: Shirt },
   { href: '/dashboard/gallery', labelKey: 'gallery', icon: Image },
   { href: '/dashboard/profile', labelKey: 'profile', icon: User },
