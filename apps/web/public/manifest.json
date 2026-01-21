@@ -1,0 +1,68 @@
+{
+  "name": "BeautyTryOn - Virtual Makeup & Hair Try-On",
+  "short_name": "BeautyTryOn",
+  "description": "Try on different hairstyles, makeup, and nail designs virtually using AI and AR technology",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8B5CF6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["beauty", "lifestyle", "shopping"],
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "540x720",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "BeautyTryOn on mobile"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Hair Try-On",
+      "short_name": "Hair",
+      "description": "Try on different hairstyles",
+      "url": "/dashboard/hair",
+      "icons": [
+        {
+          "src": "/icon-hair.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Nail Try-On",
+      "short_name": "Nails",
+      "description": "Try on nail designs",
+      "url": "/dashboard/nails",
+      "icons": [
+        {
+          "src": "/icon-nails.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "permissions": [
+    "camera",
+    "storage"
+  ],
+  "prefer_related_applications": false
+}

@@ -1,0 +1,24 @@
+# FastAPI and server
+fastapi==0.115.0
+uvicorn[standard]==0.32.0
+python-multipart==0.0.12
+pydantic==2.9.2
+
+# Image processing
+opencv-python-headless==4.9.0.80
+numpy==1.26.4
+Pillow==10.1.0
+
+# ML/AI
+mediapipe==0.10.14
+torch==2.1.2
+torchvision==0.16.2
+onnxruntime==1.17.3
+
+# Utilities
+protobuf>=4.25.3,<5
+requests==2.31.0
+typing-extensions==4.9.0
+
+# Optional: for development
+python-dotenv==1.0.0

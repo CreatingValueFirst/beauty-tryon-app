@@ -85,6 +85,7 @@
   /* Better touch feedback */
   .touch-manipulation {
     touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
   }
 
   /* Prevent text selection on buttons/interactive elements */
@@ -94,6 +95,74 @@
     -ms-user-select: none;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Ensure minimum touch target size (44x44px) */
+  .touch-target {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Safe area insets for iOS notch/home indicator */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-right {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Mobile-optimized button press feedback */
+  .active-scale {
+    transition: transform 0.1s ease;
+  }
+
+  .active-scale:active {
+    transform: scale(0.95);
+  }
+
+  /* Prevent zoom on double-tap (mobile) */
+  .no-zoom {
+    touch-action: manipulation;
+    user-select: none;
+  }
+
+  /* Better focus visibility for accessibility */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+
+  /* Mobile-friendly horizontal scroll */
+  .scroll-snap-x {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .scroll-snap-x > * {
+    scroll-snap-align: start;
+  }
+
+  /* Optimize text rendering for mobile */
+  .text-optimize {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Prevent pull-to-refresh on iOS for specific elements */
+  .no-overscroll {
+    overscroll-behavior: none;
   }
 }
 

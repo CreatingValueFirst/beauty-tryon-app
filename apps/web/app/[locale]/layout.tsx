@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -8,17 +8,32 @@ import { locales } from '@/i18n';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5, // Allow zoom for accessibility
+  userScalable: true,
+  viewportFit: 'cover', // Support iOS safe area insets
+  themeColor: '#8B5CF6',
+};
+
 export const metadata: Metadata = {
   title: 'BeautyTryOn - Virtual Hair & Nail Try-On',
   description: 'Try on different hairstyles and nail designs virtually using AI and AR technology',
   keywords: ['virtual try-on', 'hair styles', 'nail designs', 'AR', 'beauty tech'],
   authors: [{ name: 'BeautyTryOn Team' }],
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
-  themeColor: '#8B5CF6',
   manifest: '/manifest.json',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'BeautyTryOn',
+  },
+  formatDetection: {
+    telephone: false,
   },
 };
 
