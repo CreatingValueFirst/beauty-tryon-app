@@ -236,36 +236,6 @@ export function MakeupTryOnStudio({ onSave, className }: MakeupTryOnStudioProps)
     }
   };
 
-  const handleShare = async () => {
-    if (!processedImage) return;
-
-    try {
-      // Convert base64 to blob, preserving original format
-      const response = await fetch(processedImage);
-      const blob = await response.blob();
-      // Use the blob's actual type, default to JPEG for camera captures
-      const mimeType = blob.type || 'image/jpeg';
-      const extension = mimeType.includes('png') ? 'png' : 'jpg';
-      const file = new File([blob], `makeup-result.${extension}`, { type: mimeType });
-
-      if (navigator.share && navigator.canShare({ files: [file] })) {
-        await navigator.share({
-          title: 'My Makeup Try-On',
-          text: 'Check out my virtual makeup!',
-          files: [file],
-        });
-      } else {
-        // Fallback: copy link or download
-        toast({
-          title: 'Share',
-          description: 'Sharing not supported on this device. Use the download button instead.',
-        });
-      }
-    } catch (err) {
-      console.error('Error sharing:', err);
-    }
-  };
-
   return (
     <div className={className}>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -404,7 +374,6 @@ export function MakeupTryOnStudio({ onSave, className }: MakeupTryOnStudioProps)
             isProcessing={isProcessing}
             processingTime={processingTime}
             onSave={onSave ? handleSave : undefined}
-            onShare={handleShare}
           />
         </div>
 

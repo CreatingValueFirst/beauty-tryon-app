@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
 import { processNails, hexToRgbNail, NAIL_PRESETS, NailSettings } from '@/lib/ai/nail-processor';
-import { Save, Share2, Download, Sparkles, Camera, Heart, Palette, Star, Sparkle, Blend } from 'lucide-react';
+import { Save, Download, Sparkles, Camera, Heart, Palette, Star, Sparkle, Blend } from 'lucide-react';
+import { InstantShare } from '@/components/features/social/InstantShare';
 import { cn } from '@/lib/utils/cn';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
@@ -229,41 +230,6 @@ export default function NailTryOnPage() {
     }
   };
 
-  const handleShare = async () => {
-    if (!capturedImage) {
-      toast.error('Please take a photo first');
-      return;
-    }
-
-    // Use Web Share API if available
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'My Nail Try-On',
-          text: `Check out my ${selectedColor} nail design!`,
-          url: window.location.href
-        });
-        toast.success('Shared successfully!');
-      } catch (err) {
-        // User cancelled or share failed
-        if (err instanceof Error && err.name !== 'AbortError') {
-          handleCopyLink();
-        }
-      }
-    } else {
-      handleCopyLink();
-    }
-  };
-
-  const handleCopyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      toast.success('Link copied to clipboard!');
-    } catch (error) {
-      toast.error('Failed to copy link');
-    }
-  };
-
   const handleAddToFavorites = async () => {
     if (!capturedImage) {
       toast.error('Please take a photo first');
@@ -366,10 +332,13 @@ export default function NailTryOnPage() {
             <Save className="w-4 h-4 mr-2" />
             {saving ? 'Saving...' : 'Save'}
           </Button>
-          <Button variant="outline" onClick={handleShare} disabled={!capturedImage}>
-            <Share2 className="w-4 h-4 mr-2" />
-            Share
-          </Button>
+          <InstantShare
+            imageUrl={capturedImage || undefined}
+            title="My Nail Try-On"
+            description="Check out these gorgeous nails I tried with BeautyTryOn!"
+            hashtags={['BeautyTryOn', 'NailArt', 'VirtualNails', 'NailDesign']}
+            onShareComplete={(platform) => console.log('Shared to:', platform)}
+          />
         </div>
       </div>
 

@@ -7,7 +7,7 @@ import { Camera, RefreshCw, Download, AlertCircle } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface ARCameraProps {
-  mode: 'hair' | 'nails';
+  mode: 'hair' | 'nails' | 'makeup';
   onFrame?: (video: HTMLVideoElement, canvas: HTMLCanvasElement) => void;
   onError?: (error: Error) => void;
   onReady?: () => void;
@@ -352,7 +352,7 @@ export const ARCamera = forwardRef<ARCameraHandle, ARCameraProps>(
         {/* Mode indicator */}
         <div className="absolute top-4 left-4">
           <div className="bg-black/50 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-sm font-medium">
-            {mode === 'hair' ? '💇 Hair Try-On' : '💅 Nail Try-On'}
+            {mode === 'hair' ? '💇 Hair Try-On' : mode === 'makeup' ? '💄 Makeup Try-On' : '💅 Nail Try-On'}
           </div>
         </div>
 

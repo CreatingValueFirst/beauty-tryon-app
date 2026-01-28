@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Download, Share2, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+import { Download, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import Image from 'next/image';
 import { downloadBase64Image } from '@/lib/api/makeup-client';
+import { InstantShare } from '@/components/features/social/InstantShare';
 
 interface MakeupPreviewProps {
   originalImage: string | null;
@@ -13,7 +14,6 @@ interface MakeupPreviewProps {
   processingTime?: number;
   className?: string;
   onSave?: () => void;
-  onShare?: () => void;
 }
 
 export function MakeupPreview({
@@ -23,7 +23,6 @@ export function MakeupPreview({
   processingTime,
   className,
   onSave,
-  onShare,
 }: MakeupPreviewProps) {
   const [showComparison, setShowComparison] = useState(false);
   const [sliderPosition, setSliderPosition] = useState(50);
@@ -205,12 +204,15 @@ export function MakeupPreview({
               <Download className="w-4 h-4 mr-2" />
               Download
             </Button>
-            {onShare && (
-              <Button onClick={onShare} variant="outline" className="flex-1 h-11 active-scale">
-                <Share2 className="w-4 h-4 mr-2" />
-                Share
-              </Button>
-            )}
+            <div className="flex-1">
+              <InstantShare
+                imageUrl={processedImage}
+                title="My Makeup Look"
+                description="Check out this makeup look I created with BeautyTryOn!"
+                hashtags={['BeautyTryOn', 'MakeupLook', 'VirtualMakeup', 'ARBeauty']}
+                className="w-full"
+              />
+            </div>
             {onSave && (
               <Button onClick={onSave} className="flex-1 h-11 gradient-brand active-scale">
                 💾 Save to Gallery

@@ -8,7 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { processHair, hexToRgb } from '@/lib/ai/hair-processor';
-import { Save, Share2, Download, Sparkles, Camera, Palette, Heart, RefreshCw } from 'lucide-react';
+import { Save, Download, Sparkles, Camera, Palette, Heart, RefreshCw } from 'lucide-react';
+import { InstantShare } from '@/components/features/social/InstantShare';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { uploadBase64Image } from '@/lib/utils/image-upload';
@@ -286,32 +287,6 @@ export default function HairTryOnPage() {
     }
   };
 
-  const handleShare = async () => {
-    if (!capturedImage) {
-      toast.error('Please take a photo first');
-      return;
-    }
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'My Hair Try-On',
-          text: 'Check out my new hairstyle!',
-          url: window.location.href
-        });
-        toast.success('Shared successfully!');
-      } catch (err) {
-        if (err instanceof Error && err.name !== 'AbortError') {
-          await navigator.clipboard.writeText(window.location.href);
-          toast.success('Link copied to clipboard!');
-        }
-      }
-    } else {
-      await navigator.clipboard.writeText(window.location.href);
-      toast.success('Link copied to clipboard!');
-    }
-  };
-
   const handleCustomColor = () => {
     toast.info('Use the color picker in the Customize tab');
   };
@@ -343,14 +318,17 @@ export default function HairTryOnPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={handleSave}>
+          <Button variant="outline" onClick={handleSave} disabled={!capturedImage}>
             <Save className="w-4 h-4 mr-2" />
             Save
           </Button>
-          <Button variant="outline" onClick={handleShare}>
-            <Share2 className="w-4 h-4 mr-2" />
-            Share
-          </Button>
+          <InstantShare
+            imageUrl={capturedImage || undefined}
+            title="My Hair Try-On"
+            description="Check out this new hairstyle I tried with BeautyTryOn!"
+            hashtags={['BeautyTryOn', 'HairColor', 'VirtualHair', 'HairStyle']}
+            onShareComplete={(platform) => console.log('Shared to:', platform)}
+          />
         </div>
       </div>
 
