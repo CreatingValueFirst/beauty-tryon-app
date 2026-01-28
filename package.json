@@ -18,6 +18,7 @@
     "clean": "pnpm --recursive clean && rm -rf node_modules"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^20.11.5",
     "eslint": "^8.56.0",
     "pg": "^8.17.1",
@@ -29,5 +30,8 @@
     "node": ">=18.0.0",
     "pnpm": ">=8.0.0"
   },
-  "packageManager": "pnpm@8.15.1"
+  "packageManager": "pnpm@8.15.1",
+  "dependencies": {
+    "canvas-confetti": "^1.9.4"
+  }
 }

@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Camera, Sparkles, TrendingUp, Star } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { XPSystem, StreakTracker, ChallengeCenter } from '@/components/gamification';
 
 interface HairStyle {
   id: string;
@@ -91,6 +92,13 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Gamification Section */}
+      <div className="grid md:grid-cols-3 gap-6">
+        <XPSystem variant="compact" className="animate-slide-up" />
+        <StreakTracker variant="compact" className="animate-slide-up" />
+        <ChallengeCenter variant="widget" className="animate-slide-up" />
       </div>
 
       {/* Main Try-On Options */}
