@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card } from '@/components/ui/card';
-import { Upload, Camera, AlertCircle } from 'lucide-react';
+import { Upload, Camera, AlertCircle, RefreshCw, X } from 'lucide-react';
 import { makeupClient, MakeupConfig, DEFAULT_MAKEUP_CONFIG, fileToBase64 } from '@/lib/api/makeup-client';
 import { MakeupControls } from './MakeupControls';
 import { MakeupPreview } from './MakeupPreview';
@@ -25,8 +25,112 @@ export function MakeupTryOnStudio({ onSave, className }: MakeupTryOnStudioProps)
   const [error, setError] = useState<string | null>(null);
   const [config, setConfig] = useState<Partial<MakeupConfig>>(DEFAULT_MAKEUP_CONFIG);
 
+  // Camera state
+  const [isCameraActive, setIsCameraActive] = useState(false);
+  const [cameraError, setCameraError] = useState<string | null>(null);
+  const [isInitializingCamera, setIsInitializingCamera] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
   const { toast } = useToast();
+
+  // Cleanup camera stream on unmount or mode change
+  useEffect(() => {
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+        streamRef.current = null;
+      }
+    };
+  }, []);
+
+  // Stop camera when switching to upload mode
+  useEffect(() => {
+    if (mode === 'upload' && streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+      setIsCameraActive(false);
+    }
+  }, [mode]);
+
+  const startCamera = useCallback(async () => {
+    setIsInitializingCamera(true);
+    setCameraError(null);
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'user',
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+        audio: false,
+      });
+
+      streamRef.current = stream;
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      }
+
+      setIsCameraActive(true);
+    } catch (err) {
+      console.error('Camera error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to access camera';
+
+      if (errorMessage.includes('NotAllowedError') || errorMessage.includes('Permission')) {
+        setCameraError('Camera permission denied. Please allow camera access in your browser settings.');
+      } else if (errorMessage.includes('NotFoundError')) {
+        setCameraError('No camera found. Please connect a camera and try again.');
+      } else {
+        setCameraError('Failed to start camera. Please try again.');
+      }
+    } finally {
+      setIsInitializingCamera(false);
+    }
+  }, []);
+
+  const stopCamera = useCallback(() => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    setIsCameraActive(false);
+    setCameraError(null);
+  }, []);
+
+  const capturePhoto = useCallback(() => {
+    if (!videoRef.current || !isCameraActive) return;
+
+    const video = videoRef.current;
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Mirror the image for selfie-style capture
+    ctx.translate(canvas.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(video, 0, 0);
+
+    const imageData = canvas.toDataURL('image/jpeg', 0.9);
+    setOriginalImage(imageData);
+    setProcessedImage(null);
+    setProcessingTime(undefined);
+    setError(null);
+
+    // Stop camera after capture
+    stopCamera();
+
+    toast({
+      title: 'Photo captured!',
+      description: 'Now adjust makeup settings and click Apply.',
+    });
+  }, [isCameraActive, stopCamera, toast]);
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -59,11 +163,11 @@ export function MakeupTryOnStudio({ onSave, className }: MakeupTryOnStudioProps)
   };
 
   const handleCameraCapture = () => {
-    // This would integrate with the AR camera component
-    toast({
-      title: 'Camera Feature',
-      description: 'Camera integration coming soon! Use upload for now.',
-    });
+    if (isCameraActive) {
+      capturePhoto();
+    } else {
+      startCamera();
+    }
   };
 
   const handleApplyMakeup = async () => {
@@ -205,19 +309,87 @@ export function MakeupTryOnStudio({ onSave, className }: MakeupTryOnStudioProps)
               </TabsContent>
 
               <TabsContent value="camera" className="space-y-4">
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
-                  <Camera className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                  <p className="text-sm font-medium text-gray-700 mb-4">
-                    Use your camera for real-time try-on
-                  </p>
-                  <Button onClick={handleCameraCapture} className="gradient-brand">
-                    <Camera className="w-4 h-4 mr-2" />
-                    Open Camera
-                  </Button>
-                  <p className="text-xs text-gray-500 mt-4">
-                    Camera integration coming soon
-                  </p>
-                </div>
+                {isCameraActive ? (
+                  <div className="relative rounded-lg overflow-hidden bg-black">
+                    <video
+                      ref={videoRef}
+                      autoPlay
+                      playsInline
+                      muted
+                      className="w-full aspect-[4/3] object-cover"
+                      style={{ transform: 'scaleX(-1)' }}
+                    />
+                    <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4">
+                      <Button
+                        onClick={capturePhoto}
+                        size="lg"
+                        className="gradient-brand rounded-full w-16 h-16"
+                      >
+                        <Camera className="w-6 h-6" />
+                      </Button>
+                      <Button
+                        onClick={stopCamera}
+                        variant="secondary"
+                        size="lg"
+                        className="rounded-full w-16 h-16"
+                      >
+                        <X className="w-6 h-6" />
+                      </Button>
+                    </div>
+                    <p className="absolute top-4 left-0 right-0 text-center text-white text-sm bg-black/50 py-2">
+                      Position your face in the frame
+                    </p>
+                  </div>
+                ) : (
+                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center">
+                    {cameraError ? (
+                      <>
+                        <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-400" />
+                        <p className="text-sm font-medium text-red-600 mb-4">
+                          {cameraError}
+                        </p>
+                        <Button onClick={startCamera} variant="outline">
+                          <RefreshCw className="w-4 h-4 mr-2" />
+                          Try Again
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Camera className="w-12 h-12 mx-auto mb-4 text-gray-400" />
+                        <p className="text-sm font-medium text-gray-700 mb-4">
+                          Take a photo to try on makeup
+                        </p>
+                        <Button
+                          onClick={startCamera}
+                          className="gradient-brand"
+                          disabled={isInitializingCamera}
+                        >
+                          {isInitializingCamera ? (
+                            <>
+                              <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
+                              Starting Camera...
+                            </>
+                          ) : (
+                            <>
+                              <Camera className="w-4 h-4 mr-2" />
+                              Open Camera
+                            </>
+                          )}
+                        </Button>
+                        <p className="text-xs text-gray-500 mt-4">
+                          Your camera will be used to capture a photo for makeup try-on
+                        </p>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {cameraError && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>{cameraError}</AlertDescription>
+                  </Alert>
+                )}
               </TabsContent>
             </Tabs>
           </Card>

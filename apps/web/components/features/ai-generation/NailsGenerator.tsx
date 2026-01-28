@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@/components/ui/progress';
-import { Sparkles, Loader2, Download, Heart, Share2, Wand2, Zap, Crown } from 'lucide-react';
+import { Sparkles, Loader2, Download, Heart, Share2, Wand2, Zap, Crown, RefreshCw, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils/cn';
 import { createClient } from '@/lib/supabase/client';
@@ -89,6 +89,12 @@ export function NailsGenerator() {
   const [currentPredictionId, setCurrentPredictionId] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
   const [pollAttempt, setPollAttempt] = useState(0);
+  const [generationError, setGenerationError] = useState<string | null>(null);
+  const [lastFailedParams, setLastFailedParams] = useState<{
+    prompt: string;
+    modelType: AIModelType;
+    quality: QualityPreset;
+  } | null>(null);
   const pollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Exponential backoff: 2s, 4s, 8s, max 15s
@@ -167,23 +173,29 @@ export function NailsGenerator() {
     };
   }, [currentPredictionId, isGenerating, pollAttempt]);
 
-  const handleGenerate = async () => {
-    if (!prompt.trim()) {
+  const handleGenerate = async (retryParams?: typeof lastFailedParams) => {
+    const generatePrompt = retryParams?.prompt ?? prompt.trim();
+    const generateModel = retryParams?.modelType ?? modelType;
+    const generateQuality = retryParams?.quality ?? quality;
+
+    if (!generatePrompt) {
       toast.error('Please enter a prompt');
       return;
     }
 
     setIsGenerating(true);
     setProgress(10);
+    setGenerationError(null);
+    setLastFailedParams(null);
 
     try {
       const response = await fetch('/api/ai/generate-nails', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          prompt: prompt.trim(),
-          modelType,
-          quality,
+          prompt: generatePrompt,
+          modelType: generateModel,
+          quality: generateQuality,
         }),
       });
 
@@ -224,7 +236,19 @@ export function NailsGenerator() {
       console.error('Generation error:', error);
       setIsGenerating(false);
       setProgress(0);
+      setGenerationError(error.message || 'Failed to generate design');
+      setLastFailedParams({
+        prompt: generatePrompt,
+        modelType: generateModel,
+        quality: generateQuality,
+      });
       toast.error(error.message || 'Failed to generate design');
+    }
+  };
+
+  const handleRetry = () => {
+    if (lastFailedParams) {
+      handleGenerate(lastFailedParams);
     }
   };
 
@@ -437,6 +461,41 @@ export function NailsGenerator() {
                   ? 'Creating your design...'
                   : 'Almost done...'}
               </p>
+            </div>
+          )}
+
+          {/* Error with Retry */}
+          {generationError && lastFailedParams && !isGenerating && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-red-800">Generation Failed</p>
+                  <p className="text-sm text-red-600 mt-1">{generationError}</p>
+                  <div className="mt-3 flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRetry}
+                      className="border-red-300 text-red-700 hover:bg-red-100"
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Retry Generation
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setGenerationError(null);
+                        setLastFailedParams(null);
+                      }}
+                      className="text-red-600"
+                    >
+                      Dismiss
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
         </CardContent>

@@ -1,38 +1,70 @@
 /**
  * Image Generation Cache
  * Reduces costs by caching identical generations
+ * Uses SHA-256 for collision-resistant cache keys
  */
 
 import { createClient } from '@/lib/supabase/client';
 import type { AIModelType, QualityPreset } from '../replicate-client';
+
+/**
+ * Compute SHA-256 hash of a string using Web Crypto API
+ * Falls back to a deterministic hash if Web Crypto is unavailable
+ */
+async function sha256(message: string): Promise<string> {
+  if (typeof window !== 'undefined' && window.crypto?.subtle) {
+    // Browser environment with Web Crypto API
+    const encoder = new TextEncoder();
+    const data = encoder.encode(message);
+    const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  } else if (typeof globalThis !== 'undefined' && globalThis.crypto?.subtle) {
+    // Node.js or edge runtime with Web Crypto
+    const encoder = new TextEncoder();
+    const data = encoder.encode(message);
+    const hashBuffer = await globalThis.crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  } else {
+    // Fallback: Use a more robust hash than djb2 (FNV-1a variant with larger state)
+    // This is still not cryptographic but much more collision-resistant
+    let h1 = 0x811c9dc5;
+    let h2 = 0x1000193;
+    for (let i = 0; i < message.length; i++) {
+      const char = message.charCodeAt(i);
+      h1 ^= char;
+      h1 = Math.imul(h1, 0x01000193);
+      h2 ^= char;
+      h2 = Math.imul(h2, 0x85ebca6b);
+    }
+    return (h1 >>> 0).toString(16).padStart(8, '0') + (h2 >>> 0).toString(16).padStart(8, '0');
+  }
+}
 
 export class ImageCache {
   private cachePrefix = 'ai-gen';
   private ttl = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
 
   /**
-   * Generate a cache key from generation parameters
+   * Generate a cache key from generation parameters using SHA-256
    */
-  private getCacheKey(
+  private async getCacheKey(
     prompt: string,
     modelType: AIModelType,
     quality: QualityPreset,
     width: number,
     height: number
-  ): string {
+  ): Promise<string> {
     const normalized = `${modelType}:${quality}:${width}x${height}:${prompt
       .toLowerCase()
       .trim()}`;
 
-    // Create a simple hash
-    let hash = 0;
-    for (let i = 0; i < normalized.length; i++) {
-      const char = normalized.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
+    // Use SHA-256 for collision-resistant hashing
+    const hash = await sha256(normalized);
 
-    return `${this.cachePrefix}:${Math.abs(hash).toString(36)}`;
+    // Use first 16 characters (64 bits) of the hash - still very collision-resistant
+    return `${this.cachePrefix}:${hash.substring(0, 16)}`;
   }
 
   /**
@@ -49,7 +81,7 @@ export class ImageCache {
       const supabase = createClient();
       if (!supabase) return null;
 
-      const cacheKey = this.getCacheKey(prompt, modelType, quality, width, height);
+      const cacheKey = await this.getCacheKey(prompt, modelType, quality, width, height);
 
       const { data, error } = await supabase
         .from('image_cache')
@@ -92,7 +124,7 @@ export class ImageCache {
       const supabase = createClient();
       if (!supabase) return;
 
-      const cacheKey = this.getCacheKey(prompt, modelType, quality, width, height);
+      const cacheKey = await this.getCacheKey(prompt, modelType, quality, width, height);
 
       const { error } = await supabase.from('image_cache').upsert(
         {

@@ -21,11 +21,13 @@ import {
   ShoppingBag,
   User,
   Shirt,
-  RefreshCw
+  RefreshCw,
+  AlertCircle
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils/cn';
 import Image from 'next/image';
+import { createClient } from '@/lib/supabase/client';
 
 interface ClothingItem {
   id: string;
@@ -53,12 +55,17 @@ export function VirtualTryOnStudio() {
   const [result, setResult] = useState<TryOnResult | null>(null);
   const [showCamera, setShowCamera] = useState(false);
   const [pollAttempt, setPollAttempt] = useState(0);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const [generationError, setGenerationError] = useState<string | null>(null);
+  const [canRetry, setCanRetry] = useState(false);
 
   const personFileInputRef = useRef<HTMLInputElement>(null);
   const garmentFileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const realtimeChannelRef = useRef<ReturnType<ReturnType<typeof createClient>['channel']> | null>(null);
 
   // Exponential backoff: 2s, 4s, 8s, 16s, max 20s
   const getPollingInterval = (attempt: number): number => {
@@ -214,6 +221,75 @@ export function VirtualTryOnStudio() {
     };
   }, [currentPredictionId, isGenerating, pollAttempt]);
 
+  // Supabase Realtime subscription for instant notifications
+  useEffect(() => {
+    if (!currentPredictionId) return;
+
+    const supabase = createClient();
+
+    // Subscribe to changes on clothing_try_ons table
+    const channel = supabase
+      .channel(`tryon-${currentPredictionId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'clothing_try_ons',
+          filter: `prediction_id=eq.${currentPredictionId}`,
+        },
+        (payload) => {
+          const { new: newRecord } = payload;
+
+          if (newRecord.status === 'completed' && newRecord.result_image_url) {
+            // Stop polling since we got the result via Realtime
+            if (pollIntervalRef.current) {
+              clearTimeout(pollIntervalRef.current);
+              pollIntervalRef.current = null;
+            }
+
+            setIsGenerating(false);
+            setProgress(100);
+            setCurrentPredictionId(null);
+            setPollAttempt(0);
+            setResult({
+              id: newRecord.id,
+              result_image_url: newRecord.result_image_url,
+              person_image_url: newRecord.person_image_url,
+              garment_image_url: newRecord.garment_image_url,
+              status: newRecord.status,
+            });
+            toast.success('Virtual try-on completed!', {
+              description: 'Your look is ready to view.',
+            });
+          } else if (newRecord.status === 'failed') {
+            // Stop polling on failure
+            if (pollIntervalRef.current) {
+              clearTimeout(pollIntervalRef.current);
+              pollIntervalRef.current = null;
+            }
+
+            setIsGenerating(false);
+            setCurrentPredictionId(null);
+            setPollAttempt(0);
+            toast.error('Virtual try-on failed', {
+              description: newRecord.error_message || 'Please try again.',
+            });
+          }
+        }
+      )
+      .subscribe();
+
+    realtimeChannelRef.current = channel;
+
+    return () => {
+      if (realtimeChannelRef.current) {
+        supabase.removeChannel(realtimeChannelRef.current);
+        realtimeChannelRef.current = null;
+      }
+    };
+  }, [currentPredictionId]);
+
   // Generate virtual try-on
   const handleGenerate = async () => {
     if (!personImage || !garmentImage) {
@@ -224,6 +300,8 @@ export function VirtualTryOnStudio() {
     setIsGenerating(true);
     setProgress(10);
     setResult(null);
+    setGenerationError(null);
+    setCanRetry(false);
 
     try {
       // Upload images to Supabase Storage first
@@ -257,8 +335,17 @@ export function VirtualTryOnStudio() {
       console.error('Generation error:', error);
       setIsGenerating(false);
       setProgress(0);
+      setGenerationError(error.message || 'Failed to generate try-on');
+      setCanRetry(true);
       toast.error(error.message || 'Failed to generate try-on');
     }
+  };
+
+  // Retry generation
+  const handleRetry = () => {
+    setGenerationError(null);
+    setCanRetry(false);
+    handleGenerate();
   };
 
   // Upload image to Supabase Storage
@@ -334,6 +421,53 @@ export function VirtualTryOnStudio() {
     setSelectedClothing(null);
     setResult(null);
     setProgress(0);
+    setIsSaved(false);
+  };
+
+  // Save to gallery
+  const handleSaveToGallery = async () => {
+    if (!result?.result_image_url || isSaving) return;
+
+    setIsSaving(true);
+    try {
+      const supabase = createClient();
+
+      // Get current user
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        toast.error('Please log in to save your try-on');
+        return;
+      }
+
+      // Save to try_ons table for gallery display
+      const { error: saveError } = await supabase
+        .from('try_ons')
+        .insert({
+          user_id: user.id,
+          type: 'clothing',
+          result_image_url: result.result_image_url,
+          settings: {
+            person_image_url: result.person_image_url,
+            garment_image_url: result.garment_image_url,
+            clothing_item_id: selectedClothing?.id,
+            clothing_name: selectedClothing?.name,
+          },
+          is_favorite: false,
+        });
+
+      if (saveError) {
+        throw saveError;
+      }
+
+      setIsSaved(true);
+      toast.success('Saved to your gallery!');
+    } catch (error) {
+      console.error('Failed to save:', error);
+      toast.error('Failed to save. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -544,6 +678,41 @@ export function VirtualTryOnStudio() {
             </div>
           )}
 
+          {/* Error with Retry */}
+          {generationError && canRetry && !isGenerating && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-red-800">Generation Failed</p>
+                  <p className="text-sm text-red-600 mt-1">{generationError}</p>
+                  <div className="mt-3 flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRetry}
+                      className="border-red-300 text-red-700 hover:bg-red-100"
+                    >
+                      <RefreshCw className="h-4 w-4 mr-2" />
+                      Retry
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setGenerationError(null);
+                        setCanRetry(false);
+                      }}
+                      className="text-red-600"
+                    >
+                      Dismiss
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Result */}
           {result && result.result_image_url && (
             <Card className="border-purple-200 bg-purple-50">
@@ -560,7 +729,19 @@ export function VirtualTryOnStudio() {
                   />
                 </div>
 
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  <Button
+                    onClick={handleSaveToGallery}
+                    disabled={isSaving || isSaved}
+                    className="w-full"
+                  >
+                    {isSaving ? (
+                      <Loader2 className="h-4 w-4 md:mr-2 animate-spin" />
+                    ) : (
+                      <Heart className={cn("h-4 w-4 md:mr-2", isSaved && "fill-current")} />
+                    )}
+                    <span className="hidden md:inline">{isSaved ? 'Saved' : 'Save'}</span>
+                  </Button>
                   <Button
                     variant="outline"
                     onClick={handleDownload}

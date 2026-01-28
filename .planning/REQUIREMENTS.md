@@ -11,13 +11,13 @@
 - [x] **SAVE-02**: Hair try-on photo captures save to gallery ✓
 - [x] **SAVE-03**: Nail try-on photo captures save to gallery ✓
 - [x] **SAVE-04**: AI-generated nail designs save to gallery ✓
-- [ ] **SAVE-05**: Virtual clothing try-on results appear in gallery
+- [x] **SAVE-05**: Virtual clothing try-on results appear in gallery ✓
 
 ### Camera & Canvas Fixes
 
 - [x] **CAM-01**: Hair page canvas ref connected to ARCamera for photo capture ✓
 - [x] **CAM-02**: Nail page canvas ref connected to ARCamera for photo capture ✓
-- [ ] **CAM-03**: Makeup page camera integration works with real-time overlay
+- [x] **CAM-03**: Makeup page camera integration works with real-time overlay ✓
 - [x] **CAM-04**: Photo capture shows success feedback and preview ✓
 
 ### Feature Completion
@@ -29,24 +29,24 @@
 
 ### User Experience
 
-- [ ] **UX-01**: Users notified when async try-on completes (Supabase Realtime)
+- [x] **UX-01**: Users notified when async try-on completes (Supabase Realtime) ✓
 - [x] **UX-02**: "No hands detected" feedback shown on nail page ✓
 - [x] **UX-03**: "No face detected" feedback shown on hair/makeup pages ✓
-- [ ] **UX-04**: Loading states shown during ML model initialization
-- [ ] **UX-05**: Retry button when AI generation fails
+- [x] **UX-04**: Loading states shown during ML model initialization ✓
+- [x] **UX-05**: Retry button when AI generation fails ✓
 
 ### Security
 
 - [x] **SEC-01**: Webhook signature verification for Replicate webhooks ✓
 - [x] **SEC-02**: Makeup API endpoint requires authentication ✓
 - [x] **SEC-03**: Error messages don't expose internal URLs/config ✓
-- [ ] **SEC-04**: File upload validates actual content (magic numbers)
+- [x] **SEC-04**: File upload validates actual content (magic numbers) ✓
 
 ### Performance
 
 - [x] **PERF-01**: Polling uses exponential backoff (2s -> 5s -> 10s -> 20s) ✓
 - [x] **PERF-02**: Gallery implements cursor-based pagination ✓
-- [ ] **PERF-03**: Cache uses SHA-256 instead of collision-prone hash
+- [x] **PERF-03**: Cache uses SHA-256 instead of collision-prone hash ✓
 - [x] **PERF-04**: Polling intervals properly cleaned up on unmount ✓
 
 ### Bug Fixes
@@ -92,22 +92,22 @@
 | SAVE-02 | Phase 1 | ✓ Complete |
 | SAVE-03 | Phase 1 | ✓ Complete |
 | SAVE-04 | Phase 1 | ✓ Complete |
-| SAVE-05 | Phase 1 | Pending |
+| SAVE-05 | Phase 1 | ✓ Complete |
 | CAM-01 | Phase 2 | ✓ Complete |
 | CAM-02 | Phase 2 | ✓ Complete |
-| CAM-03 | Phase 2 | Pending |
+| CAM-03 | Phase 2 | ✓ Complete |
 | CAM-04 | Phase 2 | ✓ Complete |
 | SEC-01 | Phase 3 | ✓ Complete |
 | SEC-02 | Phase 3 | ✓ Complete |
 | SEC-03 | Phase 3 | ✓ Complete |
-| SEC-04 | Phase 3 | Pending |
+| SEC-04 | Phase 3 | ✓ Complete |
 | FEAT-01 | Phase 4 | ✓ Complete |
-| UX-01 | Phase 4 | Pending |
+| UX-01 | Phase 4 | ✓ Complete |
 | UX-02 | Phase 4 | ✓ Complete |
 | UX-03 | Phase 4 | ✓ Complete |
 | PERF-01 | Phase 5 | ✓ Complete |
 | PERF-02 | Phase 5 | ✓ Complete |
-| PERF-03 | Phase 5 | Pending |
+| PERF-03 | Phase 5 | ✓ Complete |
 | PERF-04 | Phase 5 | ✓ Complete |
 | BUG-01 | Phase 5 | ✓ Complete |
 | BUG-02 | Phase 5 | ✓ Complete |
@@ -115,14 +115,14 @@
 | FEAT-02 | Phase 6 | Pending |
 | FEAT-03 | Phase 6 | Pending |
 | FEAT-04 | Phase 6 | Pending |
-| UX-04 | Phase 6 | Pending |
-| UX-05 | Phase 6 | Pending |
+| UX-04 | Phase 6 | ✓ Complete |
+| UX-05 | Phase 6 | ✓ Complete |
 
 **Coverage:**
 - v1 requirements: 27 total
-- Completed: 19 ✓
-- Remaining: 8
+- Completed: 24 ✓
+- Remaining: 3 (FEAT-02, FEAT-03, FEAT-04 - all related to fal.ai integration)
 
 ---
 *Requirements defined: 2026-01-28*
-*Last updated: 2026-01-28 after implementing fixes*
+*Last updated: 2026-01-28 after completing all 8 remaining issues*

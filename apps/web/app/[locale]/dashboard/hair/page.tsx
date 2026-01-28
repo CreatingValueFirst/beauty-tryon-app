@@ -12,6 +12,7 @@ import { Save, Share2, Download, Sparkles, Camera, Palette, Heart, RefreshCw } f
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useModelLoader } from '@/hooks/use-model-loader';
 
 // Professional sample hair styles with real images
 const SAMPLE_HAIR_STYLES: StyleItem[] = [
@@ -100,6 +101,9 @@ const SAMPLE_HAIR_STYLES: StyleItem[] = [
 export default function HairTryOnPage() {
   const router = useRouter();
   const arCameraRef = useRef<ARCameraHandle>(null);
+
+  // ML model loading state
+  const modelLoader = useModelLoader({ mode: 'hair', autoLoad: true });
 
   const [hairStyles, setHairStyles] = useState<StyleItem[]>(SAMPLE_HAIR_STYLES);
   const [filteredStyles, setFilteredStyles] = useState<StyleItem[]>(SAMPLE_HAIR_STYLES);
@@ -348,7 +352,18 @@ export default function HairTryOnPage() {
         <div className="lg:col-span-2">
           <Card>
             <CardContent className="p-0 relative">
-              <ARCamera ref={arCameraRef} mode="hair" onFrame={handleFrame} className="w-full" />
+              <ARCamera
+                ref={arCameraRef}
+                mode="hair"
+                onFrame={handleFrame}
+                className="w-full"
+                modelLoadingStatus={{
+                  status: modelLoader.status,
+                  progress: modelLoader.progress,
+                  currentModel: modelLoader.currentModel,
+                  error: modelLoader.error,
+                }}
+              />
 
               {/* Detection Status Overlay */}
               {detectionStatus === 'not_detected' && (

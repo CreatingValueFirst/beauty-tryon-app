@@ -12,6 +12,12 @@ interface ARCameraProps {
   onError?: (error: Error) => void;
   onReady?: () => void;
   className?: string;
+  modelLoadingStatus?: {
+    status: 'idle' | 'loading' | 'ready' | 'error';
+    progress: number;
+    currentModel: string;
+    error: string | null;
+  };
 }
 
 export interface ARCameraHandle {
@@ -21,7 +27,7 @@ export interface ARCameraHandle {
 }
 
 export const ARCamera = forwardRef<ARCameraHandle, ARCameraProps>(
-  ({ mode, onFrame, onError, onReady, className }, ref) => {
+  ({ mode, onFrame, onError, onReady, className, modelLoadingStatus }, ref) => {
   const webcamRef = useRef<Webcam>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isActive, setIsActive] = useState(false);
@@ -232,12 +238,45 @@ export const ARCamera = forwardRef<ARCameraHandle, ARCameraProps>(
         }}
       >
         {/* Loading overlay */}
-        {isLoading && (
+        {(isLoading || modelLoadingStatus?.status === 'loading') && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
-            <div className="text-center text-white">
+            <div className="text-center text-white px-6 max-w-xs">
               <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-sm font-medium">Initializing camera...</p>
-              <p className="text-xs text-gray-400 mt-1">Please allow camera access when prompted</p>
+              {modelLoadingStatus?.status === 'loading' ? (
+                <>
+                  <p className="text-sm font-medium mb-2">Loading AI Models...</p>
+                  <div className="w-full bg-white/20 rounded-full h-2 mb-2">
+                    <div
+                      className="bg-white h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${modelLoadingStatus.progress}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-gray-300">
+                    {modelLoadingStatus.currentModel}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {modelLoadingStatus.progress}% complete
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm font-medium">Initializing camera...</p>
+                  <p className="text-xs text-gray-400 mt-1">Please allow camera access when prompted</p>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Model loading error */}
+        {modelLoadingStatus?.status === 'error' && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
+            <div className="text-center text-white px-6 max-w-xs">
+              <AlertCircle className="w-12 h-12 mx-auto mb-4 text-red-400" />
+              <p className="text-sm font-medium mb-2">Failed to Load AI Models</p>
+              <p className="text-xs text-gray-400 mb-4">
+                {modelLoadingStatus.error || 'Please refresh the page and try again.'}
+              </p>
             </div>
           </div>
         )}

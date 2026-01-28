@@ -12,6 +12,7 @@ import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import { NailsGenerator } from '@/components/features/ai-generation/NailsGenerator';
+import { useModelLoader } from '@/hooks/use-model-loader';
 
 const PATTERNS = [
   { value: 'solid', label: 'Solid', icon: Palette },
@@ -37,6 +38,9 @@ const SAMPLE_NAIL_COLORS = [
 export default function NailTryOnPage() {
   const router = useRouter();
   const arCameraRef = useRef<ARCameraHandle>(null);
+
+  // ML model loading state
+  const modelLoader = useModelLoader({ mode: 'nails', autoLoad: true });
 
   const [nailColors, setNailColors] = useState(SAMPLE_NAIL_COLORS);
   const [selectedColor, setSelectedColor] = useState('#DC143C');
@@ -361,7 +365,18 @@ export default function NailTryOnPage() {
         <div className="lg:col-span-2">
           <Card>
             <CardContent className="p-0 relative">
-              <ARCamera ref={arCameraRef} mode="nails" onFrame={handleFrame} className="w-full" />
+              <ARCamera
+                ref={arCameraRef}
+                mode="nails"
+                onFrame={handleFrame}
+                className="w-full"
+                modelLoadingStatus={{
+                  status: modelLoader.status,
+                  progress: modelLoader.progress,
+                  currentModel: modelLoader.currentModel,
+                  error: modelLoader.error,
+                }}
+              />
 
               {/* Detection Status Overlay */}
               {detectionStatus === 'not_detected' && (

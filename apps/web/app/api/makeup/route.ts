@@ -4,6 +4,71 @@ import { createClient } from '@/lib/supabase/server';
 // Makeup API base URL (environment variable or default to localhost)
 const MAKEUP_API_URL = process.env.MAKEUP_API_URL || 'http://localhost:8000';
 
+// Image magic numbers (file signatures)
+const IMAGE_SIGNATURES: { bytes: number[]; mask?: number[]; offset?: number; type: string }[] = [
+  // JPEG: FF D8 FF
+  { bytes: [0xFF, 0xD8, 0xFF], type: 'image/jpeg' },
+  // PNG: 89 50 4E 47 0D 0A 1A 0A
+  { bytes: [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A], type: 'image/png' },
+  // GIF87a: 47 49 46 38 37 61
+  { bytes: [0x47, 0x49, 0x46, 0x38, 0x37, 0x61], type: 'image/gif' },
+  // GIF89a: 47 49 46 38 39 61
+  { bytes: [0x47, 0x49, 0x46, 0x38, 0x39, 0x61], type: 'image/gif' },
+  // WebP: RIFF....WEBP (bytes at offset 0 and 8)
+  { bytes: [0x52, 0x49, 0x46, 0x46], type: 'image/webp' }, // RIFF header
+  // BMP: 42 4D
+  { bytes: [0x42, 0x4D], type: 'image/bmp' },
+];
+
+/**
+ * Validates file content matches an allowed image type by checking magic numbers
+ * @returns The detected MIME type if valid, null if invalid
+ */
+async function validateImageMagicNumber(file: File): Promise<string | null> {
+  try {
+    // Read first 12 bytes (enough for all signatures)
+    const buffer = await file.slice(0, 12).arrayBuffer();
+    const bytes = new Uint8Array(buffer);
+
+    // Check for WebP specifically (RIFF + WEBP)
+    if (bytes.length >= 12) {
+      const isRiff = bytes[0] === 0x52 && bytes[1] === 0x49 && bytes[2] === 0x46 && bytes[3] === 0x46;
+      const isWebp = bytes[8] === 0x57 && bytes[9] === 0x45 && bytes[10] === 0x42 && bytes[11] === 0x50;
+      if (isRiff && isWebp) {
+        return 'image/webp';
+      }
+    }
+
+    // Check other signatures
+    for (const sig of IMAGE_SIGNATURES) {
+      if (sig.type === 'image/webp') continue; // Already handled above
+
+      const offset = sig.offset || 0;
+      if (bytes.length < offset + sig.bytes.length) continue;
+
+      let match = true;
+      for (let i = 0; i < sig.bytes.length; i++) {
+        const byte = bytes[offset + i];
+        const expected = sig.bytes[i];
+        const mask = sig.mask?.[i] ?? 0xFF;
+
+        if ((byte & mask) !== expected) {
+          match = false;
+          break;
+        }
+      }
+
+      if (match) {
+        return sig.type;
+      }
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export const runtime = 'nodejs';
 export const maxDuration = 60; // 60 seconds timeout for makeup processing
 
@@ -27,6 +92,27 @@ export async function POST(request: NextRequest) {
 
     // Get form data from request
     const formData = await request.formData();
+
+    // Validate image file if present
+    const imageFile = formData.get('image');
+    if (imageFile instanceof File) {
+      // Check file size (max 10MB)
+      if (imageFile.size > 10 * 1024 * 1024) {
+        return NextResponse.json(
+          { error: 'File too large', details: 'Image must be less than 10MB.' },
+          { status: 400 }
+        );
+      }
+
+      // Validate magic numbers - ensure file content matches claimed type
+      const detectedType = await validateImageMagicNumber(imageFile);
+      if (!detectedType) {
+        return NextResponse.json(
+          { error: 'Invalid file type', details: 'Please upload a valid image file (JPEG, PNG, GIF, or WebP).' },
+          { status: 400 }
+        );
+      }
+    }
 
     // Forward the request to the makeup API
     const response = await fetch(`${MAKEUP_API_URL}/api/makeup/apply`, {
