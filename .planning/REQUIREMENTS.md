@@ -7,22 +7,22 @@
 
 ### Gallery Save Integration
 
-- [ ] **SAVE-01**: Makeup try-on results save to user's gallery in Supabase
-- [ ] **SAVE-02**: Hair try-on photo captures save to gallery
-- [ ] **SAVE-03**: Nail try-on photo captures save to gallery
-- [ ] **SAVE-04**: AI-generated nail designs save to gallery
+- [x] **SAVE-01**: Makeup try-on results save to user's gallery in Supabase ✓
+- [x] **SAVE-02**: Hair try-on photo captures save to gallery ✓
+- [x] **SAVE-03**: Nail try-on photo captures save to gallery ✓
+- [x] **SAVE-04**: AI-generated nail designs save to gallery ✓
 - [ ] **SAVE-05**: Virtual clothing try-on results appear in gallery
 
 ### Camera & Canvas Fixes
 
-- [ ] **CAM-01**: Hair page canvas ref connected to ARCamera for photo capture
-- [ ] **CAM-02**: Nail page canvas ref connected to ARCamera for photo capture
+- [x] **CAM-01**: Hair page canvas ref connected to ARCamera for photo capture ✓
+- [x] **CAM-02**: Nail page canvas ref connected to ARCamera for photo capture ✓
 - [ ] **CAM-03**: Makeup page camera integration works with real-time overlay
-- [ ] **CAM-04**: Photo capture shows success feedback and preview
+- [x] **CAM-04**: Photo capture shows success feedback and preview ✓
 
 ### Feature Completion
 
-- [ ] **FEAT-01**: Nail collection filtering actually filters displayed colors
+- [x] **FEAT-01**: Nail collection filtering actually filters displayed colors ✓
 - [ ] **FEAT-02**: fal.ai KOLORS virtual try-on model integrated
 - [ ] **FEAT-03**: Garment image preprocessing (background removal) implemented
 - [ ] **FEAT-04**: Garment category auto-detection implemented
@@ -30,30 +30,30 @@
 ### User Experience
 
 - [ ] **UX-01**: Users notified when async try-on completes (Supabase Realtime)
-- [ ] **UX-02**: "No hands detected" feedback shown on nail page
-- [ ] **UX-03**: "No face detected" feedback shown on hair/makeup pages
+- [x] **UX-02**: "No hands detected" feedback shown on nail page ✓
+- [x] **UX-03**: "No face detected" feedback shown on hair/makeup pages ✓
 - [ ] **UX-04**: Loading states shown during ML model initialization
 - [ ] **UX-05**: Retry button when AI generation fails
 
 ### Security
 
-- [ ] **SEC-01**: Webhook signature verification for Replicate webhooks
-- [ ] **SEC-02**: Makeup API endpoint requires authentication
-- [ ] **SEC-03**: Error messages don't expose internal URLs/config
+- [x] **SEC-01**: Webhook signature verification for Replicate webhooks ✓
+- [x] **SEC-02**: Makeup API endpoint requires authentication ✓
+- [x] **SEC-03**: Error messages don't expose internal URLs/config ✓
 - [ ] **SEC-04**: File upload validates actual content (magic numbers)
 
 ### Performance
 
-- [ ] **PERF-01**: Polling uses exponential backoff (2s -> 5s -> 10s -> 20s)
-- [ ] **PERF-02**: Gallery implements cursor-based pagination
+- [x] **PERF-01**: Polling uses exponential backoff (2s -> 5s -> 10s -> 20s) ✓
+- [x] **PERF-02**: Gallery implements cursor-based pagination ✓
 - [ ] **PERF-03**: Cache uses SHA-256 instead of collision-prone hash
-- [ ] **PERF-04**: Polling intervals properly cleaned up on unmount
+- [x] **PERF-04**: Polling intervals properly cleaned up on unmount ✓
 
 ### Bug Fixes
 
-- [ ] **BUG-01**: Virtual try-on webhook double-update race condition fixed
-- [ ] **BUG-02**: Gallery download works for cross-origin images
-- [ ] **BUG-03**: Dead mock data removed from gallery page
+- [x] **BUG-01**: Virtual try-on webhook double-update race condition fixed ✓
+- [x] **BUG-02**: Gallery download works for cross-origin images ✓
+- [x] **BUG-03**: Dead mock data removed from gallery page ✓
 
 ## v2 Requirements
 
@@ -88,30 +88,30 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| SAVE-01 | Phase 1 | Pending |
-| SAVE-02 | Phase 1 | Pending |
-| SAVE-03 | Phase 1 | Pending |
-| SAVE-04 | Phase 1 | Pending |
+| SAVE-01 | Phase 1 | ✓ Complete |
+| SAVE-02 | Phase 1 | ✓ Complete |
+| SAVE-03 | Phase 1 | ✓ Complete |
+| SAVE-04 | Phase 1 | ✓ Complete |
 | SAVE-05 | Phase 1 | Pending |
-| CAM-01 | Phase 2 | Pending |
-| CAM-02 | Phase 2 | Pending |
+| CAM-01 | Phase 2 | ✓ Complete |
+| CAM-02 | Phase 2 | ✓ Complete |
 | CAM-03 | Phase 2 | Pending |
-| CAM-04 | Phase 2 | Pending |
-| SEC-01 | Phase 3 | Pending |
-| SEC-02 | Phase 3 | Pending |
-| SEC-03 | Phase 3 | Pending |
+| CAM-04 | Phase 2 | ✓ Complete |
+| SEC-01 | Phase 3 | ✓ Complete |
+| SEC-02 | Phase 3 | ✓ Complete |
+| SEC-03 | Phase 3 | ✓ Complete |
 | SEC-04 | Phase 3 | Pending |
-| FEAT-01 | Phase 4 | Pending |
+| FEAT-01 | Phase 4 | ✓ Complete |
 | UX-01 | Phase 4 | Pending |
-| UX-02 | Phase 4 | Pending |
-| UX-03 | Phase 4 | Pending |
-| PERF-01 | Phase 5 | Pending |
-| PERF-02 | Phase 5 | Pending |
+| UX-02 | Phase 4 | ✓ Complete |
+| UX-03 | Phase 4 | ✓ Complete |
+| PERF-01 | Phase 5 | ✓ Complete |
+| PERF-02 | Phase 5 | ✓ Complete |
 | PERF-03 | Phase 5 | Pending |
-| PERF-04 | Phase 5 | Pending |
-| BUG-01 | Phase 5 | Pending |
-| BUG-02 | Phase 5 | Pending |
-| BUG-03 | Phase 5 | Pending |
+| PERF-04 | Phase 5 | ✓ Complete |
+| BUG-01 | Phase 5 | ✓ Complete |
+| BUG-02 | Phase 5 | ✓ Complete |
+| BUG-03 | Phase 5 | ✓ Complete |
 | FEAT-02 | Phase 6 | Pending |
 | FEAT-03 | Phase 6 | Pending |
 | FEAT-04 | Phase 6 | Pending |
@@ -120,9 +120,9 @@
 
 **Coverage:**
 - v1 requirements: 27 total
-- Mapped to phases: 27
-- Unmapped: 0 ✓
+- Completed: 19 ✓
+- Remaining: 8
 
 ---
 *Requirements defined: 2026-01-28*
-*Last updated: 2026-01-28 after deep analysis*
+*Last updated: 2026-01-28 after implementing fixes*
