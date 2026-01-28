@@ -243,7 +243,7 @@ export function VirtualTryOnStudio() {
           table: 'clothing_try_ons',
           filter: `prediction_id=eq.${currentPredictionId}`,
         },
-        (payload) => {
+        (payload: { new: Record<string, any> }) => {
           const { new: newRecord } = payload;
 
           // Accept both 'succeeded' (Replicate) and 'completed' (our DB status)

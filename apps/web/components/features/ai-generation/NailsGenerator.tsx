@@ -432,7 +432,7 @@ export function NailsGenerator() {
 
           {/* Generate Button */}
           <Button
-            onClick={handleGenerate}
+            onClick={() => handleGenerate()}
             disabled={isGenerating || !prompt.trim()}
             className="w-full"
             size="lg"
