@@ -52,6 +52,8 @@ export default function NailTryOnPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [detectionStatus, setDetectionStatus] = useState<'detecting' | 'detected' | 'not_detected'>('detecting');
+  const lastDetectionRef = useRef<number>(Date.now());
 
   // Fetch real nail styles from Supabase
   useEffect(() => {
@@ -84,12 +86,34 @@ export default function NailTryOnPage() {
       setIsProcessing(true);
 
       // Apply nail overlay
-      processNails(video, canvas, settings, now).finally(() => {
-        setIsProcessing(false);
-      });
+      processNails(video, canvas, settings, now)
+        .then(() => {
+          // Hands were detected and processed
+          lastDetectionRef.current = Date.now();
+          setDetectionStatus('detected');
+        })
+        .catch(() => {
+          // Detection failed - check if it's been too long
+          if (Date.now() - lastDetectionRef.current > 3000) {
+            setDetectionStatus('not_detected');
+          }
+        })
+        .finally(() => {
+          setIsProcessing(false);
+        });
     },
     [settings, lastFrameTime, isProcessing]
   );
+
+  // Update detection status when no hands detected for a while
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Date.now() - lastDetectionRef.current > 3000) {
+        setDetectionStatus('not_detected');
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleColorSelect = (hex: string) => {
     setSelectedColor(hex);
@@ -336,8 +360,27 @@ export default function NailTryOnPage() {
         {/* AR Camera - Main */}
         <div className="lg:col-span-2">
           <Card>
-            <CardContent className="p-0">
+            <CardContent className="p-0 relative">
               <ARCamera ref={arCameraRef} mode="nails" onFrame={handleFrame} className="w-full" />
+
+              {/* Detection Status Overlay */}
+              {detectionStatus === 'not_detected' && (
+                <div className="absolute inset-x-0 top-4 flex justify-center pointer-events-none">
+                  <div className="bg-yellow-500/90 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg flex items-center gap-2">
+                    <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                    No hands detected - Show your hands to the camera
+                  </div>
+                </div>
+              )}
+
+              {detectionStatus === 'detected' && (
+                <div className="absolute top-4 right-4 pointer-events-none">
+                  <div className="bg-green-500/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                    <span className="w-2 h-2 bg-white rounded-full" />
+                    Hands detected
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 

@@ -5,7 +5,7 @@
  * Allows users to generate custom nail designs using FLUX LoRA models
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -88,12 +88,28 @@ export function NailsGenerator() {
   const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([]);
   const [currentPredictionId, setCurrentPredictionId] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  const [pollAttempt, setPollAttempt] = useState(0);
+  const pollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Poll for prediction status
+  // Exponential backoff: 2s, 4s, 8s, max 15s
+  const getPollingInterval = (attempt: number): number => {
+    const baseInterval = 2000;
+    const maxInterval = 15000;
+    return Math.min(baseInterval * Math.pow(2, attempt), maxInterval);
+  };
+
+  // Poll for prediction status with exponential backoff
   useEffect(() => {
-    if (!currentPredictionId || !isGenerating) return;
+    if (!currentPredictionId || !isGenerating) {
+      // Clean up any existing timeout
+      if (pollTimeoutRef.current) {
+        clearTimeout(pollTimeoutRef.current);
+        pollTimeoutRef.current = null;
+      }
+      return;
+    }
 
-    const pollInterval = setInterval(async () => {
+    const poll = async () => {
       try {
         const response = await fetch(`/api/ai/predictions/${currentPredictionId}`);
         const data = await response.json();
@@ -102,6 +118,7 @@ export function NailsGenerator() {
           setIsGenerating(false);
           setProgress(100);
           setCurrentPredictionId(null);
+          setPollAttempt(0);
 
           const newImage: GeneratedImage = {
             id: data.generation.id,
@@ -115,24 +132,40 @@ export function NailsGenerator() {
 
           setGeneratedImages((prev) => [newImage, ...prev]);
           toast.success('Nail design generated successfully!');
-          clearInterval(pollInterval);
+          return; // Stop polling
         } else if (data.status === 'failed') {
           setIsGenerating(false);
           setCurrentPredictionId(null);
+          setPollAttempt(0);
           toast.error(data.error || 'Generation failed. Please try again.');
-          clearInterval(pollInterval);
+          return; // Stop polling
         } else {
-          // Update progress for processing status
+          // Update progress and schedule next poll with backoff
           setProgress((prev) => Math.min(prev + 5, 90));
+          setPollAttempt((prev) => prev + 1);
+          const nextInterval = getPollingInterval(pollAttempt);
+          pollTimeoutRef.current = setTimeout(poll, nextInterval);
         }
       } catch (error) {
         console.error('Polling error:', error);
-        toast.error('Failed to check generation status');
+        // Retry with backoff even on error
+        setPollAttempt((prev) => prev + 1);
+        const nextInterval = getPollingInterval(pollAttempt);
+        pollTimeoutRef.current = setTimeout(poll, nextInterval);
       }
-    }, 2000); // Poll every 2 seconds
+    };
 
-    return () => clearInterval(pollInterval);
-  }, [currentPredictionId, isGenerating]);
+    // Start first poll
+    const initialInterval = getPollingInterval(0);
+    pollTimeoutRef.current = setTimeout(poll, initialInterval);
+
+    return () => {
+      if (pollTimeoutRef.current) {
+        clearTimeout(pollTimeoutRef.current);
+        pollTimeoutRef.current = null;
+      }
+    };
+  }, [currentPredictionId, isGenerating, pollAttempt]);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {

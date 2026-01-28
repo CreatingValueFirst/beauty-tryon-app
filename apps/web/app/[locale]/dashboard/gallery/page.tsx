@@ -1,19 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Heart, Share2, Download, Trash2, Plus, Grid3x3, List, Loader2, Scissors, Sparkles } from 'lucide-react';
+import { Heart, Share2, Download, Trash2, Plus, Grid3x3, List, Loader2, Scissors, Sparkles, ChevronDown, Palette, Shirt } from 'lucide-react';
 import { cn } from '@/lib/utils/cn';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 
-// Sample gallery items with professional images
-const MOCK_GALLERY_ITEMS = [
+const ITEMS_PER_PAGE = 12;
+
+// NOTE: Mock data removed - using real Supabase data
+// If you need sample data for development, seed the database instead
+const PLACEHOLDER_IMAGE = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzliYTNhZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pjwvc3ZnPg==';
+
+// Removed MOCK_GALLERY_ITEMS - using real data from Supabase
+const _DEPRECATED_MOCK_GALLERY_ITEMS = [
   {
     id: '1',
     type: 'hair',
@@ -114,7 +120,7 @@ const MOCK_GALLERY_ITEMS = [
 
 interface GalleryItem {
   id: string;
-  type: 'hair' | 'nails';
+  type: 'hair' | 'nails' | 'makeup' | 'clothing';
   result_image_url: string;
   created_at: string;
   is_favorite: boolean;
@@ -125,44 +131,77 @@ export default function GalleryPage() {
   const router = useRouter();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [galleryItems, setGalleryItems] = useState<GalleryItem[]>([]);
   const [userId, setUserId] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
 
-  // Fetch gallery items on mount
-  useEffect(() => {
-    async function fetchGalleryItems() {
-      try {
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-
-        if (!user) {
-          toast.error('Please log in to view your gallery');
-          router.push('/login');
-          return;
-        }
-
-        setUserId(user.id);
-
-        // Fetch try-ons from database
-        const { data, error } = await supabase
-          .from('try_ons')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('created_at', { ascending: false });
-
-        if (error) throw error;
-
-        setGalleryItems(data || []);
-        setLoading(false);
-      } catch (error) {
-        console.error('Failed to fetch gallery items:', error);
-        toast.error('Failed to load gallery');
-        setLoading(false);
+  // Fetch gallery items with pagination
+  const fetchGalleryItems = useCallback(async (pageNum: number, append: boolean = false) => {
+    try {
+      if (pageNum === 0) {
+        setLoading(true);
+      } else {
+        setLoadingMore(true);
       }
-    }
 
-    fetchGalleryItems();
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        toast.error('Please log in to view your gallery');
+        router.push('/login');
+        return;
+      }
+
+      setUserId(user.id);
+
+      // Fetch try-ons from database with pagination
+      const from = pageNum * ITEMS_PER_PAGE;
+      const to = from + ITEMS_PER_PAGE - 1;
+
+      const { data, error, count } = await supabase
+        .from('try_ons')
+        .select('*', { count: 'exact' })
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .range(from, to);
+
+      if (error) throw error;
+
+      const items = data || [];
+
+      if (append) {
+        setGalleryItems((prev) => [...prev, ...items]);
+      } else {
+        setGalleryItems(items);
+      }
+
+      // Check if there are more items
+      const totalCount = count || 0;
+      setHasMore((pageNum + 1) * ITEMS_PER_PAGE < totalCount);
+      setPage(pageNum);
+    } catch (error) {
+      console.error('Failed to fetch gallery items:', error);
+      toast.error('Failed to load gallery');
+    } finally {
+      setLoading(false);
+      setLoadingMore(false);
+    }
   }, [router]);
+
+  // Initial fetch on mount
+  useEffect(() => {
+    fetchGalleryItems(0, false);
+  }, [fetchGalleryItems]);
+
+  // Load more handler
+  const handleLoadMore = () => {
+    if (!loadingMore && hasMore) {
+      fetchGalleryItems(page + 1, true);
+    }
+  };
 
   const handleToggleFavorite = async (itemId: string, currentValue: boolean) => {
     if (!userId) return;
@@ -233,17 +272,41 @@ export default function GalleryPage() {
 
   const handleDownload = async (item: GalleryItem) => {
     try {
-      const response = await fetch(item.result_image_url);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `beautytry-on-${item.id}.png`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-      toast.success('Downloaded successfully!');
+      const imageUrl = item.result_image_url;
+
+      // Handle base64 data URLs directly
+      if (imageUrl.startsWith('data:')) {
+        const a = document.createElement('a');
+        a.href = imageUrl;
+        a.download = `beautytry-on-${item.id}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        toast.success('Downloaded successfully!');
+        return;
+      }
+
+      // For remote URLs, try to fetch with CORS
+      try {
+        const response = await fetch(imageUrl, { mode: 'cors' });
+        if (!response.ok) throw new Error('Fetch failed');
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `beautytry-on-${item.id}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        toast.success('Downloaded successfully!');
+      } catch (corsError) {
+        // CORS failed - open in new tab as fallback
+        console.warn('CORS fetch failed, opening in new tab:', corsError);
+        window.open(imageUrl, '_blank');
+        toast.info('Image opened in new tab - right-click to save');
+      }
     } catch (error) {
       console.error('Failed to download:', error);
       toast.error('Failed to download image');
@@ -276,13 +339,7 @@ export default function GalleryPage() {
       console.error('Failed to delete:', error);
       toast.error('Failed to delete. Please try again.');
       // Re-fetch on error to restore correct state
-      const supabase = createClient();
-      const { data } = await supabase
-        .from('try_ons')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-      if (data) setGalleryItems(data);
+      fetchGalleryItems(0, false);
     }
   };
 
@@ -325,20 +382,26 @@ export default function GalleryPage() {
 
       {/* Filters */}
       <Tabs defaultValue="all" className="w-full">
-        <TabsList>
-          <TabsTrigger value="all">All ({galleryItems.length})</TabsTrigger>
+        <TabsList className="flex-wrap">
+          <TabsTrigger value="all">All ({galleryItems.length}{hasMore ? '+' : ''})</TabsTrigger>
           <TabsTrigger value="hair">
             Hair ({galleryItems.filter((i) => i.type === 'hair').length})
           </TabsTrigger>
           <TabsTrigger value="nails">
             Nails ({galleryItems.filter((i) => i.type === 'nails').length})
           </TabsTrigger>
+          <TabsTrigger value="makeup">
+            Makeup ({galleryItems.filter((i) => i.type === 'makeup').length})
+          </TabsTrigger>
+          <TabsTrigger value="clothing">
+            Clothing ({galleryItems.filter((i) => i.type === 'clothing').length})
+          </TabsTrigger>
           <TabsTrigger value="favorites">
             Favorites ({galleryItems.filter((i) => i.is_favorite).length})
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="all" className="mt-6">
+        <TabsContent value="all" className="mt-6 space-y-4">
           <GalleryGrid
             items={galleryItems}
             viewMode={viewMode}
@@ -347,6 +410,28 @@ export default function GalleryPage() {
             onDownload={handleDownload}
             onDelete={handleDelete}
           />
+          {hasMore && (
+            <div className="flex justify-center pt-4">
+              <Button
+                variant="outline"
+                onClick={handleLoadMore}
+                disabled={loadingMore}
+                className="min-w-[200px]"
+              >
+                {loadingMore ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="w-4 h-4 mr-2" />
+                    Load More
+                  </>
+                )}
+              </Button>
+            </div>
+          )}
         </TabsContent>
 
         <TabsContent value="hair" className="mt-6">
@@ -363,6 +448,28 @@ export default function GalleryPage() {
         <TabsContent value="nails" className="mt-6">
           <GalleryGrid
             items={galleryItems.filter((i) => i.type === 'nails')}
+            viewMode={viewMode}
+            onToggleFavorite={handleToggleFavorite}
+            onShare={handleShare}
+            onDownload={handleDownload}
+            onDelete={handleDelete}
+          />
+        </TabsContent>
+
+        <TabsContent value="makeup" className="mt-6">
+          <GalleryGrid
+            items={galleryItems.filter((i) => i.type === 'makeup')}
+            viewMode={viewMode}
+            onToggleFavorite={handleToggleFavorite}
+            onShare={handleShare}
+            onDownload={handleDownload}
+            onDelete={handleDelete}
+          />
+        </TabsContent>
+
+        <TabsContent value="clothing" className="mt-6">
+          <GalleryGrid
+            items={galleryItems.filter((i) => i.type === 'clothing')}
             viewMode={viewMode}
             onToggleFavorite={handleToggleFavorite}
             onShare={handleShare}
@@ -567,15 +674,28 @@ function GalleryGrid({
 
               {/* Type Badge */}
               <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium capitalize shadow-sm flex items-center gap-1">
-                {item.type === 'hair' ? (
+                {item.type === 'hair' && (
                   <>
                     <Scissors className="w-3 h-3" />
                     <span>Hair</span>
                   </>
-                ) : (
+                )}
+                {item.type === 'nails' && (
                   <>
                     <Sparkles className="w-3 h-3" />
                     <span>Nails</span>
+                  </>
+                )}
+                {item.type === 'makeup' && (
+                  <>
+                    <Palette className="w-3 h-3" />
+                    <span>Makeup</span>
+                  </>
+                )}
+                {item.type === 'clothing' && (
+                  <>
+                    <Shirt className="w-3 h-3" />
+                    <span>Clothing</span>
                   </>
                 )}
               </div>

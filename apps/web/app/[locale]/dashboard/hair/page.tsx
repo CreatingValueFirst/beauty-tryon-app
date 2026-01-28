@@ -116,6 +116,8 @@ export default function HairTryOnPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
+  const [detectionStatus, setDetectionStatus] = useState<'detecting' | 'detected' | 'not_detected'>('detecting');
+  const lastDetectionRef = useRef<number>(Date.now());
 
   // Fetch real styles from Supabase
   useEffect(() => {
@@ -175,12 +177,31 @@ export default function HairTryOnPage() {
           blendMode: 'multiply',
         },
         now
-      ).finally(() => {
+      ).then(() => {
+        // Face was successfully processed
+        lastDetectionRef.current = Date.now();
+        setDetectionStatus('detected');
+      }).catch(() => {
+        // Detection failed - check if it's been too long
+        if (Date.now() - lastDetectionRef.current > 3000) {
+          setDetectionStatus('not_detected');
+        }
+      }).finally(() => {
         setIsProcessing(false);
       });
     },
     [colorSettings, lastFrameTime, isProcessing]
   );
+
+  // Update detection status when no face detected for a while
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (Date.now() - lastDetectionRef.current > 3000) {
+        setDetectionStatus('not_detected');
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleStyleSelect = (style: StyleItem) => {
     setSelectedStyle(style);
@@ -326,8 +347,27 @@ export default function HairTryOnPage() {
         {/* AR Camera - Main */}
         <div className="lg:col-span-2">
           <Card>
-            <CardContent className="p-0">
+            <CardContent className="p-0 relative">
               <ARCamera ref={arCameraRef} mode="hair" onFrame={handleFrame} className="w-full" />
+
+              {/* Detection Status Overlay */}
+              {detectionStatus === 'not_detected' && (
+                <div className="absolute inset-x-0 top-4 flex justify-center pointer-events-none">
+                  <div className="bg-yellow-500/90 backdrop-blur-sm text-white px-4 py-2 rounded-lg text-sm font-medium shadow-lg flex items-center gap-2">
+                    <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                    No face detected - Please face the camera
+                  </div>
+                </div>
+              )}
+
+              {detectionStatus === 'detected' && (
+                <div className="absolute top-4 right-4 pointer-events-none">
+                  <div className="bg-green-500/80 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1">
+                    <span className="w-2 h-2 bg-white rounded-full" />
+                    Face detected
+                  </div>
+                </div>
+              )}
             </CardContent>
           </Card>
 

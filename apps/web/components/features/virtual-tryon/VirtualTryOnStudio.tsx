@@ -52,11 +52,21 @@ export function VirtualTryOnStudio() {
   const [currentPredictionId, setCurrentPredictionId] = useState<string | null>(null);
   const [result, setResult] = useState<TryOnResult | null>(null);
   const [showCamera, setShowCamera] = useState(false);
+  const [pollAttempt, setPollAttempt] = useState(0);
 
   const personFileInputRef = useRef<HTMLInputElement>(null);
   const garmentFileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Exponential backoff: 2s, 4s, 8s, 16s, max 20s
+  const getPollingInterval = (attempt: number): number => {
+    const baseInterval = 2000; // 2 seconds
+    const maxInterval = 20000; // 20 seconds
+    const interval = Math.min(baseInterval * Math.pow(2, attempt), maxInterval);
+    return interval;
+  };
 
   // Initialize camera
   const initCamera = async () => {
@@ -144,11 +154,18 @@ export function VirtualTryOnStudio() {
     reader.readAsDataURL(file);
   };
 
-  // Poll for prediction status
+  // Poll for prediction status with exponential backoff
   useEffect(() => {
-    if (!currentPredictionId || !isGenerating) return;
+    if (!currentPredictionId || !isGenerating) {
+      // Clean up any existing interval
+      if (pollIntervalRef.current) {
+        clearTimeout(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+      return;
+    }
 
-    const pollInterval = setInterval(async () => {
+    const poll = async () => {
       try {
         const response = await fetch(`/api/virtual-tryon/predictions/${currentPredictionId}`);
         const data = await response.json();
@@ -157,25 +174,45 @@ export function VirtualTryOnStudio() {
           setIsGenerating(false);
           setProgress(100);
           setCurrentPredictionId(null);
+          setPollAttempt(0);
           setResult(data.tryOn);
           toast.success('Virtual try-on completed!');
-          clearInterval(pollInterval);
+          return; // Stop polling
         } else if (data.status === 'failed') {
           setIsGenerating(false);
           setCurrentPredictionId(null);
+          setPollAttempt(0);
           toast.error(data.error || 'Virtual try-on failed. Please try again.');
-          clearInterval(pollInterval);
+          return; // Stop polling
         } else {
+          // Still processing - update progress and schedule next poll
           setProgress((prev) => Math.min(prev + 3, 90));
+          setPollAttempt((prev) => prev + 1);
+
+          // Schedule next poll with exponential backoff
+          const nextInterval = getPollingInterval(pollAttempt);
+          pollIntervalRef.current = setTimeout(poll, nextInterval);
         }
       } catch (error) {
         console.error('Polling error:', error);
-        toast.error('Failed to check status');
+        // Retry with backoff even on error
+        setPollAttempt((prev) => prev + 1);
+        const nextInterval = getPollingInterval(pollAttempt);
+        pollIntervalRef.current = setTimeout(poll, nextInterval);
       }
-    }, 3000); // Poll every 3 seconds
+    };
 
-    return () => clearInterval(pollInterval);
-  }, [currentPredictionId, isGenerating]);
+    // Start first poll after initial interval
+    const initialInterval = getPollingInterval(0);
+    pollIntervalRef.current = setTimeout(poll, initialInterval);
+
+    return () => {
+      if (pollIntervalRef.current) {
+        clearTimeout(pollIntervalRef.current);
+        pollIntervalRef.current = null;
+      }
+    };
+  }, [currentPredictionId, isGenerating, pollAttempt]);
 
   // Generate virtual try-on
   const handleGenerate = async () => {
