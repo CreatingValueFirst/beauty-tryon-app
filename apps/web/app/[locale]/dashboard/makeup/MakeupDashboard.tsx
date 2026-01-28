@@ -7,22 +7,72 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 
 export function MakeupDashboard() {
   const { toast } = useToast();
+  const router = useRouter();
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async (imageData: string, config: MakeupConfig) => {
-    // TODO: Integrate with Supabase to save to user's gallery
-    // For now, just show a success message
-    console.log('Saving makeup result:', { imageData: imageData.substring(0, 50) + '...', config });
+    if (isSaving) return;
+    setIsSaving(true);
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      const supabase = createClient();
 
-    toast({
-      title: 'Saved!',
-      description: 'Your makeup look has been saved to your gallery',
-    });
+      // Get current user
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        toast({
+          title: 'Please log in',
+          description: 'You need to be logged in to save your makeup look',
+          variant: 'destructive',
+        });
+        router.push('/login');
+        return;
+      }
+
+      // Save to try_ons table
+      const { error: saveError } = await supabase
+        .from('try_ons')
+        .insert({
+          user_id: user.id,
+          type: 'makeup',
+          result_image_url: imageData,
+          settings: {
+            lipstick_color: config.lipstick_color,
+            lipstick_intensity: config.lipstick_intensity,
+            blush_color: config.blush_color,
+            blush_intensity: config.blush_intensity,
+            eyeshadow_color: config.eyeshadow_color,
+            eyeshadow_intensity: config.eyeshadow_intensity,
+            eyeliner: config.eyeliner,
+            foundation_intensity: config.foundation_intensity,
+          },
+          is_favorite: false,
+        });
+
+      if (saveError) {
+        throw saveError;
+      }
+
+      toast({
+        title: 'Saved!',
+        description: 'Your makeup look has been saved to your gallery',
+      });
+    } catch (error) {
+      console.error('Failed to save makeup:', error);
+      toast({
+        title: 'Save failed',
+        description: 'Failed to save your makeup look. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (

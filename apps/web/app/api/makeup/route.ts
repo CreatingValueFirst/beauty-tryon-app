@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 
 // Makeup API base URL (environment variable or default to localhost)
 const MAKEUP_API_URL = process.env.MAKEUP_API_URL || 'http://localhost:8000';
@@ -9,9 +10,21 @@ export const maxDuration = 60; // 60 seconds timeout for makeup processing
 /**
  * POST /api/makeup
  * Proxy endpoint for makeup try-on service
+ * Requires authentication
  */
 export async function POST(request: NextRequest) {
   try {
+    // Verify authentication
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     // Get form data from request
     const formData = await request.formData();
 
@@ -25,10 +38,13 @@ export async function POST(request: NextRequest) {
     });
 
     if (!response.ok) {
+      // Log full error for debugging (server-side only)
       const errorText = await response.text();
       console.error('Makeup API error:', errorText);
+
+      // Return sanitized error (don't expose internal details)
       return NextResponse.json(
-        { error: 'Failed to process image', details: errorText },
+        { error: 'Failed to process image', details: 'The makeup service could not process your image. Please try a different photo.' },
         { status: response.status }
       );
     }
@@ -39,21 +55,22 @@ export async function POST(request: NextRequest) {
     // Return the processed image
     return NextResponse.json(result);
   } catch (error) {
+    // Log full error for debugging (server-side only)
     console.error('Error in makeup API proxy:', error);
 
-    // Check if the error is a timeout or connection issue
+    // Return sanitized error messages (don't expose internal details)
     if (error instanceof Error) {
-      if (error.message.includes('ECONNREFUSED')) {
+      if (error.message.includes('ECONNREFUSED') || error.message.includes('ENOTFOUND')) {
         return NextResponse.json(
           {
             error: 'Makeup service unavailable',
-            details: 'The makeup processing service is not running. Please start it with: cd apps/api/makeup && docker-compose up',
+            details: 'The makeup processing service is temporarily unavailable. Please try again later.',
           },
           { status: 503 }
         );
       }
 
-      if (error.message.includes('timeout')) {
+      if (error.message.includes('timeout') || error.message.includes('ETIMEDOUT')) {
         return NextResponse.json(
           {
             error: 'Processing timeout',
@@ -64,8 +81,9 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Generic error - don't expose internal details
     return NextResponse.json(
-      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
+      { error: 'Failed to process image', details: 'An unexpected error occurred. Please try again.' },
       { status: 500 }
     );
   }
@@ -107,11 +125,14 @@ export async function GET(request: NextRequest) {
       upstream: health,
     });
   } catch (error) {
+    // Log full error for debugging (server-side only)
     console.error('Error checking makeup API health:', error);
+
+    // Return sanitized error (don't expose internal details)
     return NextResponse.json(
       {
         status: 'unhealthy',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: 'Makeup service is temporarily unavailable',
       },
       { status: 503 }
     );

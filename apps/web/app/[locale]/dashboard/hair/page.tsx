@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { ARCamera } from '@/components/ar/ARCamera';
+import { ARCamera, ARCameraHandle } from '@/components/ar/ARCamera';
 import { StyleCarousel, StyleItem } from '@/components/features/hair-tryon/StyleCarousel';
 import { ColorPicker, ColorSettings } from '@/components/features/hair-tryon/ColorPicker';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -99,8 +99,7 @@ const SAMPLE_HAIR_STYLES: StyleItem[] = [
 
 export default function HairTryOnPage() {
   const router = useRouter();
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const arCameraRef = useRef<ARCameraHandle>(null);
 
   const [hairStyles, setHairStyles] = useState<StyleItem[]>(SAMPLE_HAIR_STYLES);
   const [filteredStyles, setFilteredStyles] = useState<StyleItem[]>(SAMPLE_HAIR_STYLES);
@@ -187,17 +186,27 @@ export default function HairTryOnPage() {
     setSelectedStyle(style);
   };
 
-  const handleTakePhoto = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
+  const handleTakePhoto = async () => {
+    if (!arCameraRef.current?.isReady()) {
       toast.error('Camera not ready. Please wait.');
       return;
     }
 
     try {
-      const imageUrl = canvas.toDataURL('image/png');
-      setCapturedImage(imageUrl);
-      toast.success('Photo captured successfully!');
+      const blob = await arCameraRef.current.capturePhoto();
+      if (!blob) {
+        toast.error('Failed to capture photo. Please try again.');
+        return;
+      }
+
+      // Convert blob to data URL for preview and saving
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageUrl = reader.result as string;
+        setCapturedImage(imageUrl);
+        toast.success('Photo captured successfully!');
+      };
+      reader.readAsDataURL(blob);
     } catch (error) {
       console.error('Failed to capture photo:', error);
       toast.error('Failed to capture photo. Please try again.');
@@ -318,7 +327,7 @@ export default function HairTryOnPage() {
         <div className="lg:col-span-2">
           <Card>
             <CardContent className="p-0">
-              <ARCamera mode="hair" onFrame={handleFrame} className="w-full" />
+              <ARCamera ref={arCameraRef} mode="hair" onFrame={handleFrame} className="w-full" />
             </CardContent>
           </Card>
 

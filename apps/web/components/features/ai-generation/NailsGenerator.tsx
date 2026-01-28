@@ -15,6 +15,8 @@ import { Progress } from '@/components/ui/progress';
 import { Sparkles, Loader2, Download, Heart, Share2, Wand2, Zap, Crown } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils/cn';
+import { createClient } from '@/lib/supabase/client';
+import { useRouter } from 'next/navigation';
 import type { AIModelType, QualityPreset } from '@/lib/ai/replicate-client';
 
 interface GeneratedImage {
@@ -216,8 +218,43 @@ export function NailsGenerator() {
   };
 
   const handleSave = async (image: GeneratedImage) => {
-    // TODO: Save to user's gallery
-    toast.success('Saved to your gallery!');
+    try {
+      const supabase = createClient();
+
+      // Get current user
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        toast.error('Please log in to save designs');
+        return;
+      }
+
+      // Save to try_ons table as AI-generated nail design
+      const { error: saveError } = await supabase
+        .from('try_ons')
+        .insert({
+          user_id: user.id,
+          type: 'nails',
+          result_image_url: image.imageUrl,
+          settings: {
+            ai_generated: true,
+            prompt: image.prompt,
+            model_type: image.modelType,
+            quality: image.quality,
+            cached: image.cached,
+          },
+          is_favorite: false,
+        });
+
+      if (saveError) {
+        throw saveError;
+      }
+
+      toast.success('Saved to your gallery!');
+    } catch (error) {
+      console.error('Failed to save design:', error);
+      toast.error('Failed to save. Please try again.');
+    }
   };
 
   const handleShare = async (image: GeneratedImage) => {

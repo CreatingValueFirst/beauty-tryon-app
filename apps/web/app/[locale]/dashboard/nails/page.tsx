@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { ARCamera } from '@/components/ar/ARCamera';
+import { ARCamera, ARCameraHandle } from '@/components/ar/ARCamera';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -36,7 +36,7 @@ const SAMPLE_NAIL_COLORS = [
 
 export default function NailTryOnPage() {
   const router = useRouter();
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const arCameraRef = useRef<ARCameraHandle>(null);
 
   const [nailColors, setNailColors] = useState(SAMPLE_NAIL_COLORS);
   const [selectedColor, setSelectedColor] = useState('#DC143C');
@@ -120,17 +120,27 @@ export default function NailTryOnPage() {
     }));
   };
 
-  const handleTakePhoto = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
+  const handleTakePhoto = async () => {
+    if (!arCameraRef.current?.isReady()) {
       toast.error('Camera not ready. Please wait.');
       return;
     }
 
     try {
-      const imageUrl = canvas.toDataURL('image/png');
-      setCapturedImage(imageUrl);
-      toast.success('Photo captured successfully!');
+      const blob = await arCameraRef.current.capturePhoto();
+      if (!blob) {
+        toast.error('Failed to capture photo. Please try again.');
+        return;
+      }
+
+      // Convert blob to data URL for preview and saving
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imageUrl = reader.result as string;
+        setCapturedImage(imageUrl);
+        toast.success('Photo captured successfully!');
+      };
+      reader.readAsDataURL(blob);
     } catch (error) {
       console.error('Failed to capture photo:', error);
       toast.error('Failed to capture photo. Please try again.');
@@ -260,9 +270,44 @@ export default function NailTryOnPage() {
   };
 
   const handleCollectionSelect = (collection: string) => {
+    if (selectedCollection === collection) {
+      // Deselect if clicking the same collection
+      setSelectedCollection(null);
+      setNailColors(SAMPLE_NAIL_COLORS);
+      toast.info('Showing all colors');
+      return;
+    }
+
     setSelectedCollection(collection);
-    toast.info(`${collection} collection selected`);
-    // TODO: Filter nail designs by collection
+
+    // Filter nail colors based on collection theme
+    const collectionColorMap: Record<string, string[]> = {
+      'Romantic': ['#DC143C', '#FFB6C1', '#FF69B4', '#E6E6FA', '#B76E79'],
+      'Glam': ['#B76E79', '#FFD700', '#C0C0C0', '#000000', '#800020'],
+      'Autumn': ['#800020', '#8B4513', '#D2691E', '#CD853F', '#DEB887'],
+      'Winter': ['#000080', '#4169E1', '#87CEEB', '#FFFFFF', '#C0C0C0'],
+      'Spring': ['#98FF98', '#FFB6C1', '#E6E6FA', '#FFFACD', '#FF69B4'],
+      'Summer': ['#FF6B6B', '#FF69B4', '#00CED1', '#FFD700', '#FF4500'],
+      'Halloween': ['#000000', '#FF6600', '#800080', '#8B0000', '#2F4F4F'],
+      'Holiday': ['#DC143C', '#228B22', '#FFD700', '#C0C0C0', '#FFFFFF'],
+    };
+
+    const collectionColors = collectionColorMap[collection] || [];
+
+    if (collectionColors.length > 0) {
+      // Create filtered color set based on collection theme
+      const filteredColors = collectionColors.map((hex, index) => ({
+        id: `${collection.toLowerCase()}-${index}`,
+        name: `${collection} ${index + 1}`,
+        color_code: hex,
+        category: 'solid' as const,
+      }));
+      setNailColors(filteredColors);
+      toast.success(`${collection} collection - ${filteredColors.length} colors`);
+    } else {
+      setNailColors(SAMPLE_NAIL_COLORS);
+      toast.info(`${collection} collection selected`);
+    }
   };
 
   return (
@@ -292,7 +337,7 @@ export default function NailTryOnPage() {
         <div className="lg:col-span-2">
           <Card>
             <CardContent className="p-0">
-              <ARCamera mode="nails" onFrame={handleFrame} className="w-full" />
+              <ARCamera ref={arCameraRef} mode="nails" onFrame={handleFrame} className="w-full" />
             </CardContent>
           </Card>
 
