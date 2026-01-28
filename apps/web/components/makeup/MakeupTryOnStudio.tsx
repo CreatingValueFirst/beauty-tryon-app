@@ -240,10 +240,13 @@ export function MakeupTryOnStudio({ onSave, className }: MakeupTryOnStudioProps)
     if (!processedImage) return;
 
     try {
-      // Convert base64 to blob
+      // Convert base64 to blob, preserving original format
       const response = await fetch(processedImage);
       const blob = await response.blob();
-      const file = new File([blob], 'makeup-result.png', { type: 'image/png' });
+      // Use the blob's actual type, default to JPEG for camera captures
+      const mimeType = blob.type || 'image/jpeg';
+      const extension = mimeType.includes('png') ? 'png' : 'jpg';
+      const file = new File([blob], `makeup-result.${extension}`, { type: mimeType });
 
       if (navigator.share && navigator.canShare({ files: [file] })) {
         await navigator.share({

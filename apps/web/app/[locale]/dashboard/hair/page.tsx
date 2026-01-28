@@ -11,6 +11,7 @@ import { processHair, hexToRgb } from '@/lib/ai/hair-processor';
 import { Save, Share2, Download, Sparkles, Camera, Palette, Heart, RefreshCw } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
+import { uploadBase64Image } from '@/lib/utils/image-upload';
 import { useRouter } from 'next/navigation';
 import { useModelLoader } from '@/hooks/use-model-loader';
 
@@ -255,11 +256,17 @@ export default function HairTryOnPage() {
         return;
       }
 
+      // Upload image to Supabase Storage instead of storing base64
+      const uploadResult = await uploadBase64Image(capturedImage, 'hair');
+      if (!uploadResult.success || !uploadResult.url) {
+        throw new Error(uploadResult.error || 'Failed to upload image');
+      }
+
       const { error } = await supabase.from('try_ons').insert({
         user_id: user.id,
         type: 'hair',
         style_id: selectedStyle?.id,
-        result_image_url: capturedImage,
+        result_image_url: uploadResult.url,
         settings: {
           color: colorSettings.hex,
           opacity: colorSettings.opacity,

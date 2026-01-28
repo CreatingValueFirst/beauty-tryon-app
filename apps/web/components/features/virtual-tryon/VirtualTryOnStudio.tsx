@@ -54,11 +54,11 @@ export function VirtualTryOnStudio() {
   const [currentPredictionId, setCurrentPredictionId] = useState<string | null>(null);
   const [result, setResult] = useState<TryOnResult | null>(null);
   const [showCamera, setShowCamera] = useState(false);
-  const [pollAttempt, setPollAttempt] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [generationError, setGenerationError] = useState<string | null>(null);
   const [canRetry, setCanRetry] = useState(false);
+  const pollAttemptRef = useRef(0);
 
   const personFileInputRef = useRef<HTMLInputElement>(null);
   const garmentFileInputRef = useRef<HTMLInputElement>(null);
@@ -169,6 +169,7 @@ export function VirtualTryOnStudio() {
         clearTimeout(pollIntervalRef.current);
         pollIntervalRef.current = null;
       }
+      pollAttemptRef.current = 0;
       return;
     }
 
@@ -177,39 +178,43 @@ export function VirtualTryOnStudio() {
         const response = await fetch(`/api/virtual-tryon/predictions/${currentPredictionId}`);
         const data = await response.json();
 
+        // API normalizes status to 'completed'
         if (data.status === 'completed') {
           setIsGenerating(false);
           setProgress(100);
           setCurrentPredictionId(null);
-          setPollAttempt(0);
+          pollAttemptRef.current = 0;
           setResult(data.tryOn);
           toast.success('Virtual try-on completed!');
           return; // Stop polling
         } else if (data.status === 'failed') {
           setIsGenerating(false);
           setCurrentPredictionId(null);
-          setPollAttempt(0);
+          pollAttemptRef.current = 0;
+          setGenerationError(data.error || 'Virtual try-on failed. Please try again.');
+          setCanRetry(true);
           toast.error(data.error || 'Virtual try-on failed. Please try again.');
           return; // Stop polling
         } else {
           // Still processing - update progress and schedule next poll
           setProgress((prev) => Math.min(prev + 3, 90));
-          setPollAttempt((prev) => prev + 1);
+          pollAttemptRef.current += 1;
 
-          // Schedule next poll with exponential backoff
-          const nextInterval = getPollingInterval(pollAttempt);
+          // Schedule next poll with exponential backoff (use ref for current value)
+          const nextInterval = getPollingInterval(pollAttemptRef.current);
           pollIntervalRef.current = setTimeout(poll, nextInterval);
         }
       } catch (error) {
         console.error('Polling error:', error);
         // Retry with backoff even on error
-        setPollAttempt((prev) => prev + 1);
-        const nextInterval = getPollingInterval(pollAttempt);
+        pollAttemptRef.current += 1;
+        const nextInterval = getPollingInterval(pollAttemptRef.current);
         pollIntervalRef.current = setTimeout(poll, nextInterval);
       }
     };
 
     // Start first poll after initial interval
+    pollAttemptRef.current = 0;
     const initialInterval = getPollingInterval(0);
     pollIntervalRef.current = setTimeout(poll, initialInterval);
 
@@ -219,7 +224,7 @@ export function VirtualTryOnStudio() {
         pollIntervalRef.current = null;
       }
     };
-  }, [currentPredictionId, isGenerating, pollAttempt]);
+  }, [currentPredictionId, isGenerating]);
 
   // Supabase Realtime subscription for instant notifications
   useEffect(() => {
@@ -241,7 +246,8 @@ export function VirtualTryOnStudio() {
         (payload) => {
           const { new: newRecord } = payload;
 
-          if (newRecord.status === 'completed' && newRecord.result_image_url) {
+          // Accept both 'succeeded' (Replicate) and 'completed' (our DB status)
+          if ((newRecord.status === 'succeeded' || newRecord.status === 'completed') && newRecord.result_image_url) {
             // Stop polling since we got the result via Realtime
             if (pollIntervalRef.current) {
               clearTimeout(pollIntervalRef.current);
@@ -251,7 +257,7 @@ export function VirtualTryOnStudio() {
             setIsGenerating(false);
             setProgress(100);
             setCurrentPredictionId(null);
-            setPollAttempt(0);
+            pollAttemptRef.current = 0;
             setResult({
               id: newRecord.id,
               result_image_url: newRecord.result_image_url,
@@ -271,7 +277,9 @@ export function VirtualTryOnStudio() {
 
             setIsGenerating(false);
             setCurrentPredictionId(null);
-            setPollAttempt(0);
+            pollAttemptRef.current = 0;
+            setGenerationError(newRecord.error_message || 'Please try again.');
+            setCanRetry(true);
             toast.error('Virtual try-on failed', {
               description: newRecord.error_message || 'Please try again.',
             });
@@ -440,20 +448,21 @@ export function VirtualTryOnStudio() {
         return;
       }
 
-      // Save to try_ons table for gallery display
+      // Save to clothing_try_ons table (dedicated table for virtual try-on)
       const { error: saveError } = await supabase
-        .from('try_ons')
+        .from('clothing_try_ons')
         .insert({
           user_id: user.id,
-          type: 'clothing',
+          person_image_url: result.person_image_url,
+          garment_image_url: result.garment_image_url,
           result_image_url: result.result_image_url,
-          settings: {
-            person_image_url: result.person_image_url,
-            garment_image_url: result.garment_image_url,
-            clothing_item_id: selectedClothing?.id,
-            clothing_name: selectedClothing?.name,
-          },
+          clothing_item_id: selectedClothing?.id || null,
+          status: 'completed',
           is_favorite: false,
+          metadata: {
+            clothing_name: selectedClothing?.name,
+            saved_from_studio: true,
+          },
         });
 
       if (saveError) {

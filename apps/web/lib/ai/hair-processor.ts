@@ -22,6 +22,16 @@ export interface HairSettings {
 }
 
 /**
+ * Custom error class for detection failures
+ */
+export class NoFaceDetectedError extends Error {
+  constructor() {
+    super('No face detected');
+    this.name = 'NoFaceDetectedError';
+  }
+}
+
+/**
  * Parse hex color to RGB
  */
 export function hexToRgb(hex: string): HairColor {
@@ -38,24 +48,28 @@ export function hexToRgb(hex: string): HairColor {
 /**
  * Apply hair color overlay to canvas using face landmarks (simplified method)
  * This method works reliably when MediaPipe segmentation is unavailable
+ * @throws {NoFaceDetectedError} When no face is detected in the frame
  */
 export async function applyHairColorSimple(
   video: HTMLVideoElement,
   canvas: HTMLCanvasElement,
   settings: HairSettings,
   timestamp: number
-) {
+): Promise<void> {
   const ctx = canvas.getContext('2d');
-  if (!ctx) return;
+  if (!ctx) {
+    throw new Error('Canvas context not available');
+  }
+
+  // Get face landmarks
+  const landmarks = await getFaceLandmarks(video, timestamp);
+
+  if (!landmarks || !landmarks.faceLandmarks || landmarks.faceLandmarks.length === 0) {
+    // No face detected - throw error so UI can handle it
+    throw new NoFaceDetectedError();
+  }
 
   try {
-    // Get face landmarks
-    const landmarks = await getFaceLandmarks(video, timestamp);
-
-    if (!landmarks || !landmarks.faceLandmarks || landmarks.faceLandmarks.length === 0) {
-      // No face detected - show message or return silently
-      return;
-    }
 
     const faceLandmarks = landmarks.faceLandmarks[0];
 
@@ -145,6 +159,7 @@ export async function applyHairColorSimple(
     ctx.restore();
   } catch (error) {
     console.error('Error applying simple hair color:', error);
+    throw error;
   }
 }
 
@@ -321,13 +336,14 @@ export async function applyHairColorBodyPix(
  * Main hair processing function
  * Uses best-in-class technology with intelligent fallbacks
  * Priority: BodyPix > MediaPipe > Face Landmarks
+ * @throws {NoFaceDetectedError} When no face is detected after trying all methods
  */
 export async function processHair(
   video: HTMLVideoElement,
   canvas: HTMLCanvasElement,
   settings: HairSettings,
   timestamp: number
-) {
+): Promise<void> {
   try {
     // Method 1: Try TensorFlow.js BodyPix (BEST - most accurate)
     const bodyPixSuccess = await applyHairColorBodyPix(video, canvas, settings, timestamp);
@@ -336,13 +352,14 @@ export async function processHair(
     // Method 2: Try MediaPipe segmentation (GOOD - fast and accurate)
     await applyHairColorAdvanced(video, canvas, settings, timestamp);
   } catch (error) {
-    console.warn('Advanced hair processing failed, using fallback:', error);
-    // Method 3: Fallback to landmark-based method (BASIC - always works)
-    try {
-      await applyHairColorSimple(video, canvas, settings, timestamp);
-    } catch (fallbackError) {
-      console.error('All hair processing methods failed:', fallbackError);
+    // If it's a face detection error, try fallback before re-throwing
+    if (!(error instanceof NoFaceDetectedError)) {
+      console.warn('Advanced hair processing failed, using fallback:', error);
     }
+
+    // Method 3: Fallback to landmark-based method (BASIC - always works)
+    // This will throw NoFaceDetectedError if no face is found
+    await applyHairColorSimple(video, canvas, settings, timestamp);
   }
 }
 

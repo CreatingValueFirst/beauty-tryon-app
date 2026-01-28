@@ -62,9 +62,9 @@ export class MakeupClient {
    * @returns Processed image result
    */
   async applyMakeup(file: File, config: Partial<MakeupConfig> = {}): Promise<ProcessResponse> {
-    // Create form data
+    // Create form data - use 'image' field name as expected by API route
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('image', file);
 
     // Add configuration parameters
     const fullConfig: MakeupConfig = {

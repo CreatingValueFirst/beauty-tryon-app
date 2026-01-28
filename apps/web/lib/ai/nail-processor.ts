@@ -201,26 +201,39 @@ function getRotationAngle(
 }
 
 /**
+ * Custom error class for detection failures
+ */
+export class NoHandsDetectedError extends Error {
+  constructor() {
+    super('No hands detected');
+    this.name = 'NoHandsDetectedError';
+  }
+}
+
+/**
  * Process nail overlay on video frame with PROFESSIONAL PIXEL-PERFECT accuracy
  * Uses enhanced geometric analysis and temporal smoothing
+ * @throws {NoHandsDetectedError} When no hands are detected in the frame
  */
 export async function processNails(
   video: HTMLVideoElement,
   canvas: HTMLCanvasElement,
   settings: NailSettings,
   timestamp: number
-) {
+): Promise<void> {
   const ctx = canvas.getContext('2d');
-  if (!ctx) return;
+  if (!ctx) {
+    throw new Error('Canvas context not available');
+  }
 
   try {
     // Detect hands with MediaPipe
     const handResults = await detectHands(video, timestamp);
 
     if (!handResults || !handResults.landmarks || handResults.landmarks.length === 0) {
-      // No hands detected - clear smoother history
+      // No hands detected - clear smoother history and throw error
       nailSmoother.clear();
-      return;
+      throw new NoHandsDetectedError();
     }
 
     // Process each detected hand
@@ -261,8 +274,17 @@ export async function processNails(
       }
     }
   } catch (error) {
-    console.error('Error processing nails:', error);
+    // Clear smoother on any error
     nailSmoother.clear();
+
+    // Re-throw detection errors so UI can handle them
+    if (error instanceof NoHandsDetectedError) {
+      throw error;
+    }
+
+    // Log and re-throw other errors
+    console.error('Error processing nails:', error);
+    throw error;
   }
 }
 

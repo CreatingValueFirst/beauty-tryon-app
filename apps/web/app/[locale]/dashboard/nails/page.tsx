@@ -10,6 +10,7 @@ import { Save, Share2, Download, Sparkles, Camera, Heart, Palette, Star, Sparkle
 import { cn } from '@/lib/utils/cn';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from 'sonner';
+import { uploadBase64Image } from '@/lib/utils/image-upload';
 import { useRouter } from 'next/navigation';
 import { NailsGenerator } from '@/components/features/ai-generation/NailsGenerator';
 import { useModelLoader } from '@/hooks/use-model-loader';
@@ -195,13 +196,19 @@ export default function NailTryOnPage() {
         return;
       }
 
+      // Upload image to Supabase Storage instead of storing base64
+      const uploadResult = await uploadBase64Image(capturedImage, 'nails');
+      if (!uploadResult.success || !uploadResult.url) {
+        throw new Error(uploadResult.error || 'Failed to upload image');
+      }
+
       // Save to try_ons table
       const { error } = await supabase
         .from('try_ons')
         .insert({
           user_id: user.id,
           type: 'nails',
-          result_image_url: capturedImage,
+          result_image_url: uploadResult.url,
           settings: {
             color: selectedColor,
             opacity: settings.opacity,
@@ -273,12 +280,18 @@ export default function NailTryOnPage() {
         return;
       }
 
+      // Upload image to Supabase Storage instead of storing base64
+      const uploadResult = await uploadBase64Image(capturedImage, 'nails');
+      if (!uploadResult.success || !uploadResult.url) {
+        throw new Error(uploadResult.error || 'Failed to upload image');
+      }
+
       const { error } = await supabase
         .from('try_ons')
         .insert({
           user_id: user.id,
           type: 'nails',
-          result_image_url: capturedImage,
+          result_image_url: uploadResult.url,
           settings: {
             color: selectedColor,
             opacity: settings.opacity,

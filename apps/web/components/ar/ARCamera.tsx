@@ -51,10 +51,19 @@ export const ARCamera = forwardRef<ARCameraHandle, ARCameraProps>(
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
-      // Draw video frame
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      // Draw video frame - mirror for front-facing camera so overlays align
+      if (facingMode === 'user') {
+        // Mirror horizontally for selfie camera
+        ctx.save();
+        ctx.scale(-1, 1);
+        ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
+        ctx.restore();
+      } else {
+        // Draw normally for back camera
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      }
 
-      // Call custom frame processor
+      // Call custom frame processor (works on already-mirrored canvas)
       if (onFrame) {
         onFrame(video, canvas);
       }
@@ -64,7 +73,7 @@ export const ARCamera = forwardRef<ARCameraHandle, ARCameraProps>(
     if (isActive) {
       animationFrameId.current = requestAnimationFrame(processFrame);
     }
-  }, [isActive, onFrame]);
+  }, [isActive, onFrame, facingMode]);
 
   // Start processing when camera is active
   useEffect(() => {
@@ -298,13 +307,11 @@ export const ARCamera = forwardRef<ARCameraHandle, ARCameraProps>(
         />
 
         {/* Canvas - main visible element with AR effects */}
+        {/* Mirror transform removed - mirroring now done at draw time in processFrame */}
         <canvas
           ref={canvasRef}
           className="w-full h-full object-contain"
-          style={{
-            transform: facingMode === 'user' ? 'scaleX(-1)' : 'none',
-            display: 'block',
-          }}
+          style={{ display: 'block' }}
         />
 
         {/* Controls */}

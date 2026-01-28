@@ -9,6 +9,7 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
+import { uploadBase64Image } from '@/lib/utils/image-upload';
 
 export function MakeupDashboard() {
   const { toast } = useToast();
@@ -35,22 +36,27 @@ export function MakeupDashboard() {
         return;
       }
 
-      // Save to try_ons table
+      // Upload image to Supabase Storage instead of storing base64
+      const uploadResult = await uploadBase64Image(imageData, 'makeup');
+      if (!uploadResult.success || !uploadResult.url) {
+        throw new Error(uploadResult.error || 'Failed to upload image');
+      }
+
+      // Save to try_ons table - use only fields from MakeupConfig interface
       const { error: saveError } = await supabase
         .from('try_ons')
         .insert({
           user_id: user.id,
           type: 'makeup',
-          result_image_url: imageData,
+          result_image_url: uploadResult.url,
           settings: {
+            apply_lipstick: config.apply_lipstick,
             lipstick_color: config.lipstick_color,
-            lipstick_intensity: config.lipstick_intensity,
+            apply_blush: config.apply_blush,
             blush_color: config.blush_color,
             blush_intensity: config.blush_intensity,
-            eyeshadow_color: config.eyeshadow_color,
-            eyeshadow_intensity: config.eyeshadow_intensity,
-            eyeliner: config.eyeliner,
-            foundation_intensity: config.foundation_intensity,
+            apply_foundation: config.apply_foundation,
+            foundation_preset: config.foundation_preset,
           },
           is_favorite: false,
         });

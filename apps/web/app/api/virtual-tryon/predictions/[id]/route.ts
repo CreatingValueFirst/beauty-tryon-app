@@ -81,8 +81,9 @@ export async function GET(request: NextRequest, context: RouteContext) {
     const prediction = await getVirtualTryOnStatus(predictionId);
 
     // Update database with latest status
+    // Normalize Replicate 'succeeded' to our 'completed' status
     const updateData: any = {
-      status: prediction.status,
+      status: prediction.status === 'succeeded' ? 'completed' : prediction.status,
     };
 
     if (prediction.status === 'succeeded' && prediction.output) {
@@ -110,9 +111,12 @@ export async function GET(request: NextRequest, context: RouteContext) {
       .select()
       .single();
 
+    // Return normalized status (succeeded -> completed)
+    const normalizedStatus = prediction.status === 'succeeded' ? 'completed' : prediction.status;
+
     return NextResponse.json({
       success: true,
-      status: prediction.status,
+      status: normalizedStatus,
       tryOn: updatedTryOn || tryOn,
       imageUrl: updateData.result_image_url,
       progress: prediction.status === 'processing' ? 50 : undefined,
